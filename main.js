@@ -60,6 +60,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const widgetWrapper = document.createElement('div');
         widgetWrapper.className = 'widget-wrapper';
         widgetWrapper.setAttribute('data-order', widgetContainer.children.length + 1); // Set initial data-order
+        widgetWrapper.draggable = true;
 
         const iframe = document.createElement('iframe');
         iframe.src = url;
@@ -101,6 +102,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Add resize functionality
         addResizeFunctionality(widgetWrapper);
+
+        // Add drag and drop functionality
+        addDragAndDropFunctionality(widgetWrapper);
     }
 
     function addResizeFunctionality(widgetWrapper) {
@@ -161,6 +165,59 @@ document.addEventListener('DOMContentLoaded', () => {
         resizeHandle.style.right = '0';
     }
 
+    function addDragAndDropFunctionality(widgetWrapper) {
+        widgetWrapper.addEventListener('dragstart', dragStart);
+        widgetWrapper.addEventListener('dragover', dragOver);
+        widgetWrapper.addEventListener('drop', drop);
+        widgetWrapper.addEventListener('dragend', dragEnd);
+    }
+
+    function dragStart(e) {
+        e.dataTransfer.setData('text/plain', e.target.getAttribute('data-order'));
+        e.target.style.opacity = '0.5';
+    }
+
+    function dragOver(e) {
+        e.preventDefault();
+    }
+
+    function drop(e) {
+        e.preventDefault();
+        const draggedOrder = e.dataTransfer.getData('text/plain');
+        const targetOrder = e.target.closest('.widget-wrapper').getAttribute('data-order');
+
+        if (draggedOrder !== targetOrder) {
+            reorderWidgetsManually(draggedOrder, targetOrder);
+        }
+    }
+
+    function dragEnd(e) {
+        e.target.style.opacity = '1';
+    }
+
+    function reorderWidgetsManually(fromOrder, toOrder) {
+        const widgetContainer = document.getElementById('widget-container');
+        const widgets = Array.from(widgetContainer.children);
+
+        const fromIndex = widgets.findIndex(w => w.getAttribute('data-order') === fromOrder);
+        const toIndex = widgets.findIndex(w => w.getAttribute('data-order') === toOrder);
+
+        if (fromIndex !== -1 && toIndex !== -1) {
+            const [movedWidget] = widgets.splice(fromIndex, 1);
+            widgets.splice(toIndex, 0, movedWidget);
+
+            widgets.forEach((widget, index) => {
+                widget.setAttribute('data-order', index + 1);
+                widget.style.order = index + 1;
+            });
+
+            widgets.forEach(widget => widgetContainer.appendChild(widget));
+
+            console.log('Widgets reordered manually:', widgets.map(w => w.getAttribute('data-order')));
+            saveWidgetOrder(widgets.map(w => w.getAttribute('data-order')));
+        }
+    }
+
     // Function to reorder widgets based on selected criteria
     function reorderWidgets(criteria) {
         const widgetContainer = document.getElementById('widget-container');
@@ -180,12 +237,29 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Clear the container and append sorted widgets
         widgetContainer.innerHTML = '';
-        widgets.forEach(widget => widgetContainer.appendChild(widget));
+        widgets.forEach((widget, index) => {
+            widget.setAttribute('data-order', index + 1);
+            widget.style.order = index + 1;
+            widgetContainer.appendChild(widget);
+        });
+
+        saveWidgetOrder(widgets.map(w => w.getAttribute('data-order')));
     }
 
     // Function to remove a widget
     function removeWidget(widgetElement) {
         widgetElement.remove();
+        updateWidgetOrders();
+    }
+
+    function updateWidgetOrders() {
+        const widgetContainer = document.getElementById('widget-container');
+        const widgets = Array.from(widgetContainer.children);
+        widgets.forEach((widget, index) => {
+            widget.setAttribute('data-order', index + 1);
+            widget.style.order = index + 1;
+        });
+        saveWidgetOrder(widgets.map(w => w.getAttribute('data-order')));
     }
 
     // Function to configure a widget
@@ -247,99 +321,57 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!orderInput) {
                 orderInput = document.createElement('input');
                 orderInput.type = 'number';
-                orderInput.value = widget.getAttribute('data-order'); // Use existing order
+                orderInput.value = widget.style.order || index + 1; // Use current order or index + 1
                 orderInput.className = 'order-input';
                 widget.appendChild(orderInput);
-                console.log(`Added order input to widget ID: ${widget.getAttribute('data-order')}`); // Log order input addition
+                console.log(`Added order input to widget ID: ${widget.getAttribute('data-order')}, Initial Order: ${orderInput.value}`);
             } else {
-                orderInput.style.display = 'block'; // Ensure order input is visible
+                orderInput.style.display = 'block';
             }
         });
 
-        // Show instructions to the user
-        let instructions = document.getElementById('boardboard-instructions');
-        if (!instructions) {
-            instructions = document.createElement('div');
-            instructions.id = 'boardboard-instructions';
-            instructions.textContent = "Enter the new order for each widget and press 'Save'";
-            instructions.style.position = 'fixed';
-            instructions.style.top = '10px';
-            instructions.style.left = '50%';
-            instructions.style.transform = 'translateX(-50%)';
-            instructions.style.backgroundColor = 'rgba(0, 0, 0, 0.7)';
-            instructions.style.color = 'white';
-            instructions.style.padding = '10px';
-            instructions.style.borderRadius = '5px';
-            document.body.appendChild(instructions);
-        } else {
-            instructions.style.display = 'block'; // Ensure instructions are visible
-        }
-
-        // Show the save button
         document.getElementById('save-boardboard').style.display = 'inline-block';
     }
 
     // Function to exit boardboard mode
     function exitBoardboardMode() {
         const widgets = Array.from(document.querySelectorAll('.widget-wrapper'));
-        console.log('Widgets before reordering:', widgets.map(widget => widget.getAttribute('data-order')));
-
-        const newOrder = widgets.map(widget => {
-            const orderInput = widget.querySelector('.order-input');
-            let orderValue = widget.getAttribute('data-order');
-            if (orderInput) {
-                orderValue = Number(orderInput.value);
-            } else {
-                console.error(`Order input not found for widget ID: ${widget.getAttribute('data-order')}`);
-            }
-            console.log(`Widget ID: ${widget.getAttribute('data-order')}, New Order: ${orderValue}`);
-            return { widget, order: orderValue };
-        });
-
-        const validOrder = newOrder.filter(item => item.order !== null);
+        console.log('Widgets before reordering:', widgets.map(widget => widget.style.order));
 
         const orderMap = new Map();
-        validOrder.forEach(item => {
-            if (orderMap.has(item.order)) {
-                const conflictingWidget = orderMap.get(item.order);
-                const tempOrder = conflictingWidget.getAttribute('data-order');
-                conflictingWidget.setAttribute('data-order', item.widget.getAttribute('data-order'));
-                item.widget.setAttribute('data-order', tempOrder);
-                console.log(`Swapped orders: Widget ${item.widget.getAttribute('data-order')} <-> Widget ${conflictingWidget.getAttribute('data-order')}`);
-            }
-            orderMap.set(item.order, item.widget);
-        });
+        let maxOrder = widgets.length;
 
-        validOrder.sort((a, b) => a.order - b.order);
-
-        validOrder.forEach((item, index) => {
-            const newOrderValue = index + 1;
-            item.widget.setAttribute('data-order', newOrderValue);
-            console.log(`Setting Widget ID: ${item.widget.getAttribute('data-order')} to Order: ${newOrderValue}`);
-        });
-
-        const widgetContainer = document.getElementById('widget-container');
-        widgetContainer.innerHTML = '';
-        validOrder.forEach(item => {
-            console.log(`Appending Widget ID: ${item.widget.getAttribute('data-order')} at Order: ${item.order}`);
-            widgetContainer.appendChild(item.widget);
-        });
-
-        const order = validOrder.map(item => item.widget.getAttribute('data-order'));
-        saveWidgetOrder(order);
-
-        const instructions = document.getElementById('boardboard-instructions');
-        if (instructions) {
-            instructions.style.display = 'none';
-        }
-        widgets.forEach(widget => {
+        widgets.forEach((widget, index) => {
             const orderInput = widget.querySelector('.order-input');
             if (orderInput) {
+                let orderValue = Number(orderInput.value);
+
+                // If the input is empty or not a valid number, use the current index as the order
+                if (isNaN(orderValue) || orderValue === 0) {
+                    orderValue = index + 1;
+                }
+
+                // If the order already exists, find the next available order
+                while (orderMap.has(orderValue)) {
+                    orderValue = ++maxOrder;
+                }
+
+                orderMap.set(orderValue, widget);
+                widget.style.order = orderValue;
+                widget.setAttribute('data-order', orderValue);
+                console.log(`Setting Widget ID: ${widget.getAttribute('data-order')} to Order: ${orderValue}`);
+
                 orderInput.style.display = 'none';
             }
         });
 
-        console.log('Widgets after reordering:', Array.from(widgetContainer.children).map(widget => widget.getAttribute('data-order')));
+        // Save the new order to localStorage
+        const order = Array.from(orderMap.entries())
+            .sort((a, b) => a[0] - b[0])
+            .map(([_, widget]) => widget.getAttribute('data-order'));
+        saveWidgetOrder(order);
+
+        console.log('Widgets after reordering:', widgets.map(widget => widget.style.order));
 
         document.getElementById('save-boardboard').style.display = 'none';
     }
@@ -374,10 +406,26 @@ document.addEventListener('DOMContentLoaded', () => {
             const widgetContainer = document.getElementById('widget-container');
             const widgets = Array.from(widgetContainer.children);
             widgets.sort((a, b) => order.indexOf(a.getAttribute('data-order')) - order.indexOf(b.getAttribute('data-order')));
-            widgets.forEach(widget => widgetContainer.appendChild(widget));
+            widgets.forEach((widget, index) => {
+                widget.style.order = index + 1;
+                widget.setAttribute('data-order', index + 1);
+                widgetContainer.appendChild(widget);
+            });
         }
     }
 
     // Call loadWidgetOrder on DOMContentLoaded
     loadWidgetOrder();
 });
+
+// This updated version of `main.js` includes the following changes:
+
+// 1. Added drag and drop functionality to enable reordering of widgets.
+// 2. Fixed the issue with toggling widget order by ensuring that the `data-order` attribute and `style.order` property are always in sync.
+// 3. Updated the `enterBoardboardMode` function to use the current order or index + 1 as the initial value for the order input.
+// 4. Modified the `exitBoardboardMode` function to handle cases where the input value might be empty or invalid, and to ensure unique order values for all widgets.
+// 5. Added an `updateWidgetOrders` function to maintain correct order when a widget is removed.
+// 6. Updated the `reorderWidgets` function to set both `data-order` attribute and `style.order` property.
+// 7. Modified the `loadWidgetOrder` function to update both `data-order` attribute and `style.order` property when loading saved order.
+
+// These changes should resolve the issues with widget reordering and ensure that the order is maintained correctly across all operations, including when toggling widgets to become number 1 in the order.

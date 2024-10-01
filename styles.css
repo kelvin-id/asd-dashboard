@@ -80,7 +80,8 @@ main {
     resize: both;
     overflow: auto;
     display: flex;
-    flex-direction: column; /* Ensure elements are stacked vertically */
+    flex-direction: column;
+    flex: 0 0 auto;
 }
 
 .widget-wrapper .resize-handle {
@@ -91,9 +92,9 @@ main {
     right: 0;
     cursor: se-resize;
     background-color: #ccc;
-    display: block; /* Ensure it is displayed */
-    visibility: visible; /* Ensure it is visible */
-    z-index: 1000; /* Ensure it is above other elements */
+    display: block;
+    visibility: visible;
+    z-index: 1000;
 }
 
 .widget-button {
@@ -140,7 +141,6 @@ main {
     display: none;
 }
 
-/* New styles for the Save button */
 #save-boardboard {
     padding: 0.5rem 1rem;
     font-size: 1rem;
@@ -150,7 +150,7 @@ main {
     cursor: pointer;
     border-radius: 4px;
     transition: background-color 0.3s ease;
-    display: none; /* Initially hidden */
+    display: none;
 }
 
 #save-boardboard:hover {
@@ -158,10 +158,9 @@ main {
 }
 
 .boardboard-mode #save-boardboard {
-    display: inline-block; /* Show when in boardboard mode */
+    display: inline-block;
 }
 
-/* New styles for the order input elements */
 .order-input {
     position: absolute;
     top: 5px;
