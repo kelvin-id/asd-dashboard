@@ -1,6 +1,7 @@
 import { saveWidgetState } from './localStorage.js';
 import { fetchData } from './fetchData.js';
 import { debounce } from './utils.js';
+import { resizeHorizontally, resizeVertically, enlarge, shrink, showResizeMenu, hideResizeMenu } from './resizeMenu.js';
 
 let services = [];
 
@@ -24,10 +25,6 @@ function createWidget(url, width = '300px', height = '200px') {
         console.error('Error loading iframe:', url);
     };
 
-    const resizeHandle = document.createElement('div');
-    resizeHandle.className = 'resize-handle';
-    widgetWrapper.appendChild(resizeHandle);
-
     const removeButton = document.createElement('button');
     removeButton.innerHTML = '&#x274C;';
     removeButton.classList.add('widget-button');
@@ -42,9 +39,24 @@ function createWidget(url, width = '300px', height = '200px') {
         configureWidget(iframe);
     });
 
+    const resizeMenuIcon = document.createElement('button');
+    resizeMenuIcon.innerHTML = '&#128269;';
+    resizeMenuIcon.classList.add('widget-button', 'resize-menu-icon');
+    resizeMenuIcon.addEventListener('mouseover', () => {
+        console.log('Mouse over resize menu icon');
+        showResizeMenu(resizeMenuIcon);
+    });
+    resizeMenuIcon.addEventListener('mouseout', (event) => {
+        console.log('Mouse out resize menu icon');
+        if (!event.relatedTarget || !event.relatedTarget.classList.contains('resize-menu')) {
+            hideResizeMenu(resizeMenuIcon);
+        }
+    });
+
     widgetWrapper.appendChild(iframe);
     widgetWrapper.appendChild(removeButton);
     widgetWrapper.appendChild(configureButton);
+    widgetWrapper.appendChild(resizeMenuIcon);
 
     widgetWrapper.style.width = width;
     widgetWrapper.style.height = height;
@@ -52,9 +64,6 @@ function createWidget(url, width = '300px', height = '200px') {
         width: widgetWrapper.style.width,
         height: widgetWrapper.style.height
     });
-
-    // Add resize functionality
-    addResizeFunctionality(widgetWrapper, resizeHandle);
 
     return widgetWrapper;
 }
@@ -147,52 +156,7 @@ function updateWidgetOrders() {
     });
 }
 
-function addResizeFunctionality(widgetWrapper, resizeHandle) {
-    let isResizing = false;
-    let lastDownX = 0;
-    let lastDownY = 0;
-
-    resizeHandle.addEventListener('mousedown', function(e) {
-        isResizing = true;
-        lastDownX = e.clientX;
-        lastDownY = e.clientY;
-        e.preventDefault();
-        e.stopPropagation();
-    });
-
-    document.addEventListener('mousemove', function(e) {
-        if (!isResizing) return;
-
-        let offsetX = e.clientX - lastDownX;
-        let offsetY = e.clientY - lastDownY;
-
-        let newWidth = parseInt(getComputedStyle(widgetWrapper, '').width) + offsetX;
-        let newHeight = parseInt(getComputedStyle(widgetWrapper, '').height) + offsetY;
-
-        if (newWidth > 100) { // minimum width
-            widgetWrapper.style.width = newWidth + 'px';
-            lastDownX = e.clientX;
-        }
-        if (newHeight > 100) { // minimum height
-            widgetWrapper.style.height = newHeight + 'px';
-            lastDownY = e.clientY;
-        }
-
-        // We can optionally save state here if you want real-time saving
-        // But it's more efficient to save once after resizing ends
-    });
-
-    document.addEventListener('mouseup', function(e) {
-        isResizing = true;
-        if (isResizing) {
-            console.log('Saving resize state');
-            isResizing = false;
-            debounce(saveWidgetState, 1000); // Save sizes after resizing ends
-        }
-    });
-}
-
-
+// Ensure to export necessary functions
 export {
     services,
     createWidget,

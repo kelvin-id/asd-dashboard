@@ -86,27 +86,13 @@ main {
 
 .widget-wrapper {
     position: relative;
-    resize: both; /* Allows resizing in both directions */
     overflow: auto;
     display: flex;
     flex-direction: column;
     flex: 0 0 auto;
     min-width: 200px;
-    min-height: 200px; 
+    min-height: 200px;
     margin: 0;
-}
-
-.widget-wrapper .resize-handle {
-    position: absolute;
-    width: 8px;
-    height: 8px;
-    bottom: 0;
-    right: 0;
-    cursor: se-resize;
-    background-color: #aaa; /* Subtler color */
-    display: block;
-    visibility: visible;
-    z-index: 1000;
 }
 
 .widget-button {
@@ -197,4 +183,41 @@ main {
     width: 50px;
     font-size: 1rem;
     z-index: 10;
+}
+
+/* New styles for the magnifying glass icon and the resize menu */
+.widget-button.resize-menu-icon {
+    right: 55px;
+    font-size: 1.2rem;
+    opacity: 0.5;
+}
+
+.widget-button.resize-menu-icon:hover {
+    opacity: 1;
+}
+
+.resize-menu {
+    position: absolute;
+    top: 30px;
+    right: 5px;
+    display: none;
+    flex-direction: column;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    z-index: 20;
+}
+
+.resize-menu button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+    padding: 0.5rem;
+    transition: background-color 0.3s ease;
+}
+
+.resize-menu button:hover {
+    background-color: #f0f0f0;
 }
