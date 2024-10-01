@@ -1,3 +1,8 @@
+/* Universal box-sizing */
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
 body {
     font-family: Arial, sans-serif;
     margin: 0;
@@ -10,7 +15,7 @@ body {
 header {
     background-color: #4CAF50;
     color: white;
-    padding: 1rem;
+    padding: 0.5rem; /* Reduced padding */
     text-align: center;
 }
 
@@ -18,51 +23,52 @@ main {
     flex: 1;
     display: flex;
     flex-direction: column;
+    padding: 0; /* Removed padding */
     justify-content: center;
     align-items: center;
-    padding: 1rem;
 }
 
 #widget-container {
-    width: 100%;
-    height: 100%;
-    border: 1px solid #ccc;
+    flex: 1;
     display: flex;
-    flex-wrap: wrap;
-    gap: 1rem;
+    flex-wrap: wrap; /* Ensures widgets wrap when the viewport is resized */
+    gap: 0.5rem; /* Reduced gap */
     overflow: auto;
-}
-
-.widget-placeholder {
-    width: 200px;
-    height: 150px;
-    border: 1px solid #bbb;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: #f9f9f9;
-    border-radius: 4px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    align-items: flex-start; /* Aligns widgets to the top */
+    padding-bottom: 3rem;  /* Adds extra space to ensure the last widget is not hidden under controls */
+    width: 100%; /* Ensure the container takes full width */
+    box-sizing: border-box;
 }
 
 #controls {
-    margin-top: 1rem;
     display: flex;
     justify-content: center;
-    gap: 1rem;
     flex-wrap: wrap;
+    gap: 0.5rem; /* Reduced gap */
+    margin-top: 0.5rem; /* Reduced margin */
+    position: sticky;  /* Makes the controls sticky */
+    top: 0;  /* Sticks it to the bottom */
+    margin-top: auto;  /* Pushes the controls down as far as possible */
+    padding: 0.5rem;  /* Adds padding */
+    background-color: #fff;  /* Keep a background to avoid transparency issues */
+    z-index: 1001;  /* Ensures it stays above other elements */
+    box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);  /* Adds a subtle shadow to differentiate it */
 }
 
-#controls select, #controls input {
-    padding: 0.5rem;
-    font-size: 1rem;
+#controls select,
+#controls input {
+    padding: 0.4rem; /* Reduced padding */
+    font-size: 0.9rem; /* Slightly smaller font size */
     border: 1px solid #ccc;
     border-radius: 4px;
 }
 
-#controls button {
-    padding: 0.5rem 1rem;
-    font-size: 1rem;
+#controls button,
+#toggle-boardboard,
+#toggle-buttons,
+#save-boardboard {
+    padding: 0.4rem 0.8rem; /* Reduced padding */
+    font-size: 0.9rem;
     border: none;
     background-color: #4CAF50;
     color: white;
@@ -71,27 +77,33 @@ main {
     transition: background-color 0.3s ease;
 }
 
-#controls button:hover {
+#controls button:hover,
+#toggle-boardboard:hover,
+#toggle-buttons:hover,
+#save-boardboard:hover {
     background-color: #45a049;
 }
 
 .widget-wrapper {
     position: relative;
-    resize: both;
+    resize: both; /* Allows resizing in both directions */
     overflow: auto;
     display: flex;
     flex-direction: column;
     flex: 0 0 auto;
+    min-width: 200px;
+    min-height: 200px; 
+    margin: 0;
 }
 
 .widget-wrapper .resize-handle {
     position: absolute;
-    width: 10px;
-    height: 10px;
+    width: 8px;
+    height: 8px;
     bottom: 0;
     right: 0;
     cursor: se-resize;
-    background-color: #ccc;
+    background-color: #aaa; /* Subtler color */
     display: block;
     visibility: visible;
     z-index: 1000;
@@ -132,13 +144,30 @@ main {
     position: absolute;
     top: 5px;
     left: 5px;
-    background: rgba(255, 255, 255, 0.8);
+    background: rgba(0, 0, 0, 0.5); /* Darker background */
+    color: #fff;
     padding: 2px 5px;
     border-radius: 3px;
 }
 
 .hidden-buttons .widget-button {
     display: none;
+}
+
+.widget-button {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.2rem; /* Slightly smaller */
+    z-index: 10;
+    opacity: 0.5; /* Less obtrusive */
+}
+
+.widget-button:hover {
+    opacity: 1;
 }
 
 #save-boardboard {
