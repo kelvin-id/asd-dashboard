@@ -5,10 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ASD Dashboard</title>
     <link rel="stylesheet" href="styles.css">
+    
 </head>
 <body>
     <main>
         <div id="controls">
+            <label>
+                <input type="checkbox" id="sw-toggle">📡
+            </label>
             <select id="service-selector">
                 <option value="">Select a Service</option>
                 <!-- Options will be dynamically populated -->
@@ -27,6 +31,82 @@
             <!-- Widgets will be dynamically loaded here -->
         </div>
     </main>
+    <script>
+        const swToggle = document.getElementById('sw-toggle'); // Add this line to get the checkbox element
+        // Check saved preference in localStorage and set the checkbox state accordingly
+        const swEnabled = localStorage.getItem('swEnabled') === 'true';
+
+        // Set the checkbox to the saved state (enabled/disabled)
+        swToggle.checked = swEnabled;
+
+        if ('serviceWorker' in navigator) {
+            // Function to register Service Worker
+            function registerServiceWorker() {
+                navigator.serviceWorker.register('/serviceWorker.js', { scope: '/' })
+                    .then(function (registration) {
+                        console.log('Service Worker registered with scope:', registration.scope);
+                    })
+                    .catch(function (error) {
+                        console.error('Service Worker registration failed:', error);
+                    });
+            }
+
+            // Function to unregister Service Worker
+            function unregisterServiceWorker() {
+                navigator.serviceWorker.getRegistrations()
+                    .then(function (registrations) {
+                        for (let registration of registrations) {
+                            registration.unregister()
+                                .then(function () {
+                                    console.log('Service Worker unregistered');
+                                })
+                                .catch(function (error) {
+                                    console.error('Service Worker unregistration failed:', error);
+                                });
+                        }
+                    });
+                // Optional: Clear cached files
+                caches.keys().then(function (cacheNames) {
+                    return Promise.all(
+                        cacheNames.map(function (cacheName) {
+                            return caches.delete(cacheName);
+                        })
+                    ).then(function () {
+                        console.log('All caches cleared');
+                    });
+                });
+            }
+
+            // Initial load: Register or unregister based on stored preference
+            if (swEnabled) {
+                registerServiceWorker();
+            } else {
+                unregisterServiceWorker();
+            }
+
+            // Listen for toggle change (enable/disable service worker)
+            swToggle.addEventListener('change', function () {
+                const isEnabled = swToggle.checked;
+
+                // Update localStorage with the new preference
+                localStorage.setItem('swEnabled', isEnabled);
+
+                if (isEnabled) {
+                    registerServiceWorker();
+                } else {
+                    unregisterServiceWorker();
+                }
+            });
+        }
+        // Add this event listener to set localStorage when checkbox is checked
+        swToggle.addEventListener('change', function () {
+            if (swToggle.checked) {
+                localStorage.setItem('swEnabled', "true");
+            } else {
+                localStorage.setItem('swEnabled', "false");
+            }
+        });
+    </script>
     <script type="module" src="widgetManagement.js"></script>
     <script type="module" src="localStorage.js"></script>
     <script type="module" src="uiInteractions.js"></script>

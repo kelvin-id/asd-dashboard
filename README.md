@@ -1,64 +1,78 @@
-Here's the README.md file for the ASD Dashboard project:
-
-```markdown
 # ASD Dashboard
 
-ASD Dashboard is a pure VanillaJS application for managing remote services through widgets displayed in iframes. It provides a flexible and customizable dashboard interface that allows users to add, resize, reorder, and configure widgets dynamically.
+ASD Dashboard is a pure VanillaJS single-page application (SPA) designed for managing remote services through widgets displayed in iframes. The dashboard allows users to add, resize, reorder, and configure widgets dynamically, with all user preferences stored in localStorage to ensure persistence across sessions.
 
 ## Overview
 
-The ASD Dashboard is built as a single-page application (SPA) using HTML, CSS, and JavaScript without any frameworks. The project structure consists of:
+The 'asd-dashboard' is built using plain HTML, CSS, and JavaScript without any frameworks. The architecture is a single-page application (SPA) that consists of the following main components:
 
-- `index.html`: The main entry point of the application
-- `styles.css`: Contains all the styling for the dashboard
-- `main.js`: The core JavaScript file handling all the functionality
-- `services.json`: A JSON file containing the list of available services
+- **index.html**: The main entry point of the application, defining the basic layout.
+- **styles.css**: The stylesheet for the application's styling.
+- **JavaScript Files**: Various JavaScript files handling different functionalities such as widget management, local storage handling, UI interactions, and more.
 
-The application utilizes modern web technologies and browser APIs to provide a responsive and interactive user experience.
+### Technologies Used
+
+- **VanillaJS**: Core JavaScript functionality.
+- **HTML**: Structure of the web application.
+- **CSS**: Styling for the application.
+- **Node.js**: JavaScript runtime required to run the application.
+
+### Project Structure
+
+```
+asd-dashboard/
+├── boardboardMode.js
+├── fetchData.js
+├── index.html
+├── localStorage.js
+├── main.js
+├── resizeMenu.js
+├── services.json
+├── styles.css
+├── uiInteractions.js
+├── utils.js
+├── widgetManagement.js
+├── serverWorkerRegistration.js
+├── serviceWorker.js
+└── README.md
+```
 
 ## Features
 
-- Add widgets from a list of predefined services or custom URLs
-- Resize widgets to customize the dashboard layout
-- Reorder widgets using drag and drop or a dropdown menu
-- Configure widget URLs dynamically
-- Save and restore dashboard state, including widget order and size
-- Toggle visibility of widget control buttons
-- Boardboard mode for quick reordering of widgets
-- Responsive design that utilizes the full screen size
+- **Widget Management**: Add widgets by selecting a service from a predefined list or entering a URL manually.
+- **Screen Utilization**: Widgets dynamically resize to fully utilize the screen size.
+- **Persistence**: User preferences for widget order and size are stored in localStorage and restored upon page reload.
+- **Reordering Widgets**: Widgets can be reordered using a dropdown menu.
+- **Boardboard Mode**: Allows users to reorder widgets by entering a number for each widget.
+- **Toggle Buttons**: Show or hide remove and configure buttons within widgets.
+- **Service Worker**: Optionally register a service worker for caching and offline capabilities.
 
-## Getting started
+## Getting Started
 
 ### Requirements
 
-- Node.js (latest LTS version recommended)
-- A modern web browser (Chrome, Firefox, Safari, or Edge)
+- **Node.js**: Ensure Node.js is installed on your computer to run the application.
 
 ### Quickstart
 
-1. Clone the repository:
-   ```
-   git clone <repository-url>
-   ```
+1. **Clone the repository**:
+    ```bash
+    git clone <repository-url>
+    cd asd-dashboard
+    ```
 
-2. Navigate to the project directory:
-   ```
-   cd asd-dashboard
-   ```
+2. **Install dependencies**:
+    ```bash
+    npm install
+    ```
 
-3. Install dependencies (if any):
-   ```
-   npm install
-   ```
-
-4. Start a local server:
-   ```
-   npx http-server
-   ```
-
-5. Open your browser and navigate to `http://localhost:8080` (or the port specified by http-server)
+3. **Run the application**:
+    Open `index.html` in your web browser.
 
 ### License
 
-Copyright (c) 2024. All rights reserved.
+The project is proprietary (not open source). 
+
+```
+© 2024. All rights reserved.
 ```
