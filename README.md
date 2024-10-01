@@ -1,72 +1,64 @@
+Here's the README.md file for the ASD Dashboard project:
+
 ```markdown
 # ASD Dashboard
 
-ASD Dashboard is a pure VanillaJS dashboard for managing remote services through widgets displayed in iframes. This single-page application (SPA) allows users to dynamically add, configure, and remove widgets by selecting services from a predefined list or by entering URLs manually.
+ASD Dashboard is a pure VanillaJS application for managing remote services through widgets displayed in iframes. It provides a flexible and customizable dashboard interface that allows users to add, resize, reorder, and configure widgets dynamically.
 
 ## Overview
 
-The 'asd-dashboard' is built using plain HTML, CSS, and JavaScript without any frameworks. The architecture is a single-page application (SPA) that focuses solely on frontend functionality. The main components of the project include:
+The ASD Dashboard is built as a single-page application (SPA) using HTML, CSS, and JavaScript without any frameworks. The project structure consists of:
 
-- `index.html`: The main entry point of the application, defining the basic structure of the web page.
-- `styles.css`: The stylesheet that defines the styling for the application.
-- `main.js`: The core JavaScript file that handles dynamic iframe loading, event listeners for user interactions, and AJAX calls to remote services.
-- `services.json`: A JSON file containing a list of services that can be used by the application.
+- `index.html`: The main entry point of the application
+- `styles.css`: Contains all the styling for the dashboard
+- `main.js`: The core JavaScript file handling all the functionality
+- `services.json`: A JSON file containing the list of available services
+
+The application utilizes modern web technologies and browser APIs to provide a responsive and interactive user experience.
 
 ## Features
 
-- **Add Widgets**: Users can add widgets by selecting a service from a dropdown list or by entering a URL manually.
-- **Dynamic Loading**: Widgets are dynamically loaded into the dashboard as iframes.
-- **Configure Widgets**: Users can configure widgets by updating their URLs.
-- **Remove Widgets**: Users can remove widgets from the dashboard.
-- **Service Management**: The application fetches available services from a `services.json` file and populates the dropdown list for easy selection.
-- **Reorder Widgets**: Users can reorder widgets through a boardboard mode that allows entering order numbers and saving the new order.
+- Add widgets from a list of predefined services or custom URLs
+- Resize widgets to customize the dashboard layout
+- Reorder widgets using drag and drop or a dropdown menu
+- Configure widget URLs dynamically
+- Save and restore dashboard state, including widget order and size
+- Toggle visibility of widget control buttons
+- Boardboard mode for quick reordering of widgets
+- Responsive design that utilizes the full screen size
 
 ## Getting started
 
 ### Requirements
 
-- Node.js: JavaScript runtime for building apps. This is required to be able to run the app you're building.
+- Node.js (latest LTS version recommended)
+- A modern web browser (Chrome, Firefox, Safari, or Edge)
 
 ### Quickstart
 
-1. **Clone the repository**:
-    ```sh
-    git clone <repository_url>
-    cd asd-dashboard
-    ```
+1. Clone the repository:
+   ```
+   git clone <repository-url>
+   ```
 
-2. **Install dependencies**:
-    ```sh
-    npm install
-    ```
+2. Navigate to the project directory:
+   ```
+   cd asd-dashboard
+   ```
 
-3. **Run the application**:
-    ```sh
-    npm start
-    ```
+3. Install dependencies (if any):
+   ```
+   npm install
+   ```
 
-4. **Open your browser** and navigate to `http://localhost:3000` to view the ASD Dashboard.
+4. Start a local server:
+   ```
+   npx http-server
+   ```
 
-## Using Boardboard Mode
-
-Boardboard mode allows you to reorder the widgets on your dashboard. Follow these steps to use this feature:
-
-1. **Toggle Boardboard Mode**:
-    - Click the "Toggle Boardboard" button in the controls section. This will enable boardboard mode and display input fields for entering the new order of the widgets.
-
-2. **Reorder Widgets**:
-    - Enter the new order for each widget in the input fields displayed on each widget.
-
-3. **Save the New Order**:
-    - Once you have reordered the widgets, click the "Save" button that appears in the controls section to save the new order.
-
-4. **Exit Boardboard Mode**:
-    - Click the "Toggle Boardboard" button again to exit boardboard mode.
+5. Open your browser and navigate to `http://localhost:8080` (or the port specified by http-server)
 
 ### License
 
-The project is proprietary (not open source).
-
-```
-Copyright (c) 2024.
+Copyright (c) 2024. All rights reserved.
 ```

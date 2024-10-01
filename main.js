@@ -49,17 +49,10 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('toggle-buttons').addEventListener('click', toggleButtons);
     document.getElementById('save-boardboard').addEventListener('click', exitBoardboardMode);
 
-    // Function to create and add a widget (iframe) to the widget container
-    function addWidget(url) {
-        const widgetContainer = document.getElementById('widget-container');
-        if (!widgetContainer) {
-            console.error('Widget container not found');
-            return;
-        }
-
+    // Function to create a widget (extracted from addWidget function)
+    function createWidget(url, width = '300px', height = '200px') {
         const widgetWrapper = document.createElement('div');
         widgetWrapper.className = 'widget-wrapper';
-        widgetWrapper.setAttribute('data-order', widgetContainer.children.length + 1); // Set initial data-order
         widgetWrapper.draggable = true;
 
         const iframe = document.createElement('iframe');
@@ -90,21 +83,40 @@ document.addEventListener('DOMContentLoaded', () => {
         widgetWrapper.appendChild(removeButton);
         widgetWrapper.appendChild(configureButton);
 
-        widgetContainer.appendChild(widgetWrapper);
+        addResizeFunctionality(widgetWrapper);
+        addDragAndDropFunctionality(widgetWrapper);
+
+        widgetWrapper.style.width = width;
+        widgetWrapper.style.height = height;
+        console.log('Widget created with size:', {
+            width: widgetWrapper.style.width,
+            height: widgetWrapper.style.height
+        });
+
+        return widgetWrapper;
+    }
+
+    // Function to create and add a widget (iframe) to the widget container
+    function addWidget(url, width = '300px', height = '200px') {
+        const widgetContainer = document.getElementById('widget-container');
+        if (!widgetContainer) {
+            console.error('Widget container not found');
+            return;
+        }
+
+        const widget = createWidget(url, width, height);
+        widget.setAttribute('data-order', widgetContainer.children.length + 1);
+        widgetContainer.appendChild(widget);
 
         // Fetch data and display it in the iframe if it's an API service
         const service = services.find(service => service.url === url);
         if (service && service.type === 'api') {
             fetchData(url, data => {
-                displayDataInIframe(iframe, data);
+                displayDataInIframe(widget.querySelector('iframe'), data);
             });
         }
 
-        // Add resize functionality
-        addResizeFunctionality(widgetWrapper);
-
-        // Add drag and drop functionality
-        addDragAndDropFunctionality(widgetWrapper);
+        saveWidgetState();
     }
 
     function addResizeFunctionality(widgetWrapper) {
@@ -114,53 +126,52 @@ document.addEventListener('DOMContentLoaded', () => {
             const width = e.clientX - widgetWrapper.getBoundingClientRect().left;
             const height = e.clientY - widgetWrapper.getBoundingClientRect().top;
 
-            // Update widgetWrapper dimensions (iframe dimensions will follow as iframe is a child of widgetWrapper)
-            widgetWrapper.style.width = width + 'px';
-            widgetWrapper.style.height = height + 'px';
+            widgetWrapper.style.width = `${width}px`;
+            widgetWrapper.style.height = `${height}px`;
 
-            console.log('Resizing: ', {
-                widgetWrapper: { width: widgetWrapper.style.width, height: widgetWrapper.style.height }
+            console.log('Resize event triggered:', {
+                width: widgetWrapper.style.width,
+                height: widgetWrapper.style.height
             });
 
-            // Ensure iframe content scales properly
             const iframe = widgetWrapper.querySelector('iframe');
             iframe.contentWindow.postMessage({ action: 'resize', width, height }, '*');
+
+            // Call saveWidgetState after each resize
+            saveWidgetState();
+            console.log('saveWidgetState called from resize function');
         }
 
         function stopResize() {
             window.removeEventListener('mousemove', resize);
             window.removeEventListener('mouseup', stopResize);
             console.log('Resize stopped');
+            saveWidgetState();
+            console.log('saveWidgetState called from stopResize function');
         }
 
         function startResize(e) {
+            e.preventDefault();
+            console.log('Resize started');
             window.addEventListener('mousemove', resize);
             window.addEventListener('mouseup', stopResize);
-            console.log('Resize started');
 
-            // Immediate update on start resize
             const width = widgetWrapper.getBoundingClientRect().width;
             const height = widgetWrapper.getBoundingClientRect().height;
-            widgetWrapper.style.width = width + 'px';
-            widgetWrapper.style.height = height + 'px';
+            widgetWrapper.style.width = `${width}px`;
+            widgetWrapper.style.height = `${height}px`;
 
-            console.log('Immediate update on start resize: ', {
+            console.log('Initial size on start resize:', {
                 width: widgetWrapper.style.width,
                 height: widgetWrapper.style.height
             });
 
-            // Ensure iframe content scales properly
             const iframe = widgetWrapper.querySelector('iframe');
             iframe.contentWindow.postMessage({ action: 'resize', width, height }, '*');
         }
 
         resizeHandle.addEventListener('mousedown', startResize);
 
-        // Initialize widgetWrapper dimensions
-        widgetWrapper.style.width = '300px';
-        widgetWrapper.style.height = '200px';
-
-        // Set initial resize handle position
         resizeHandle.style.bottom = '0';
         resizeHandle.style.right = '0';
     }
@@ -214,7 +225,7 @@ document.addEventListener('DOMContentLoaded', () => {
             widgets.forEach(widget => widgetContainer.appendChild(widget));
 
             console.log('Widgets reordered manually:', widgets.map(w => w.getAttribute('data-order')));
-            saveWidgetOrder(widgets.map(w => w.getAttribute('data-order')));
+            saveWidgetState();
         }
     }
 
@@ -235,7 +246,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
-        // Clear the container and append sorted widgets
         widgetContainer.innerHTML = '';
         widgets.forEach((widget, index) => {
             widget.setAttribute('data-order', index + 1);
@@ -243,13 +253,14 @@ document.addEventListener('DOMContentLoaded', () => {
             widgetContainer.appendChild(widget);
         });
 
-        saveWidgetOrder(widgets.map(w => w.getAttribute('data-order')));
+        saveWidgetState();
     }
 
     // Function to remove a widget
     function removeWidget(widgetElement) {
         widgetElement.remove();
         updateWidgetOrders();
+        saveWidgetState();
     }
 
     function updateWidgetOrders() {
@@ -259,7 +270,6 @@ document.addEventListener('DOMContentLoaded', () => {
             widget.setAttribute('data-order', index + 1);
             widget.style.order = index + 1;
         });
-        saveWidgetOrder(widgets.map(w => w.getAttribute('data-order')));
     }
 
     // Function to configure a widget
@@ -274,6 +284,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     displayDataInIframe(iframeElement, data);
                 });
             }
+            saveWidgetState();
         }
     }
 
@@ -321,7 +332,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!orderInput) {
                 orderInput = document.createElement('input');
                 orderInput.type = 'number';
-                orderInput.value = widget.style.order || index + 1; // Use current order or index + 1
+                orderInput.value = widget.style.order || index + 1;
                 orderInput.className = 'order-input';
                 widget.appendChild(orderInput);
                 console.log(`Added order input to widget ID: ${widget.getAttribute('data-order')}, Initial Order: ${orderInput.value}`);
@@ -346,12 +357,10 @@ document.addEventListener('DOMContentLoaded', () => {
             if (orderInput) {
                 let orderValue = Number(orderInput.value);
 
-                // If the input is empty or not a valid number, use the current index as the order
                 if (isNaN(orderValue) || orderValue === 0) {
                     orderValue = index + 1;
                 }
 
-                // If the order already exists, find the next available order
                 while (orderMap.has(orderValue)) {
                     orderValue = ++maxOrder;
                 }
@@ -365,11 +374,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
-        // Save the new order to localStorage
-        const order = Array.from(orderMap.entries())
-            .sort((a, b) => a[0] - b[0])
-            .map(([_, widget]) => widget.getAttribute('data-order'));
-        saveWidgetOrder(order);
+        saveWidgetState();
 
         console.log('Widgets after reordering:', widgets.map(widget => widget.style.order));
 
@@ -394,38 +399,64 @@ document.addEventListener('DOMContentLoaded', () => {
         widgetContainer.classList.toggle('hidden-buttons');
     }
 
-    // Function to save widget order to localStorage
-    function saveWidgetOrder(order) {
-        localStorage.setItem('widgetOrder', JSON.stringify(order));
+    // Function to save widget state to localStorage
+    function saveWidgetState() {
+        console.log('saveWidgetState function called');
+        const widgetContainer = document.getElementById('widget-container');
+        const widgets = Array.from(widgetContainer.children);
+        const widgetState = widgets.map(widget => {
+            const state = {
+                order: widget.getAttribute('data-order'),
+                width: widget.style.width,
+                height: widget.style.height,
+                url: widget.querySelector('iframe').src
+            };
+            console.log('Saving widget state:', state);
+            return state;
+        });
+        localStorage.setItem('widgetState', JSON.stringify(widgetState));
+        console.log('Saved widget state to localStorage:', widgetState);
     }
 
-    // Function to load widget order from localStorage
-    function loadWidgetOrder() {
-        const order = JSON.parse(localStorage.getItem('widgetOrder'));
-        if (order) {
+    // Function to load widget state from localStorage
+    function loadWidgetState() {
+        const savedState = JSON.parse(localStorage.getItem('widgetState'));
+        console.log('Loaded widget state from localStorage:', savedState);
+        if (savedState) {
             const widgetContainer = document.getElementById('widget-container');
-            const widgets = Array.from(widgetContainer.children);
-            widgets.sort((a, b) => order.indexOf(a.getAttribute('data-order')) - order.indexOf(b.getAttribute('data-order')));
-            widgets.forEach((widget, index) => {
-                widget.style.order = index + 1;
-                widget.setAttribute('data-order', index + 1);
+            widgetContainer.innerHTML = ''; // Clear existing widgets
+            savedState.forEach(widgetData => {
+                console.log('Creating widget with data:', widgetData);
+                const widget = createWidget(widgetData.url, widgetData.width, widgetData.height);
+                widget.style.order = widgetData.order;
+                widget.setAttribute('data-order', widgetData.order);
+                widget.style.width = widgetData.width || '300px';
+                widget.style.height = widgetData.height || '200px';
+                console.log('Widget created with size:', {
+                    width: widget.style.width,
+                    height: widget.style.height
+                });
                 widgetContainer.appendChild(widget);
             });
         }
     }
 
-    // Call loadWidgetOrder on DOMContentLoaded
-    loadWidgetOrder();
+    // Call loadWidgetState on DOMContentLoaded
+    loadWidgetState();
+
+    // Add event listener for window resize
+    window.addEventListener('resize', debounce(saveWidgetState, 250));
+
+    // Debounce function to limit the rate at which saveWidgetState is called
+    function debounce(func, wait) {
+        let timeout;
+        return function executedFunction(...args) {
+            const later = () => {
+                clearTimeout(timeout);
+                func(...args);
+            };
+            clearTimeout(timeout);
+            timeout = setTimeout(later, wait);
+        };
+    }
 });
-
-// This updated version of `main.js` includes the following changes:
-
-// 1. Added drag and drop functionality to enable reordering of widgets.
-// 2. Fixed the issue with toggling widget order by ensuring that the `data-order` attribute and `style.order` property are always in sync.
-// 3. Updated the `enterBoardboardMode` function to use the current order or index + 1 as the initial value for the order input.
-// 4. Modified the `exitBoardboardMode` function to handle cases where the input value might be empty or invalid, and to ensure unique order values for all widgets.
-// 5. Added an `updateWidgetOrders` function to maintain correct order when a widget is removed.
-// 6. Updated the `reorderWidgets` function to set both `data-order` attribute and `style.order` property.
-// 7. Modified the `loadWidgetOrder` function to update both `data-order` attribute and `style.order` property when loading saved order.
-
-// These changes should resolve the issues with widget reordering and ensure that the order is maintained correctly across all operations, including when toggling widgets to become number 1 in the order.
