@@ -65,9 +65,13 @@ asd-dashboard/
     ```bash
     npm install
     ```
+    or
+    ```bash
+    python3 -m http.server 8000
+    ```
 
 3. **Run the application**:
-    Open `index.html` in your web browser.
+    Open http://localhost:8000 in your web browser.
 
 ### License
 
