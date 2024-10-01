@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ASD Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>ASD Dashboard</h1>
+    </header>
+    <main>
+        <div id="widget-container">
+            <!-- Widgets will be dynamically loaded here -->
+        </div>
+        <div id="controls">
+            <select id="service-selector">
+                <option value="">Select a Service</option>
+                <!-- Options will be dynamically populated -->
+            </select>
+            <input type="text" id="widget-url" placeholder="Or enter URL manually">
+            <button id="add-widget-button">Add Widget</button>
+            <select id="order-selector">
+                <option value="name">Order by Name</option>
+                <option value="url">Order by URL</option>
+            </select>
+            <button id="toggle-boardboard">Toggle Boardboard</button>
+            <button id="toggle-buttons">Toggle Remove/Configure</button>
+            <button id="save-boardboard" style="display: none;">Save</button>
+        </div>
+    </main>
+    <script src="main.js"></script>
+</body>
+</html>

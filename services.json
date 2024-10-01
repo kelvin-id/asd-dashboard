@@ -1,0 +1,23 @@
+[
+    {
+        "name": "Server TAP",
+        "url": "https://kwuite-app.grid.ctcue.io/tap",
+        "type": "api",
+        "apiType": "REST"
+    },
+    {
+        "name": "Lazydocker",
+        "url": "https://kwuite-app.grid.ctcue.io/toolbox?arg=lazydocker",
+        "type": "web"
+    },
+    {
+        "name": "Terminal(bash)",
+        "url": "https://kwuite-app.grid.ctcue.io/toolbox?arg=bash",
+        "type": "web"
+    },
+    {
+        "name": "DbGate Database Client",
+        "url": "https://kwuite-app.grid.ctcue.io/data-dbgate/",
+        "type": "web"
+    }
+]

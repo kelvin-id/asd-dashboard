@@ -1,0 +1,172 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+header {
+    background-color: #4CAF50;
+    color: white;
+    padding: 1rem;
+    text-align: center;
+}
+
+main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem;
+}
+
+#widget-container {
+    width: 100%;
+    height: 100%;
+    border: 1px solid #ccc;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    overflow: auto;
+}
+
+.widget-placeholder {
+    width: 200px;
+    height: 150px;
+    border: 1px solid #bbb;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #f9f9f9;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+#controls {
+    margin-top: 1rem;
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+#controls select, #controls input {
+    padding: 0.5rem;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+#controls button {
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    border: none;
+    background-color: #4CAF50;
+    color: white;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+}
+
+#controls button:hover {
+    background-color: #45a049;
+}
+
+.widget-wrapper {
+    position: relative;
+    resize: both;
+    overflow: auto;
+    display: flex;
+    flex-direction: column; /* Ensure elements are stacked vertically */
+}
+
+.widget-wrapper .resize-handle {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    bottom: 0;
+    right: 0;
+    cursor: se-resize;
+    background-color: #ccc;
+    display: block; /* Ensure it is displayed */
+    visibility: visible; /* Ensure it is visible */
+    z-index: 1000; /* Ensure it is above other elements */
+}
+
+.widget-button {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.5rem;
+    z-index: 10;
+}
+
+.widget-button.configure {
+    right: 30px;
+}
+
+#toggle-boardboard, #toggle-buttons {
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    border: none;
+    background-color: #4CAF50;
+    color: white;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+}
+
+#toggle-boardboard:hover, #toggle-buttons:hover {
+    background-color: #45a049;
+}
+
+.boardboard-mode .widget-wrapper::before {
+    content: attr(data-order);
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    background: rgba(255, 255, 255, 0.8);
+    padding: 2px 5px;
+    border-radius: 3px;
+}
+
+.hidden-buttons .widget-button {
+    display: none;
+}
+
+/* New styles for the Save button */
+#save-boardboard {
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    border: none;
+    background-color: #4CAF50;
+    color: white;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+    display: none; /* Initially hidden */
+}
+
+#save-boardboard:hover {
+    background-color: #45a049;
+}
+
+.boardboard-mode #save-boardboard {
+    display: inline-block; /* Show when in boardboard mode */
+}
+
+/* New styles for the order input elements */
+.order-input {
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    width: 50px;
+    font-size: 1rem;
+    z-index: 10;
+}
