@@ -1,3 +1,6 @@
+import emojiList from './unicodeEmoji.js';
+
+
 function resizeHorizontally(widget, increase = true) {
     try {
         const currentWidth = parseInt(widget.style.width, 10);
@@ -50,22 +53,22 @@ function showResizeMenu(icon) {
 
             // Horizontal Increase Button
             const horizontalIncreaseButton = document.createElement('button');
-            horizontalIncreaseButton.innerHTML = '\u27A1'; // '⟶';  Right arrow
+            horizontalIncreaseButton.innerHTML = emojiList.arrowRight.unicode;
             horizontalIncreaseButton.addEventListener('click', () => resizeHorizontally(widget, true));
 
-            // Horizontal Decrease Button
+            // Horizontal Decrease Button   
             const horizontalDecreaseButton = document.createElement('button');
-            horizontalDecreaseButton.innerHTML = '\u2B05'; // '⟵';  Left arrow
+            horizontalDecreaseButton.innerHTML = emojiList.arrowLeft.unicode;
             horizontalDecreaseButton.addEventListener('click', () => resizeHorizontally(widget, false));
 
             // Vertical Increase Button
             const verticalIncreaseButton = document.createElement('button');
-            verticalIncreaseButton.innerHTML = '\u2B06'; // '⬆️';  Up arrow
+            verticalIncreaseButton.innerHTML = emojiList.arrowUp.unicode;
             verticalIncreaseButton.addEventListener('click', () => resizeVertically(widget, false));
 
             // Vertical Decrease Button
             const verticalDecreaseButton = document.createElement('button');
-            verticalDecreaseButton.innerHTML = '\u2B07'; // '⬇'; Down arrow
+            verticalDecreaseButton.innerHTML = emojiList.arrowDown.unicode;
             verticalDecreaseButton.addEventListener('click', () => resizeVertically(widget, true));
 
             menu.appendChild(verticalDecreaseButton);

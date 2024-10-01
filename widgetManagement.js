@@ -1,7 +1,6 @@
 import { saveWidgetState } from './localStorage.js';
 import { fetchData } from './fetchData.js';
-import { debounce } from './utils.js';
-import { resizeHorizontally, resizeVertically, enlarge, shrink, showResizeMenu, hideResizeMenu } from './resizeMenu.js';
+import { showResizeMenu, hideResizeMenu } from './resizeMenu.js';
 
 let services = [];
 
