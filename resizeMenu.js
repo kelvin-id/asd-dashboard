@@ -48,26 +48,30 @@ function showResizeMenu(icon) {
             menu = document.createElement('div');
             menu.className = 'resize-menu';
 
-            const horizontalButton = document.createElement('button');
-            horizontalButton.innerHTML = '↔️';
-            horizontalButton.addEventListener('click', () => resizeHorizontally(widget));
+            // Horizontal Increase Button
+            const horizontalIncreaseButton = document.createElement('button');
+            horizontalIncreaseButton.innerHTML = '\u27A1'; // '⟶';  Right arrow
+            horizontalIncreaseButton.addEventListener('click', () => resizeHorizontally(widget, true));
 
-            const verticalButton = document.createElement('button');
-            verticalButton.innerHTML = '↕️';
-            verticalButton.addEventListener('click', () => resizeVertically(widget));
+            // Horizontal Decrease Button
+            const horizontalDecreaseButton = document.createElement('button');
+            horizontalDecreaseButton.innerHTML = '\u2B05'; // '⟵';  Left arrow
+            horizontalDecreaseButton.addEventListener('click', () => resizeHorizontally(widget, false));
 
-            const enlargeButton = document.createElement('button');
-            enlargeButton.innerHTML = '⤢';
-            enlargeButton.addEventListener('click', () => enlarge(widget));
+            // Vertical Increase Button
+            const verticalIncreaseButton = document.createElement('button');
+            verticalIncreaseButton.innerHTML = '\u2B06'; // '⬆️';  Up arrow
+            verticalIncreaseButton.addEventListener('click', () => resizeVertically(widget, false));
 
-            const shrinkButton = document.createElement('button');
-            shrinkButton.innerHTML = '⤡';
-            shrinkButton.addEventListener('click', () => shrink(widget));
+            // Vertical Decrease Button
+            const verticalDecreaseButton = document.createElement('button');
+            verticalDecreaseButton.innerHTML = '\u2B07'; // '⬇'; Down arrow
+            verticalDecreaseButton.addEventListener('click', () => resizeVertically(widget, true));
 
-            menu.appendChild(horizontalButton);
-            menu.appendChild(verticalButton);
-            menu.appendChild(enlargeButton);
-            menu.appendChild(shrinkButton);
+            menu.appendChild(verticalDecreaseButton);
+            menu.appendChild(horizontalIncreaseButton);
+            menu.appendChild(verticalIncreaseButton);
+            menu.appendChild(horizontalDecreaseButton);
 
             widget.appendChild(menu);
 
