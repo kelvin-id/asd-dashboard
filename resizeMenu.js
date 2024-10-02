@@ -4,10 +4,14 @@ import { saveWidgetState } from './localStorage.js';
 
 function resizeHorizontally(widget, increase = true) {
     try {
-        const currentWidth = parseInt(widget.style.width, 10);
-        const newWidth = increase ? currentWidth + 20 : currentWidth - 20;
-        widget.style.width = `${newWidth}px`;
-        console.log(`Widget resized horizontally to ${newWidth}px`);
+        let currentSpan = parseInt(widget.dataset.columns) || 1;
+        let newSpan = increase ? currentSpan + 1 : currentSpan - 1;
+        if (newSpan < 1) newSpan = 1; // Ensure minimum span of 1
+        if (newSpan > 4) newSpan = 4; // Ensure maximum span (adjust as per your grid columns)
+        widget.dataset.columns = newSpan;
+        widget.style.gridColumn = `span ${newSpan}`;
+        console.log(`Widget resized horizontally to span ${newSpan} columns`);
+        saveWidgetState();
     } catch (error) {
         console.error('Error resizing widget horizontally:', error);
     }
@@ -15,14 +19,19 @@ function resizeHorizontally(widget, increase = true) {
 
 function resizeVertically(widget, increase = true) {
     try {
-        const currentHeight = parseInt(widget.style.height, 10);
-        const newHeight = increase ? currentHeight + 20 : currentHeight - 20;
-        widget.style.height = `${newHeight}px`;
-        console.log(`Widget resized vertically to ${newHeight}px`);
+        let currentSpan = parseInt(widget.dataset.rows) || 1;
+        let newSpan = increase ? currentSpan + 1 : currentSpan - 1;
+        if (newSpan < 1) newSpan = 1; // Ensure minimum span of 1
+        // Optionally, set a maximum row span if needed
+        widget.dataset.rows = newSpan;
+        widget.style.gridRow = `span ${newSpan}`;
+        console.log(`Widget resized vertically to span ${newSpan} rows`);
+        saveWidgetState();
     } catch (error) {
         console.error('Error resizing widget vertically:', error);
     }
 }
+
 
 function enlarge(widget) {
     try {
