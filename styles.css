@@ -301,7 +301,7 @@ header {
 }
 
 .widget-wrapper .fullscreen-btn {
-    top: 0;
-    right: 130px;
+    top: -2px;
+    right: 135px;
     font-size: 1.6rem;
 }
