@@ -1,0 +1,14 @@
+{
+  "name": "asd-dashboard",
+  "version": "0.1.0",
+  "description": "ASD Dashboard is a pure VanillaJS Progressive Web APP (PWA) designed for managing remote services through widgets displayed in iframes. The dashboard allows users to add, resize, reorder, and configure widgets dynamically, with all user preferences stored in localStorage to ensure persistence across sessions.",
+  "main": "serve.js",
+  "repository": "git@github.com:kelvin-id/asd-dashboard.git",
+  "author": "contact@kelvin.id",
+  "license": "MIT",
+  "scripts": {
+    "start": "node serve.js",
+    "build": "mkdir -p dist && cp *.js *.css *.html dist/",
+    "deploy": "npm run build"
+  }
+}
