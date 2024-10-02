@@ -5,11 +5,17 @@ import emojiList from './unicodeEmoji.js';
 
 let services = [];
 
-function createWidget(url, width = '300px', height = '200px') {
+function createWidget(url, gridColumnSpan = 1, gridRowSpan = 1) {
     console.log('Creating widget with URL:', url);
     const widgetWrapper = document.createElement('div');
     widgetWrapper.className = 'widget-wrapper';
     widgetWrapper.draggable = true;
+
+    // Set initial grid spans
+    widgetWrapper.style.gridColumn = `span ${gridColumnSpan}`;
+    widgetWrapper.style.gridRow = `span ${gridRowSpan}`;
+    widgetWrapper.dataset.columns = gridColumnSpan;
+    widgetWrapper.dataset.rows = gridRowSpan;
 
     const iframe = document.createElement('iframe');
     iframe.src = url;
@@ -58,25 +64,23 @@ function createWidget(url, width = '300px', height = '200px') {
     widgetWrapper.appendChild(configureButton);
     widgetWrapper.appendChild(resizeMenuIcon);
 
-    widgetWrapper.style.width = width;
-    widgetWrapper.style.height = height;
-    console.log('Widget created with size:', {
-        width: widgetWrapper.style.width,
-        height: widgetWrapper.style.height
+    console.log('Widget created with grid spans:', {
+        columns: gridColumnSpan,
+        rows: gridRowSpan
     });
 
     return widgetWrapper;
 }
-
-function addWidget(url, width = '300px', height = '200px') {
+//, width = '300px', height = '200px'
+function addWidget(url) {
     console.log('Adding widget with URL:', url);
     const widgetContainer = document.getElementById('widget-container');
     if (!widgetContainer) {
         console.error('Widget container not found');
         return;
     }
-
-    const widget = createWidget(url, width, height);
+    //, width, height
+    const widget = createWidget(url);
     widget.setAttribute('data-order', widgetContainer.children.length + 1);
     widgetContainer.appendChild(widget);
 
