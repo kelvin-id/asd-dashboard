@@ -16,7 +16,7 @@ function enterBoardboardMode() {
         }
     });
 
-    document.getElementById('save-boardboard').style.display = 'inline-block';
+    document.getElementById('save-widget-order').style.display = 'inline-block';
 }
 
 function exitBoardboardMode() {
@@ -52,7 +52,7 @@ function exitBoardboardMode() {
 
     console.log('Widgets after reordering:', widgets.map(widget => widget.style.order));
 
-    document.getElementById('save-boardboard').style.display = 'none';
+    document.getElementById('save-widget-order').style.display = 'none';
 }
 
 function toggleBoardboardMode() {

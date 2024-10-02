@@ -51,7 +51,7 @@ header {
 #controls button,
 #toggle-widget-order,
 #toggle-buttons,
-#save-boardboard {
+#save-widget-order {
     padding: 0.4rem 0.8rem; /* Reduced padding */
     font-size: 0.9rem;
     border: none;
@@ -65,7 +65,7 @@ header {
 #controls button:hover,
 #toggle-widget-order:hover,
 #toggle-buttons:hover,
-#save-boardboard:hover {
+#save-widget-order:hover {
     background-color: #45a049;
 }
 
@@ -142,7 +142,7 @@ header {
     opacity: 1;
 }
 
-#save-boardboard {
+#save-widget-order {
     padding: 0.5rem 1rem;
     font-size: 1rem;
     border: none;
@@ -154,11 +154,11 @@ header {
     display: none;
 }
 
-#save-boardboard:hover {
+#save-widget-order:hover {
     background-color: #45a049;
 }
 
-.boardboard-mode #save-boardboard {
+.boardboard-mode #save-widget-order {
     display: inline-block;
 }
 

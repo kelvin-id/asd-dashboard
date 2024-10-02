@@ -22,7 +22,7 @@ function initializeUIInteractions() {
 
     document.getElementById('toggle-widget-order').addEventListener('click', toggleBoardboardMode);
     document.getElementById('toggle-buttons').addEventListener('click', toggleButtons);
-    document.getElementById('save-boardboard').addEventListener('click', exitBoardboardMode);
+    document.getElementById('save-widget-order').addEventListener('click', exitBoardboardMode);
 }
 
 export { initializeUIInteractions };
