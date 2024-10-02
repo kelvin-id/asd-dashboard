@@ -47,25 +47,27 @@ function createWidget(url, gridColumnSpan = 1, gridRowSpan = 1) {
     });
 
     // Resize menu icons
+    const buttonDebounce = 100;
     
     // Debounced hide functions using your debounce utility
     const debouncedHideResizeMenu = debounce((icon) => {
         hideResizeMenu(icon);
-    }, 200);
+    }, buttonDebounce);
 
     const debouncedHideResizeMenuBlock = debounce((widgetWrapper) => {
         hideResizeMenuBlock(widgetWrapper);
-    }, 200);
+    }, buttonDebounce);
 
+    // resize-menu icon
     const resizeMenuIcon = document.createElement('button');
     resizeMenuIcon.innerHTML = emojiList.triangularRuler.unicode;
     resizeMenuIcon.classList.add('widget-button', 'widget-icon-resize');
-    resizeMenuIcon.addEventListener('mouseover', () => {
-        console.log('Mouse over resize menu icon');
+    resizeMenuIcon.addEventListener('mouseenter', () => {
+        console.log('Mouse enter resize menu icon');
         showResizeMenu(resizeMenuIcon);
     });
-    resizeMenuIcon.addEventListener('mouseout', (event) => {
-        console.log('Mouse out resize menu icon');
+    resizeMenuIcon.addEventListener('mouseleave', (event) => {
+        console.log('Mouse left resize menu icon');
         if (!event.relatedTarget || !event.relatedTarget.classList.contains('resize-menu')) {
             debouncedHideResizeMenu(resizeMenuIcon);
         }
@@ -75,12 +77,10 @@ function createWidget(url, gridColumnSpan = 1, gridRowSpan = 1) {
     const resizeMenuBlockIcon = document.createElement('button');
     resizeMenuBlockIcon.innerHTML = emojiList.puzzle.unicode; // Use the puzzle piece emoji
     resizeMenuBlockIcon.classList.add('widget-button', 'widget-icon-resize-block');
-
-    resizeMenuBlockIcon.addEventListener('mouseover', () => {
+    resizeMenuBlockIcon.addEventListener('mouseenter', () => {
         showResizeMenuBlock(resizeMenuBlockIcon, widgetWrapper);
     });
-    
-    resizeMenuBlockIcon.addEventListener('mouseout', (event) => {
+    resizeMenuBlockIcon.addEventListener('mouseleave', (event) => {
         // Check if the mouse moved to an element outside of the resize menu block
         if (!event.relatedTarget || !event.relatedTarget.closest('.resize-menu-block')) {
             debouncedHideResizeMenuBlock(widgetWrapper);

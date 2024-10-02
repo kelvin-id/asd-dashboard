@@ -142,6 +142,10 @@ header {
 .hide-widget-menu .widget-button {
     display: none;
 }
+.widget-menu {
+    padding: 10px;      /* Optional: Add padding for better layout */
+    z-index: 10;        /* Ensure it appears on top */
+}
 
 .widget-button {
     position: absolute;

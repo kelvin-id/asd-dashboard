@@ -114,7 +114,7 @@ function showResizeMenu(icon) {
 
 function hideResizeMenu(icon) {
     try {
-        const widget = icon.parentElement;
+        const widget = icon.closest('.widget-wrapper')
         const menu = widget.querySelector('.resize-menu');
         if (menu) {
             menu.style.display = 'none';
