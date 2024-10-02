@@ -54,10 +54,13 @@ function shrink(widget) {
     }
 }
 
+
 function showResizeMenu(icon) {
     try {
-        const widget = icon.parentElement;
+        // Traverse the DOM to get the widgetWrapper, not the widgetMenu (icon.parentElement)
+        const widget = icon.closest('.widget-wrapper'); //icon.parentElement;
         let menu = widget.querySelector('.resize-menu');
+
         if (!menu) {
             menu = document.createElement('div');
             menu.className = 'resize-menu';

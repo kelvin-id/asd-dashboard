@@ -87,11 +87,19 @@ function createWidget(url, gridColumnSpan = 1, gridRowSpan = 1) {
         }
     });
 
+    // Create widget menu wrapper
+    const widgetMenu = document.createElement('div');
+    widgetMenu.classList.add('widget-menu');
+
+    // Append buttons to widget menu
+    widgetMenu.appendChild(removeButton);
+    widgetMenu.appendChild(configureButton);
+    widgetMenu.appendChild(resizeMenuIcon);
+    widgetMenu.appendChild(resizeMenuBlockIcon);
+
+    // Append widget menu and iframe to widget wrapper
     widgetWrapper.appendChild(iframe);
-    widgetWrapper.appendChild(removeButton);
-    widgetWrapper.appendChild(configureButton);
-    widgetWrapper.appendChild(resizeMenuIcon);
-    widgetWrapper.appendChild(resizeMenuBlockIcon);
+    widgetWrapper.appendChild(widgetMenu);
 
     console.log('Widget created with grid spans:', {
         columns: gridColumnSpan,

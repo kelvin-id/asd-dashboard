@@ -139,7 +139,7 @@ header {
     border-radius: 3px;
 }
 
-.hidden-buttons .widget-button {
+.hide-widget-menu .widget-button {
     display: none;
 }
 

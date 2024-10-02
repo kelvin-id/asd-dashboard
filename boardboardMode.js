@@ -68,7 +68,7 @@ function toggleBoardboardMode() {
 
 function toggleButtons() {
     const widgetContainer = document.getElementById('widget-container');
-    widgetContainer.classList.toggle('hidden-buttons');
+    widgetContainer.classList.toggle('hide-widget-menu');
 }
 
 export { enterBoardboardMode, exitBoardboardMode, toggleBoardboardMode, toggleButtons };
