@@ -50,7 +50,7 @@ header {
 
 #controls button,
 #toggle-widget-order,
-#toggle-buttons,
+#toggle-widget-buttons,
 #save-widget-order {
     padding: 0.4rem 0.8rem; /* Reduced padding */
     font-size: 0.9rem;
@@ -64,7 +64,7 @@ header {
 
 #controls button:hover,
 #toggle-widget-order:hover,
-#toggle-buttons:hover,
+#toggle-widget-buttons:hover,
 #save-widget-order:hover {
     background-color: #45a049;
 }
@@ -96,7 +96,7 @@ header {
     right: 30px;
 }
 
-#toggle-widget-order, #toggle-buttons {
+#toggle-widget-order, #toggle-widget-buttons {
     padding: 0.5rem 1rem;
     font-size: 1rem;
     border: none;
@@ -107,7 +107,7 @@ header {
     transition: background-color 0.3s ease;
 }
 
-#toggle-widget-order:hover, #toggle-buttons:hover {
+#toggle-widget-order:hover, #toggle-widget-buttons:hover {
     background-color: #45a049;
 }
 

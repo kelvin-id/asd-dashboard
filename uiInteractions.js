@@ -15,13 +15,13 @@ function initializeUIInteractions() {
         }
     });
 
-    document.getElementById('order-selector').addEventListener('change', () => {
-        const orderCriteria = document.getElementById('order-selector').value;
+    document.getElementById('widget-order-selector').addEventListener('change', () => {
+        const orderCriteria = document.getElementById('widget-order-selector').value;
         reorderWidgets(orderCriteria);
     });
 
     document.getElementById('toggle-widget-order').addEventListener('click', toggleBoardboardMode);
-    document.getElementById('toggle-buttons').addEventListener('click', toggleButtons);
+    document.getElementById('toggle-widget-buttons').addEventListener('click', toggleButtons);
     document.getElementById('save-widget-order').addEventListener('click', exitBoardboardMode);
 }
 
