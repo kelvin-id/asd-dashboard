@@ -7,7 +7,7 @@ function enterBoardboardMode() {
         if (!orderInput) {
             orderInput = document.createElement('input');
             orderInput.type = 'number';
-            orderInput.value = widget.style.order || index + 1;
+            orderInput.value = widget.dataset.order //|| index + 1;
             orderInput.className = 'order-input';
             widget.appendChild(orderInput);
             console.log(`Added order input to widget ID: ${widget.getAttribute('data-order')}, Initial Order: ${orderInput.value}`);
@@ -21,7 +21,7 @@ function enterBoardboardMode() {
 
 function exitBoardboardMode() {
     const widgets = Array.from(document.querySelectorAll('.widget-wrapper'));
-    console.log('Widgets before reordering:', widgets.map(widget => widget.style.order));
+    console.log('Widgets before reordering:', widgets.map(widget => widget.dataset.order));
 
     const orderMap = new Map();
     let maxOrder = widgets.length;
@@ -40,8 +40,8 @@ function exitBoardboardMode() {
             }
 
             orderMap.set(orderValue, widget);
+            widget.dataset.order = orderValue;
             widget.style.order = orderValue;
-            widget.setAttribute('data-order', orderValue);
             console.log(`Setting Widget ID: ${widget.getAttribute('data-order')} to Order: ${orderValue}`);
 
             orderInput.style.display = 'none';
@@ -50,7 +50,7 @@ function exitBoardboardMode() {
 
     saveWidgetState();
 
-    console.log('Widgets after reordering:', widgets.map(widget => widget.style.order));
+    console.log('Widgets after reordering:', widgets.map(widget => widget.dataset.order));
 
     document.getElementById('save-widget-order').style.display = 'none';
 }
