@@ -23,9 +23,16 @@ header {
     grid-auto-rows: minmax(100px, auto); /* Rows adjust based on content */
     gap: 0.5rem;
     overflow: auto;
-    padding-bottom: 3rem;
     width: 100%;
     box-sizing: border-box;
+    grid-template-rows: repeat(3, 200px);
+}
+
+/* Ultra-wide screen adjustments */
+@media (min-width: 1600px) {
+    #widget-container {
+        grid-template-columns: repeat(6, 1fr); /* 6 equal columns */
+    }
 }
 
 #controls {
