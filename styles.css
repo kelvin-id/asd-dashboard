@@ -103,16 +103,6 @@ header {
     transform: scale(0.95);
 }
 
-.widget-button, .drag-handle {
-    position: absolute;
-    top: 5px;
-    background: none;
-    border: none;
-    cursor: pointer;
-    font-size: 1.5rem;
-    z-index: 10;
-}
-
 .widget-button.widget-icon-configure {
     right: 30px;
 }
@@ -275,23 +265,17 @@ header {
     background-color: #f0f0f0;
 }
 
-.drag-handle {
+.widget-icon-drag {
     cursor: grab;
     right: 115px;
-    font-size: 1.5rem;
-    opacity: 0.8;
-    background-color: rgba(255, 255, 255, 0.8);
-    padding: 5px;
-    border-radius: 4px;
-    z-index: 1000;
     transition: opacity 0.3s ease;
 }
 
-.drag-handle:hover {
+.widget-icon-drag:hover {
     opacity: 1;
 }
 
-.drag-handle:active {
+.widget-icon-drag:active {
     cursor: grabbing;
 
 .widget-wrapper.drag-over {

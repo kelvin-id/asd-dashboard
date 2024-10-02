@@ -1,5 +1,5 @@
 import { saveWidgetState, loadWidgetState } from './localStorage.js';
-// import { initializeUIInteractions } from './uiInteractions.js';
+import { initializeUIInteractions } from './uiInteractions.js';
 import { debounce } from './utils.js';
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -24,7 +24,7 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error('Error fetching services:', error);
         });
 
-    // initializeUIInteractions(); // Ensure this is called only once
+    initializeUIInteractions(); // Ensure this is called only once
     loadWidgetState();
 
     // Add event listener for window resize

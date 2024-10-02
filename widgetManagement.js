@@ -96,7 +96,8 @@ function createWidget(url, gridColumnSpan = 1, gridRowSpan = 1) {
 
     // Add drag handle
     const dragHandle = document.createElement('span');
-    dragHandle.classList.add('drag-handle');
+    dragHandle.classList.add('widget-icon-drag');
+    dragHandle.classList.add('widget-button');
     dragHandle.innerHTML = emojiList.pinching.icon;
     dragHandle.draggable = true;
     widgetMenu.appendChild(dragHandle);
