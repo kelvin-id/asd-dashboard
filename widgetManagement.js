@@ -1,6 +1,7 @@
 import { saveWidgetState } from './localStorage.js';
 import { fetchData } from './fetchData.js';
 import { showResizeMenu, hideResizeMenu } from './resizeMenu.js';
+import emojiList from './unicodeEmoji.js';
 
 let services = [];
 
@@ -25,21 +26,21 @@ function createWidget(url, width = '300px', height = '200px') {
     };
 
     const removeButton = document.createElement('button');
-    removeButton.innerHTML = '&#x274C;';
+    removeButton.innerHTML = emojiList.cross.unicode;
     removeButton.classList.add('widget-button');
     removeButton.addEventListener('click', () => {
         removeWidget(widgetWrapper);
     });
 
     const configureButton = document.createElement('button');
-    configureButton.innerHTML = '&#x1F527;';
+    configureButton.innerHTML = emojiList.wrench.unicode;
     configureButton.classList.add('widget-button', 'configure');
     configureButton.addEventListener('click', () => {
         configureWidget(iframe);
     });
 
     const resizeMenuIcon = document.createElement('button');
-    resizeMenuIcon.innerHTML = '&#128269;';
+    resizeMenuIcon.innerHTML = emojiList.triangularRuler.unicode;
     resizeMenuIcon.classList.add('widget-button', 'resize-menu-icon');
     resizeMenuIcon.addEventListener('mouseover', () => {
         console.log('Mouse over resize menu icon');
