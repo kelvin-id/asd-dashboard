@@ -10,7 +10,6 @@ function createWidget(url, gridColumnSpan = 1, gridRowSpan = 1) {
     console.log('Creating widget with URL:', url);
     const widgetWrapper = document.createElement('div');
     widgetWrapper.className = 'widget-wrapper';
-    widgetWrapper.draggable = true;
 
     // Set initial grid spans
     widgetWrapper.style.gridColumn = `span ${gridColumnSpan}`;
@@ -32,6 +31,11 @@ function createWidget(url, gridColumnSpan = 1, gridRowSpan = 1) {
         console.error('Error loading iframe:', url);
     };
 
+    // Create widget menu wrapper
+    const widgetMenu = document.createElement('div');
+    widgetMenu.classList.add('widget-menu');
+
+    // Add existing buttons (remove, configure, resize, etc.) to widgetMenu...
     const removeButton = document.createElement('button');
     removeButton.innerHTML = emojiList.cross.unicode;
     removeButton.classList.add('widget-button', 'remove');
@@ -48,8 +52,8 @@ function createWidget(url, gridColumnSpan = 1, gridRowSpan = 1) {
 
     // Resize menu icons
     const buttonDebounce = 100;
-    
-    // Debounced hide functions using your debounce utility
+
+    // Debounced hide functions using debounce utility
     const debouncedHideResizeMenu = debounce((icon) => {
         hideResizeMenu(icon);
     }, buttonDebounce);
@@ -75,7 +79,7 @@ function createWidget(url, gridColumnSpan = 1, gridRowSpan = 1) {
 
     // resize-menu-block icon
     const resizeMenuBlockIcon = document.createElement('button');
-    resizeMenuBlockIcon.innerHTML = emojiList.puzzle.unicode; // Use the puzzle piece emoji
+    resizeMenuBlockIcon.innerHTML = emojiList.puzzle.unicode;
     resizeMenuBlockIcon.classList.add('widget-button', 'widget-icon-resize-block');
     resizeMenuBlockIcon.addEventListener('mouseenter', () => {
         showResizeMenuBlock(resizeMenuBlockIcon, widgetWrapper);
@@ -84,16 +88,59 @@ function createWidget(url, gridColumnSpan = 1, gridRowSpan = 1) {
     resizeMenuBlockIcon.addEventListener('mouseleave', (event) => {
         console.log('Mouse left resize menu block icon');
         const related = event.relatedTarget;
-        // Check if the mouse moved to an element outside of the resize menu block
-        // We catch leaving the .resize-menu-block in resizeMenu.js
         if (!related || !related.closest('.resize-menu-block')) {
             debouncedHideResizeMenuBlock(widgetWrapper);
         }
     });
 
-    // Create widget menu wrapper
-    const widgetMenu = document.createElement('div');
-    widgetMenu.classList.add('widget-menu');
+    // Add drag handle
+    const dragHandle = document.createElement('span');
+    dragHandle.classList.add('drag-handle');
+    dragHandle.innerHTML = emojiList.pinching.icon;
+    dragHandle.draggable = true;
+    widgetMenu.appendChild(dragHandle);
+
+    // Attach drag event listeners to the drag handle
+    dragHandle.addEventListener('dragstart', (e) => {
+        console.log('Drag start event triggered');
+        e.dataTransfer.setData('text/plain', widgetWrapper.getAttribute('data-order'));
+        e.dataTransfer.effectAllowed = 'move';
+
+        // Set the drag image to be the entire widget
+        e.dataTransfer.setDragImage(widgetWrapper, 0, 0);
+
+        widgetWrapper.classList.add('dragging');
+        handleDragStart(e);
+    });
+
+    dragHandle.addEventListener('dragend', (e) => {
+        console.log('Drag end event triggered');
+        widgetWrapper.classList.remove('dragging');
+        const allWidgets = document.querySelectorAll('.widget-wrapper');
+        allWidgets.forEach(widget => widget.classList.remove('drag-over'));
+    });
+
+    console.log('Drag start event listener attached to drag handle');
+
+    // Attach drop and dragover event listeners to the widget wrapper
+    widgetWrapper.addEventListener('dragover', (e) => {
+        console.log('Drag over event triggered on widget wrapper');
+        e.preventDefault(); // Necessary to allow dropping
+        handleDragOver(e);
+    });
+
+    widgetWrapper.addEventListener('drop', (e) => {
+        console.log('Drop event triggered on widget wrapper');
+        e.preventDefault();
+        handleDrop(e);
+    });
+
+    widgetWrapper.addEventListener('dragleave', (e) => {
+        console.log('Drag leave event triggered');
+        handleDragLeave(e);
+    });
+
+    console.log('Drag over, drop, and drag leave event listeners attached to widget wrapper');
 
     // Append buttons to widget menu
     widgetMenu.appendChild(removeButton);
@@ -113,7 +160,6 @@ function createWidget(url, gridColumnSpan = 1, gridRowSpan = 1) {
     return widgetWrapper;
 }
 
-
 function addWidget(url) {
     console.log('Adding widget with URL:', url);
     const widgetContainer = document.getElementById('widget-container');
@@ -121,9 +167,8 @@ function addWidget(url) {
         console.error('Widget container not found');
         return;
     }
-    //, width, height
     const widget = createWidget(url);
-    widget.setAttribute('data-order', widgetContainer.children.length + 1);
+    widget.setAttribute('data-order', widgetContainer.children.length);
     widgetContainer.appendChild(widget);
 
     console.log('Widget appended to container:', widget);
@@ -167,49 +212,98 @@ function displayDataInIframe(iframe, data) {
     }
 }
 
-function reorderWidgets(criteria) {
-    const widgetContainer = document.getElementById('widget-container');
-    const widgets = Array.from(widgetContainer.children);
-
-    widgets.sort((a, b) => {
-        const iframeA = a.querySelector('iframe').src;
-        const iframeB = b.querySelector('iframe').src;
-        if (criteria === 'name') {
-            const nameA = services.find(service => service.url === iframeA).name;
-            const nameB = services.find(service => service.url === iframeB).name;
-            return nameA.localeCompare(nameB);
-        } else if (criteria === 'url') {
-            return iframeA.localeCompare(iframeB);
-        }
-    });
-
-    widgetContainer.innerHTML = '';
-    widgets.forEach((widget, index) => {
-        widget.setAttribute('data-order', index + 1);
-        widget.style.order = index + 1;
-        widgetContainer.appendChild(widget);
-    });
-
-    saveWidgetState();
-}
-
 function updateWidgetOrders() {
     const widgetContainer = document.getElementById('widget-container');
     const widgets = Array.from(widgetContainer.children);
     widgets.forEach((widget, index) => {
-        widget.setAttribute('data-order', index + 1);
-        widget.style.order = index + 1;
+        widget.setAttribute('data-order', index);
+        widget.style.order = index;
+        console.log('Updated widget order:', {
+            widget: widget,
+            order: index
+        });
     });
+    saveWidgetState();
 }
 
-// Ensure to export necessary functions
-export {
-    services,
-    createWidget,
-    addWidget,
-    removeWidget,
-    configureWidget,
-    displayDataInIframe,
-    reorderWidgets,
-    updateWidgetOrders
-};
+function handleDragStart(e) {
+    const widgetWrapper = e.target.closest('.widget-wrapper');
+    const widgetOrder = widgetWrapper.getAttribute('data-order');
+    console.log('Drag started for widget with order:', widgetOrder);
+    e.dataTransfer.setData('text/plain', widgetOrder);
+    e.dataTransfer.effectAllowed = 'move';
+    console.log('Data transfer set with widget order:', widgetOrder);
+}
+
+function handleDrop(e) {
+    e.preventDefault();
+    console.log('Drop event target:', e.target);
+    console.log('Drop event currentTarget:', e.currentTarget);
+    const draggedOrder = e.dataTransfer.getData('text/plain');
+    const targetWidgetWrapper = e.currentTarget;
+    console.log('Target widget wrapper:', targetWidgetWrapper);
+    const targetOrder = targetWidgetWrapper.getAttribute('data-order');
+
+    console.log(`Drop event: draggedOrder=${draggedOrder}, targetOrder=${targetOrder}`);
+
+    if (draggedOrder === null || targetOrder === null) {
+        console.error('Invalid drag or drop target');
+        return;
+    }
+
+    const widgetContainer = document.getElementById('widget-container');
+    const widgets = Array.from(widgetContainer.children);
+
+    const draggedWidget = widgets.find(widget => widget.getAttribute('data-order') === draggedOrder);
+    const targetWidget = widgets.find(widget => widget.getAttribute('data-order') === targetOrder);
+
+    if (!draggedWidget || !targetWidget) {
+        console.error('Invalid widget elements for dragging or dropping');
+        return;
+    }
+
+    console.log('Before swap:', {
+        draggedWidgetOrder: draggedWidget.getAttribute('data-order'),
+        targetWidgetOrder: targetWidget.getAttribute('data-order')
+    });
+
+    // Swap orders
+    draggedWidget.setAttribute('data-order', targetOrder);
+    targetWidget.setAttribute('data-order', draggedOrder);
+
+    console.log('After swap:', {
+        draggedWidgetOrder: draggedWidget.getAttribute('data-order'),
+        targetWidgetOrder: targetWidget.getAttribute('data-order')
+    });
+
+    updateWidgetOrders();
+    saveWidgetState();
+
+    // Re-render widgets
+    widgetContainer.innerHTML = '';
+    widgets.sort((a, b) => parseInt(a.getAttribute('data-order')) - parseInt(b.getAttribute('data-order')));
+    widgets.forEach(widget => widgetContainer.appendChild(widget));
+
+    // Remove drag-over class from all widgets
+    widgets.forEach(widget => widget.classList.remove('drag-over'));
+}
+
+function handleDragOver(e) {
+    e.preventDefault();
+    console.log('Drag over event target:', e.target);
+    console.log('Drag over event currentTarget:', e.currentTarget);
+    const dragOverTarget = e.currentTarget;
+    console.log('Drag over target widget wrapper:', dragOverTarget);
+    if (dragOverTarget) {
+        dragOverTarget.classList.add('drag-over');
+    }
+}
+
+function handleDragLeave(e) {
+    const dragLeaveTarget = e.currentTarget;
+    if (dragLeaveTarget) {
+        dragLeaveTarget.classList.remove('drag-over');
+    }
+}
+
+export { addWidget, removeWidget, updateWidgetOrders, createWidget, handleDragStart, handleDrop, handleDragOver, handleDragLeave };

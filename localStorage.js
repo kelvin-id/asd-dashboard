@@ -46,5 +46,4 @@ function loadWidgetState() {
     }
 }
 
-
 export { saveWidgetState, loadWidgetState };
