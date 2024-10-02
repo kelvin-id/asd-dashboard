@@ -1,7 +1,8 @@
 import { saveWidgetState } from './localStorage.js';
 import { fetchData } from './fetchData.js';
-import { showResizeMenu, hideResizeMenu, showResizeMenuBlock } from './resizeMenu.js';
+import { showResizeMenu, hideResizeMenu, showResizeMenuBlock, hideResizeMenuBlock } from './resizeMenu.js';
 import emojiList from './unicodeEmoji.js';
+import { debounce } from './utils.js';
 
 let services = [];
 
@@ -45,6 +46,17 @@ function createWidget(url, gridColumnSpan = 1, gridRowSpan = 1) {
         configureWidget(iframe);
     });
 
+    // Resize menu icons
+    
+    // Debounced hide functions using your debounce utility
+    const debouncedHideResizeMenu = debounce((icon) => {
+        hideResizeMenu(icon);
+    }, 200);
+
+    const debouncedHideResizeMenuBlock = debounce((widgetWrapper) => {
+        hideResizeMenuBlock(widgetWrapper);
+    }, 200);
+
     const resizeMenuIcon = document.createElement('button');
     resizeMenuIcon.innerHTML = emojiList.triangularRuler.unicode;
     resizeMenuIcon.classList.add('widget-button', 'widget-icon-resize');
@@ -55,7 +67,7 @@ function createWidget(url, gridColumnSpan = 1, gridRowSpan = 1) {
     resizeMenuIcon.addEventListener('mouseout', (event) => {
         console.log('Mouse out resize menu icon');
         if (!event.relatedTarget || !event.relatedTarget.classList.contains('resize-menu')) {
-            hideResizeMenu(resizeMenuIcon);
+            debouncedHideResizeMenu(resizeMenuIcon);
         }
     });
 
@@ -63,21 +75,17 @@ function createWidget(url, gridColumnSpan = 1, gridRowSpan = 1) {
     const resizeMenuBlockIcon = document.createElement('button');
     resizeMenuBlockIcon.innerHTML = emojiList.puzzle.unicode; // Use the puzzle piece emoji
     resizeMenuBlockIcon.classList.add('widget-button', 'widget-icon-resize-block');
-    resizeMenuBlockIcon.addEventListener('click', (event) => {
-        event.stopPropagation();
+
+    resizeMenuBlockIcon.addEventListener('mouseover', () => {
         showResizeMenuBlock(resizeMenuBlockIcon, widgetWrapper);
     });
-
-    // resizeMenuBlockIcon.addEventListener('mouseover', () => {
-    //     console.log('Mouse over resize menu icon');
-    //     showResizeMenu(resizeMenuBlockIcon);
-    // });
-    // resizeMenuBlockIcon.addEventListener('mouseout', (event) => {
-    //     console.log('Mouse out resize menu icon');
-    //     if (!event.relatedTarget || !event.relatedTarget.classList.contains('resize-menu-block')) {
-    //         hideResizeMenu(resizeMenuBlockIcon);
-    //     }
-    // });
+    
+    resizeMenuBlockIcon.addEventListener('mouseout', (event) => {
+        // Check if the mouse moved to an element outside of the resize menu block
+        if (!event.relatedTarget || !event.relatedTarget.closest('.resize-menu-block')) {
+            debouncedHideResizeMenuBlock(widgetWrapper);
+        }
+    });
 
     widgetWrapper.appendChild(iframe);
     widgetWrapper.appendChild(removeButton);
@@ -92,7 +100,8 @@ function createWidget(url, gridColumnSpan = 1, gridRowSpan = 1) {
 
     return widgetWrapper;
 }
-//, width = '300px', height = '200px'
+
+
 function addWidget(url) {
     console.log('Adding widget with URL:', url);
     const widgetContainer = document.getElementById('widget-container');

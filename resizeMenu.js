@@ -1,13 +1,14 @@
 import emojiList from './unicodeEmoji.js';
 import { saveWidgetState } from './localStorage.js';
 
+const MAX_SPAN = 4;
 
 function resizeHorizontally(widget, increase = true) {
     try {
         let currentSpan = parseInt(widget.dataset.columns) || 1;
         let newSpan = increase ? currentSpan + 1 : currentSpan - 1;
         if (newSpan < 1) newSpan = 1; // Ensure minimum span of 1
-        if (newSpan > 4) newSpan = 4; // Ensure maximum span (adjust as per your grid columns)
+        if (newSpan > MAX_SPAN) newSpan = MAX_SPAN; // Ensure maximum span (adjust as per your grid columns)
         widget.dataset.columns = newSpan;
         widget.style.gridColumn = `span ${newSpan}`;
         console.log(`Widget resized horizontally to span ${newSpan} columns`);
@@ -160,6 +161,23 @@ function showResizeMenuBlock(icon, widgetWrapper) {
     widgetWrapper.appendChild(menu);
 }
 
+function hideResizeMenuBlock(widgetWrapper) {
+    try {
+        // Look for the existing resize menu block
+        const menu = widgetWrapper.querySelector('.resize-menu-block');
+        if (menu) {
+            // Remove or hide the resize menu block
+            menu.remove();
+            console.log('Resize menu block hidden');
+        } else {
+            console.log('No resize menu block to hide');
+        }
+    } catch (error) {
+        console.error('Error hiding resize menu block:', error);
+    }
+}
+
+
 function adjustWidgetSize(widgetWrapper, columns, rows) {
     widgetWrapper.dataset.columns = columns;
     widgetWrapper.dataset.rows = rows;
@@ -169,4 +187,4 @@ function adjustWidgetSize(widgetWrapper, columns, rows) {
 }
 
 
-export { resizeHorizontally, resizeVertically, enlarge, shrink, showResizeMenu, hideResizeMenu, showResizeMenuBlock, adjustWidgetSize };
+export { resizeHorizontally, resizeVertically, enlarge, shrink, showResizeMenu, hideResizeMenu, showResizeMenuBlock, hideResizeMenuBlock, adjustWidgetSize };

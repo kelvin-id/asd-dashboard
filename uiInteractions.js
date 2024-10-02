@@ -1,5 +1,4 @@
 import { addWidget, reorderWidgets } from './widgetManagement.js';
-import { saveWidgetState } from './localStorage.js';
 import { toggleBoardboardMode, toggleButtons, exitBoardboardMode } from './boardboardMode.js';
 
 function initializeUIInteractions() {
