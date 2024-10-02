@@ -161,10 +161,17 @@ function showResizeMenuBlock(icon, widgetWrapper) {
     menu.style.right = '5px';
     menu.style.zIndex = '20';
 
+    // Hide the menu when the mouse leaves the menu block
+    menu.addEventListener('mouseleave', (event) => {
+        console.log('Mouse left resize-menu-block');
+        hideResizeMenuBlock(widgetWrapper);
+    });
+
     widgetWrapper.appendChild(menu);
 }
 
 function hideResizeMenuBlock(widgetWrapper) {
+    console.log('Removing resize menu block');
     try {
         // Look for the existing resize menu block
         const menu = widgetWrapper.querySelector('.resize-menu-block');

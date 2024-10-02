@@ -80,9 +80,13 @@ function createWidget(url, gridColumnSpan = 1, gridRowSpan = 1) {
     resizeMenuBlockIcon.addEventListener('mouseenter', () => {
         showResizeMenuBlock(resizeMenuBlockIcon, widgetWrapper);
     });
+
     resizeMenuBlockIcon.addEventListener('mouseleave', (event) => {
+        console.log('Mouse left resize menu block icon');
+        const related = event.relatedTarget;
         // Check if the mouse moved to an element outside of the resize menu block
-        if (!event.relatedTarget || !event.relatedTarget.closest('.resize-menu-block')) {
+        // We catch leaving the .resize-menu-block in resizeMenu.js
+        if (!related || !related.closest('.resize-menu-block')) {
             debouncedHideResizeMenuBlock(widgetWrapper);
         }
     });
