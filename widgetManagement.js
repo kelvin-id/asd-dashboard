@@ -10,6 +10,7 @@ function createWidget(url, gridColumnSpan = 1, gridRowSpan = 1) {
     console.log('Creating widget with URL:', url);
     const widgetWrapper = document.createElement('div');
     widgetWrapper.className = 'widget-wrapper';
+    widgetWrapper.style.position = 'relative'; // Ensure widgetWrapper has position: relative
 
     // Set initial grid spans
     widgetWrapper.style.gridColumn = `span ${gridColumnSpan}`;
@@ -35,7 +36,7 @@ function createWidget(url, gridColumnSpan = 1, gridRowSpan = 1) {
     const widgetMenu = document.createElement('div');
     widgetMenu.classList.add('widget-menu');
 
-    // Add existing buttons (remove, configure, resize, etc.) to widgetMenu...
+    // Add existing buttons (remove, configure, resize, etc.) to widgetMenu
     const removeButton = document.createElement('button');
     removeButton.innerHTML = emojiList.cross.unicode;
     removeButton.classList.add('widget-button', 'remove');
@@ -100,6 +101,16 @@ function createWidget(url, gridColumnSpan = 1, gridRowSpan = 1) {
     dragHandle.draggable = true;
     widgetMenu.appendChild(dragHandle);
 
+    // Append buttons to widget menu
+    widgetMenu.appendChild(removeButton);
+    widgetMenu.appendChild(configureButton);
+    widgetMenu.appendChild(resizeMenuIcon);
+    widgetMenu.appendChild(resizeMenuBlockIcon);
+
+    // Append iframe and widget menu to widget wrapper
+    widgetWrapper.appendChild(iframe);
+    widgetWrapper.appendChild(widgetMenu);
+
     // Attach drag event listeners to the drag handle
     dragHandle.addEventListener('dragstart', (e) => {
         console.log('Drag start event triggered');
@@ -110,47 +121,16 @@ function createWidget(url, gridColumnSpan = 1, gridRowSpan = 1) {
         e.dataTransfer.setDragImage(widgetWrapper, 0, 0);
 
         widgetWrapper.classList.add('dragging');
-        handleDragStart(e);
+        handleDragStart(e, widgetWrapper);
     });
 
     dragHandle.addEventListener('dragend', (e) => {
         console.log('Drag end event triggered');
         widgetWrapper.classList.remove('dragging');
-        const allWidgets = document.querySelectorAll('.widget-wrapper');
-        allWidgets.forEach(widget => widget.classList.remove('drag-over'));
+        handleDragEnd(e);
     });
 
     console.log('Drag start event listener attached to drag handle');
-
-    // Attach drop and dragover event listeners to the widget wrapper
-    widgetWrapper.addEventListener('dragover', (e) => {
-        console.log('Drag over event triggered on widget wrapper');
-        e.preventDefault(); // Necessary to allow dropping
-        handleDragOver(e);
-    });
-
-    widgetWrapper.addEventListener('drop', (e) => {
-        console.log('Drop event triggered on widget wrapper');
-        e.preventDefault();
-        handleDrop(e);
-    });
-
-    widgetWrapper.addEventListener('dragleave', (e) => {
-        console.log('Drag leave event triggered');
-        handleDragLeave(e);
-    });
-
-    console.log('Drag over, drop, and drag leave event listeners attached to widget wrapper');
-
-    // Append buttons to widget menu
-    widgetMenu.appendChild(removeButton);
-    widgetMenu.appendChild(configureButton);
-    widgetMenu.appendChild(resizeMenuIcon);
-    widgetMenu.appendChild(resizeMenuBlockIcon);
-
-    // Append widget menu and iframe to widget wrapper
-    widgetWrapper.appendChild(iframe);
-    widgetWrapper.appendChild(widgetMenu);
 
     console.log('Widget created with grid spans:', {
         columns: gridColumnSpan,
@@ -215,6 +195,8 @@ function displayDataInIframe(iframe, data) {
 function updateWidgetOrders() {
     const widgetContainer = document.getElementById('widget-container');
     const widgets = Array.from(widgetContainer.children);
+
+    // Widgets are already in the correct order in the DOM, so update CSS 'order' and 'data-order' accordingly
     widgets.forEach((widget, index) => {
         widget.setAttribute('data-order', index);
         widget.style.order = index;
@@ -223,25 +205,82 @@ function updateWidgetOrders() {
             order: index
         });
     });
+
     saveWidgetState();
 }
 
-function handleDragStart(e) {
-    const widgetWrapper = e.target.closest('.widget-wrapper');
-    const widgetOrder = widgetWrapper.getAttribute('data-order');
+function handleDragStart(e, draggedWidgetWrapper) {
+    const widgetOrder = draggedWidgetWrapper.getAttribute('data-order');
     console.log('Drag started for widget with order:', widgetOrder);
     e.dataTransfer.setData('text/plain', widgetOrder);
     e.dataTransfer.effectAllowed = 'move';
     console.log('Data transfer set with widget order:', widgetOrder);
+
+    // Add dragOverlays to other widgets
+    const widgetContainer = document.getElementById('widget-container');
+    const widgets = Array.from(widgetContainer.children);
+    widgets.forEach(widget => {
+        if (widget !== draggedWidgetWrapper) {
+            addDragOverlay(widget);
+        }
+    });
 }
 
-function handleDrop(e) {
+function handleDragEnd(e) {
+    // Remove dragOverlays from all widgets
+    const widgetContainer = document.getElementById('widget-container');
+    const widgets = Array.from(widgetContainer.children);
+    widgets.forEach(widget => {
+        removeDragOverlay(widget);
+        widget.classList.remove('drag-over');
+    });
+}
+
+function addDragOverlay(widgetWrapper) {
+    // Create the drag overlay
+    const dragOverlay = document.createElement('div');
+    dragOverlay.classList.add('drag-overlay');
+
+    // Style the overlay to cover the entire widget
+    dragOverlay.style.position = 'absolute';
+    dragOverlay.style.top = '0';
+    dragOverlay.style.left = '0';
+    dragOverlay.style.width = '100%';
+    dragOverlay.style.height = '100%';
+    dragOverlay.style.zIndex = '10000'; // Ensure it sits above other elements
+    dragOverlay.style.backgroundColor = 'rgba(0, 0, 0, 0)'; // Transparent background
+
+    // Add event listeners to the overlay
+    dragOverlay.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        handleDragOver(e, widgetWrapper);
+    });
+
+    dragOverlay.addEventListener('drop', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        handleDrop(e, widgetWrapper);
+    });
+
+    // Attach the overlay to the widgetWrapper
+    widgetWrapper.appendChild(dragOverlay);
+    widgetWrapper.classList.add('has-overlay');
+}
+
+
+function removeDragOverlay(widgetWrapper) {
+    const dragOverlay = widgetWrapper.querySelector('.drag-overlay');
+    if (dragOverlay) {
+        dragOverlay.remove();
+    }
+    widgetWrapper.classList.remove('has-overlay');
+}
+
+function handleDrop(e, targetWidgetWrapper) {
     e.preventDefault();
-    console.log('Drop event target:', e.target);
-    console.log('Drop event currentTarget:', e.currentTarget);
+    console.log('Drop event on overlay for widget:', targetWidgetWrapper);
+
     const draggedOrder = e.dataTransfer.getData('text/plain');
-    const targetWidgetWrapper = e.currentTarget;
-    console.log('Target widget wrapper:', targetWidgetWrapper);
     const targetOrder = targetWidgetWrapper.getAttribute('data-order');
 
     console.log(`Drop event: draggedOrder=${draggedOrder}, targetOrder=${targetOrder}`);
@@ -252,58 +291,56 @@ function handleDrop(e) {
     }
 
     const widgetContainer = document.getElementById('widget-container');
-    const widgets = Array.from(widgetContainer.children);
 
-    const draggedWidget = widgets.find(widget => widget.getAttribute('data-order') === draggedOrder);
-    const targetWidget = widgets.find(widget => widget.getAttribute('data-order') === targetOrder);
+    const draggedWidget = widgetContainer.querySelector(`[data-order='${draggedOrder}']`);
+    const targetWidget = widgetContainer.querySelector(`[data-order='${targetOrder}']`);
 
     if (!draggedWidget || !targetWidget) {
         console.error('Invalid widget elements for dragging or dropping');
         return;
     }
 
-    console.log('Before swap:', {
+    console.log('Before rearrangement:', {
         draggedWidgetOrder: draggedWidget.getAttribute('data-order'),
         targetWidgetOrder: targetWidget.getAttribute('data-order')
     });
 
-    // Swap orders
-    draggedWidget.setAttribute('data-order', targetOrder);
-    targetWidget.setAttribute('data-order', draggedOrder);
+    // Remove draggedWidget from its current position
+    widgetContainer.removeChild(draggedWidget);
 
-    console.log('After swap:', {
-        draggedWidgetOrder: draggedWidget.getAttribute('data-order'),
-        targetWidgetOrder: targetWidget.getAttribute('data-order')
-    });
+    // Insert draggedWidget before or after targetWidget based on their order
+    if (parseInt(draggedOrder) < parseInt(targetOrder)) {
+        // Insert after targetWidget
+        if (targetWidget.nextSibling) {
+            widgetContainer.insertBefore(draggedWidget, targetWidget.nextSibling);
+        } else {
+            widgetContainer.appendChild(draggedWidget);
+        }
+    } else {
+        // Insert before targetWidget
+        widgetContainer.insertBefore(draggedWidget, targetWidget);
+    }
 
-    updateWidgetOrders();
-    saveWidgetState();
-
-    // Re-render widgets
-    widgetContainer.innerHTML = '';
-    widgets.sort((a, b) => parseInt(a.getAttribute('data-order')) - parseInt(b.getAttribute('data-order')));
-    widgets.forEach(widget => widgetContainer.appendChild(widget));
+    // No need to update data-order attributes here if updateWidgetOrders will handle it
+    // But if you prefer to update them here, you can do so
 
     // Remove drag-over class from all widgets
-    widgets.forEach(widget => widget.classList.remove('drag-over'));
+    const updatedWidgets = Array.from(widgetContainer.children);
+    updatedWidgets.forEach(widget => widget.classList.remove('drag-over'));
+
+    // Update widget orders
+    updateWidgetOrders();
 }
 
-function handleDragOver(e) {
+function handleDragOver(e, widgetWrapper) {
     e.preventDefault();
-    console.log('Drag over event target:', e.target);
-    console.log('Drag over event currentTarget:', e.currentTarget);
-    const dragOverTarget = e.currentTarget;
-    console.log('Drag over target widget wrapper:', dragOverTarget);
-    if (dragOverTarget) {
-        dragOverTarget.classList.add('drag-over');
-    }
+    console.log('Drag over event on overlay for widget:', widgetWrapper);
+    widgetWrapper.classList.add('drag-over');
 }
 
-function handleDragLeave(e) {
-    const dragLeaveTarget = e.currentTarget;
-    if (dragLeaveTarget) {
-        dragLeaveTarget.classList.remove('drag-over');
-    }
+function handleDragLeave(e, widgetWrapper) {
+    console.log('Drag leave event on overlay for widget:', widgetWrapper);
+    widgetWrapper.classList.remove('drag-over');
 }
 
 export { addWidget, removeWidget, updateWidgetOrders, createWidget, handleDragStart, handleDrop, handleDragOver, handleDragLeave };
