@@ -1,6 +1,7 @@
 import { saveWidgetState, loadWidgetState } from './localStorage.js';
 import { initializeUIInteractions } from './uiInteractions.js';
 import { debounce } from './utils.js';
+import { initializeFullScreenToggle } from './fullscreenToggle.js';
 
 document.addEventListener('DOMContentLoaded', () => {
     // Fetch services from services.json and populate the service selector
@@ -26,6 +27,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     initializeUIInteractions(); // Ensure this is called only once
     loadWidgetState();
+    initializeFullScreenToggle(); // Initialize full-screen toggle functionality
 
     // Add event listener for window resize
     window.addEventListener('resize', debounce(saveWidgetState, 250));
@@ -66,14 +68,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Update CSS order
                 draggedWidget.style.order = targetOrder;
                 targetWidget.style.order = draggedOrder;
-
-                // // Re-render widgets
-                // widgetContainer.innerHTML = '';
-                // widgets.sort((a, b) => parseInt(a.getAttribute('data-order')) - parseInt(b.getAttribute('data-order')));
-                // widgets.forEach(widget => widgetContainer.appendChild(widget));
-
-                // Remove drag-over class from all widgets
-                // widgets.forEach(widget => widget.classList.remove('drag-over'));
 
                 // Save the new state
                 saveWidgetState();

@@ -102,6 +102,12 @@ function createWidget(url, gridColumnSpan = 1, gridRowSpan = 1) {
     dragHandle.draggable = true;
     widgetMenu.appendChild(dragHandle);
 
+    // Add full-screen button
+    const fullScreenButton = document.createElement('button');
+    fullScreenButton.innerHTML = emojiList.fullscreen.unicode; // Full-screen icon (you can choose another if needed)
+    fullScreenButton.classList.add('widget-button', 'fullscreen-btn');
+    widgetMenu.appendChild(fullScreenButton);
+
     // Append buttons to widget menu
     widgetMenu.appendChild(removeButton);
     widgetMenu.appendChild(configureButton);

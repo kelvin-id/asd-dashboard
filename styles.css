@@ -26,6 +26,7 @@ header {
     width: 100%;
     box-sizing: border-box;
     grid-template-rows: repeat(2, 200px);
+    margin-left: 0.5rem;
 }
 
 /* Wide screen adjustments */
@@ -277,7 +278,30 @@ header {
 
 .widget-icon-drag:active {
     cursor: grabbing;
+}
 
 .widget-wrapper.drag-over {
     border: 2px dashed #4CAF50;
+}
+
+.widget-wrapper.fullscreen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 1000;
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+}
+
+.widget-wrapper.fullscreen .widget-iframe {
+    flex-grow: 1;
+}
+
+.widget-wrapper .fullscreen-btn {
+    top: 0;
+    right: 130px;
+    font-size: 1.6rem;
 }

@@ -16,6 +16,7 @@ const emojiList = {
     compass: { icon: '🧭', unicode: '\u{1F9ED}', description: 'Compass' },
     globe: { icon: '🌐', unicode: '\u{1F310}', description: 'Globe' },
     pinching: { icon: '🤏', unicode: '\u{1F9F0}', description: 'Drag and drop' },
+    fullscreen: { icon: '▢', unicode: '\u{25A2}', description: 'Fullscreen' },
 };
 
 export default emojiList;
