@@ -1,6 +1,6 @@
 import { saveWidgetState } from './localStorage.js';
 import { fetchData } from './fetchData.js';
-import { showResizeMenu, hideResizeMenu } from './resizeMenu.js';
+import { showResizeMenu, hideResizeMenu, showResizeMenuBlock } from './resizeMenu.js';
 import emojiList from './unicodeEmoji.js';
 
 let services = [];
@@ -59,10 +59,31 @@ function createWidget(url, gridColumnSpan = 1, gridRowSpan = 1) {
         }
     });
 
+    // resize-menu-block icon
+    const resizeMenuBlockIcon = document.createElement('button');
+    resizeMenuBlockIcon.innerHTML = emojiList.puzzle.unicode; // Use the puzzle piece emoji
+    resizeMenuBlockIcon.classList.add('widget-button', 'widget-icon-resize-block');
+    resizeMenuBlockIcon.addEventListener('click', (event) => {
+        event.stopPropagation();
+        showResizeMenuBlock(resizeMenuBlockIcon, widgetWrapper);
+    });
+
+    // resizeMenuBlockIcon.addEventListener('mouseover', () => {
+    //     console.log('Mouse over resize menu icon');
+    //     showResizeMenu(resizeMenuBlockIcon);
+    // });
+    // resizeMenuBlockIcon.addEventListener('mouseout', (event) => {
+    //     console.log('Mouse out resize menu icon');
+    //     if (!event.relatedTarget || !event.relatedTarget.classList.contains('resize-menu-block')) {
+    //         hideResizeMenu(resizeMenuBlockIcon);
+    //     }
+    // });
+
     widgetWrapper.appendChild(iframe);
     widgetWrapper.appendChild(removeButton);
     widgetWrapper.appendChild(configureButton);
     widgetWrapper.appendChild(resizeMenuIcon);
+    widgetWrapper.appendChild(resizeMenuBlockIcon);
 
     console.log('Widget created with grid spans:', {
         columns: gridColumnSpan,

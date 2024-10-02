@@ -8,9 +8,9 @@ function saveWidgetState() {
         const widgetState = widgets.map(widget => {
             const state = {
                 order: widget.getAttribute('data-order'),
-                width: widget.style.width,
-                height: widget.style.height,
-                url: widget.querySelector('iframe').src
+                url: widget.querySelector('iframe').src,
+                columns: widget.dataset.columns || 1,
+                rows: widget.dataset.rows || 1
             };
             console.log('Saving widget state:', state);
             return state;
@@ -31,15 +31,13 @@ function loadWidgetState() {
             widgetContainer.innerHTML = ''; // Clear existing widgets
             savedState.forEach(widgetData => {
                 console.log('Creating widget with data:', widgetData);
-                const widget = createWidget(widgetData.url, widgetData.width, widgetData.height);
-                widget.style.order = widgetData.order;
+                const widget = createWidget(
+                    widgetData.url,
+                    parseInt(widgetData.columns),
+                    parseInt(widgetData.rows)
+                );
                 widget.setAttribute('data-order', widgetData.order);
-                widget.style.width = widgetData.width || '300px';
-                widget.style.height = widgetData.height || '200px';
-                console.log('Widget created with size:', {
-                    width: widget.style.width,
-                    height: widget.style.height
-                });
+                widget.style.order = widgetData.order;
                 widgetContainer.appendChild(widget);
             });
         }
@@ -47,5 +45,6 @@ function loadWidgetState() {
         console.error('Error loading widget state:', error);
     }
 }
+
 
 export { saveWidgetState, loadWidgetState };

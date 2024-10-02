@@ -210,3 +210,45 @@ header {
 .resize-menu button:hover {
     background-color: #f0f0f0;
 }
+
+
+/* ## Resize menu block */
+/* Styles for the resize-menu-block */
+.widget-button.widget-icon-resize-block {
+    right: 80px; /* Adjust position to avoid overlap */
+    font-size: 1.2rem;
+    opacity: 0.5;
+}
+
+.widget-button.widget-icon-resize-block:hover {
+    opacity: 1;
+}
+
+.resize-menu-block {
+    position: absolute;
+    top: 30px;
+    right: 5px;
+    display: flex;
+    flex-direction: column;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    z-index: 20;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.resize-menu-block button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 0.9rem;
+    padding: 0.3rem;
+    text-align: left;
+    transition: background-color 0.3s ease;
+}
+
+.resize-menu-block button:hover {
+    background-color: #f0f0f0;
+}

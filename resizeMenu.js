@@ -1,4 +1,5 @@
 import emojiList from './unicodeEmoji.js';
+import { saveWidgetState } from './localStorage.js';
 
 
 function resizeHorizontally(widget, increase = true) {
@@ -86,7 +87,7 @@ function showResizeMenu(icon) {
             menu.addEventListener('mouseout', (event) => {
                 console.log('Mouse out resize menu');
                 if (!event.relatedTarget || !event.relatedTarget.classList.contains('widget-icon-resize')) {
-                    menu.style.display = 'none';
+                    menu.style.diadjustWidgetSizesplay = 'none';
                 }
             });
         }
@@ -112,4 +113,51 @@ function hideResizeMenu(icon) {
     }
 }
 
-export { resizeHorizontally, resizeVertically, enlarge, shrink, showResizeMenu, hideResizeMenu };
+function showResizeMenuBlock(icon, widgetWrapper) {
+    // If a menu already exists, remove it
+    let existingMenu = widgetWrapper.querySelector('.resize-menu-block');
+    if (existingMenu) {
+        existingMenu.remove();
+    }
+
+    const menu = document.createElement('div');
+    menu.className = 'resize-menu-block';
+
+    // List of grid options
+    const gridOptions = [];
+    for (let cols = 1; cols <= 4; cols++) {
+        for (let rows = 1; rows <= 4; rows++) {
+            gridOptions.push({ cols, rows });
+        }
+    }
+
+    gridOptions.forEach(option => {
+        const button = document.createElement('button');
+        button.textContent = `${option.cols} columns, ${option.rows} rows`;
+        button.addEventListener('click', () => {
+            adjustWidgetSize(widgetWrapper, option.cols, option.rows);
+            menu.remove();
+            saveWidgetState();
+        });
+        menu.appendChild(button);
+    });
+
+    // Position the menu
+    menu.style.position = 'absolute';
+    menu.style.top = '30px';
+    menu.style.right = '5px';
+    menu.style.zIndex = '20';
+
+    widgetWrapper.appendChild(menu);
+}
+
+function adjustWidgetSize(widgetWrapper, columns, rows) {
+    widgetWrapper.dataset.columns = columns;
+    widgetWrapper.dataset.rows = rows;
+    widgetWrapper.style.gridColumn = `span ${columns}`;
+    widgetWrapper.style.gridRow = `span ${rows}`;
+    console.log(`Widget resized to ${columns} columns and ${rows} rows`);
+}
+
+
+export { resizeHorizontally, resizeVertically, enlarge, shrink, showResizeMenu, hideResizeMenu, showResizeMenuBlock, adjustWidgetSize };
