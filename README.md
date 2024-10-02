@@ -1,10 +1,10 @@
 # ASD Dashboard
 
-ASD Dashboard is a pure VanillaJS single-page application (SPA) designed for managing remote services through widgets displayed in iframes. The dashboard allows users to add, resize, reorder, and configure widgets dynamically, with all user preferences stored in localStorage to ensure persistence across sessions.
+ASD Dashboard is a pure VanillaJS Progressive Web APP (PWA) designed for managing remote services through widgets displayed in iframes. The dashboard allows users to add, resize, reorder, and configure widgets dynamically, with all user preferences stored in localStorage to ensure persistence across sessions.
 
 ## Overview
 
-The 'asd-dashboard' is built using plain HTML, CSS, and JavaScript without any frameworks. The architecture is a single-page application (SPA) that consists of the following main components:
+The 'asd-dashboard' is built using plain HTML, CSS, and JavaScript without any frameworks. The architecture is PWA that consists of the following main components:
 
 - **index.html**: The main entry point of the application, defining the basic layout.
 - **styles.css**: The stylesheet for the application's styling.
