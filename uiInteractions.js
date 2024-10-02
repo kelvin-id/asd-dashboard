@@ -20,7 +20,7 @@ function initializeUIInteractions() {
         reorderWidgets(orderCriteria);
     });
 
-    document.getElementById('toggle-boardboard').addEventListener('click', toggleBoardboardMode);
+    document.getElementById('toggle-widget-order').addEventListener('click', toggleBoardboardMode);
     document.getElementById('toggle-buttons').addEventListener('click', toggleButtons);
     document.getElementById('save-boardboard').addEventListener('click', exitBoardboardMode);
 }
