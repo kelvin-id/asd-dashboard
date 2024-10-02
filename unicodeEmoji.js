@@ -8,10 +8,13 @@ const emojiList = {
     arrowLeft: { icon: '⬅', unicode: '\u2B05', description: 'Decrease width' },
     magnifyingGlass: { icon: '🔍', unicode: '\uD83D\uDD0D', description: 'Search' },
     wrench: { icon: '🔧', unicode: '\uD83D\uDD27', description: 'Tune' },
+    link: { icon: '🔗', unicode: '\uD83D\uDD17', description: 'Link' },
     ruler: { icon: '📏', unicode: '\uD83D\uDCCF', description: 'Adjust widget size' }, // Corrected Unicode
     triangularRuler: { icon: '📐', unicode: '\uD83D\uDCD0', description: 'Adjust widget size' }, // Corrected Unicode
     toolbox: { icon: '🧰', unicode: '\uD83E\uDDF0', description: 'Toolbox' }, // Corrected Unicode
-    hammerAndWrench: { icon: '🛠️', unicode: '\uD83D\uDEE0', description: 'Wrench' }
+    hammerAndWrench: { icon: '🛠️', unicode: '\uD83D\uDEE0', description: 'Wrench' },
+    compass: { icon: '🧭', unicode: '\uD83E\uDDED', description: 'Compass' },
+    globe: { icon: '🌐', unicode: '\uD83C\uDF10', description: 'Globe' },
 };
 
 export default emojiList;

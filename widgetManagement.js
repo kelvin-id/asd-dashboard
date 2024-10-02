@@ -27,21 +27,21 @@ function createWidget(url, width = '300px', height = '200px') {
 
     const removeButton = document.createElement('button');
     removeButton.innerHTML = emojiList.cross.unicode;
-    removeButton.classList.add('widget-button');
+    removeButton.classList.add('widget-button', 'remove');
     removeButton.addEventListener('click', () => {
         removeWidget(widgetWrapper);
     });
 
     const configureButton = document.createElement('button');
-    configureButton.innerHTML = emojiList.wrench.unicode;
-    configureButton.classList.add('widget-button', 'configure');
+    configureButton.innerHTML = emojiList.link.unicode;
+    configureButton.classList.add('widget-button', 'widget-icon-configure');
     configureButton.addEventListener('click', () => {
         configureWidget(iframe);
     });
 
     const resizeMenuIcon = document.createElement('button');
     resizeMenuIcon.innerHTML = emojiList.triangularRuler.unicode;
-    resizeMenuIcon.classList.add('widget-button', 'resize-menu-icon');
+    resizeMenuIcon.classList.add('widget-button', 'widget-icon-resize');
     resizeMenuIcon.addEventListener('mouseover', () => {
         console.log('Mouse over resize menu icon');
         showResizeMenu(resizeMenuIcon);

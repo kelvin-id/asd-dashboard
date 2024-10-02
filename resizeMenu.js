@@ -85,7 +85,7 @@ function showResizeMenu(icon) {
             });
             menu.addEventListener('mouseout', (event) => {
                 console.log('Mouse out resize menu');
-                if (!event.relatedTarget || !event.relatedTarget.classList.contains('resize-menu-icon')) {
+                if (!event.relatedTarget || !event.relatedTarget.classList.contains('widget-icon-resize')) {
                     menu.style.display = 'none';
                 }
             });
