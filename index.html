@@ -8,25 +8,25 @@
     
 </head>
 <body>
+    <div id="controls">
+        <label>
+            <input type="checkbox" id="sw-toggle">📡
+        </label>
+        <select id="service-selector">
+            <option value="">Select a Service</option>
+            <!-- Options will be dynamically populated -->
+        </select>
+        <input type="text" id="widget-url" placeholder="Or enter URL manually">
+        <button id="add-widget-button">Add Widget</button>
+        <select id="order-selector">
+            <option value="name">Order by Name</option>
+            <option value="url">Order by URL</option>
+        </select>
+        <button id="toggle-boardboard">Toggle Boardboard</button>
+        <button id="toggle-buttons">Toggle Remove/Configure</button>
+        <button id="save-boardboard" style="display: none;">Save</button>
+    </div>
     <main>
-        <div id="controls">
-            <label>
-                <input type="checkbox" id="sw-toggle">📡
-            </label>
-            <select id="service-selector">
-                <option value="">Select a Service</option>
-                <!-- Options will be dynamically populated -->
-            </select>
-            <input type="text" id="widget-url" placeholder="Or enter URL manually">
-            <button id="add-widget-button">Add Widget</button>
-            <select id="order-selector">
-                <option value="name">Order by Name</option>
-                <option value="url">Order by URL</option>
-            </select>
-            <button id="toggle-boardboard">Toggle Boardboard</button>
-            <button id="toggle-buttons">Toggle Remove/Configure</button>
-            <button id="save-boardboard" style="display: none;">Save</button>
-        </div>
         <div id="widget-container">
             <!-- Widgets will be dynamically loaded here -->
         </div>

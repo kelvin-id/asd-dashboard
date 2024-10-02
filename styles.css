@@ -29,14 +29,13 @@ main {
 }
 
 #widget-container {
-    flex: 1;
-    display: flex;
-    flex-wrap: wrap; /* Ensures widgets wrap when the viewport is resized */
-    gap: 0.5rem; /* Reduced gap */
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* 4 equal columns */
+    grid-auto-rows: minmax(100px, auto); /* Rows adjust based on content */
+    gap: 0.5rem;
     overflow: auto;
-    align-items: flex-start; /* Aligns widgets to the top */
-    padding-bottom: 3rem;  /* Adds extra space to ensure the last widget is not hidden under controls */
-    width: 100%; /* Ensure the container takes full width */
+    padding-bottom: 3rem;
+    width: 100%;
     box-sizing: border-box;
 }
 
@@ -45,10 +44,7 @@ main {
     justify-content: center;
     flex-wrap: wrap;
     gap: 0.5rem; /* Reduced gap */
-    margin-top: 0.5rem; /* Reduced margin */
     position: sticky;  /* Makes the controls sticky */
-    top: 0;  /* Sticks it to the bottom */
-    margin-top: auto;  /* Pushes the controls down as far as possible */
     padding: 0.5rem;  /* Adds padding */
     background-color: #fff;  /* Keep a background to avoid transparency issues */
     z-index: 1001;  /* Ensures it stays above other elements */
@@ -89,10 +85,11 @@ main {
     overflow: auto;
     display: flex;
     flex-direction: column;
-    flex: 0 0 auto;
-    min-width: 200px;
-    min-height: 200px;
+    min-width: 0; /* Allow flexibility within the grid */
+    min-height: 0;
     margin: 0;
+    grid-column: span 1; /* Default spans */
+    grid-row: span 1;
 }
 
 .widget-button {
@@ -200,21 +197,24 @@ main {
     position: absolute;
     top: 30px;
     right: 5px;
-    display: none;
+    display: flex;
     flex-direction: column;
     background-color: #fff;
     border: 1px solid #ccc;
     border-radius: 4px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     z-index: 20;
+    max-height: 200px;
+    overflow-y: auto;
 }
 
 .resize-menu button {
     background: none;
     border: none;
     cursor: pointer;
-    font-size: 1rem;
-    padding: 0.5rem;
+    font-size: 0.9rem;
+    padding: 0.3rem;
+    text-align: left;
     transition: background-color 0.3s ease;
 }
 
