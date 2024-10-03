@@ -3,14 +3,39 @@ import { fetchData } from './fetchData.js';
 import { showResizeMenu, hideResizeMenu, showResizeMenuBlock, hideResizeMenuBlock } from './resizeMenu.js';
 import emojiList from './unicodeEmoji.js';
 import { debounce } from './utils.js';
+import { fetchServices } from './fetchServices.js'; // Ensure this import is used consistently
 
-let services = [];
+// Function to initialize configuration
+async function getConfig() {
+    try {
+        const response = await fetch('config.json');
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return await response.json();
+    } catch (error) {
+        console.error('Error fetching config.json:', error);
+        throw new Error('Failed to load configuration');
+    }
+}
 
-function createWidget(url, gridColumnSpan = 1, gridRowSpan = 1) {
+async function createWidget(url, gridColumnSpan = 1, gridRowSpan = 1) {
     console.log('Creating widget with URL:', url);
+    const config = await getConfig();
+    const services = await fetchServices(); // Ensure the imported function is used
+    const serviceConfig = services.find(service => service.url === url)?.config || {};
+    const minColumns = serviceConfig.minColumns || config.styling.grid.minColumns;
+    const maxColumns = serviceConfig.maxColumns || config.styling.grid.maxColumns;
+    const minRows = serviceConfig.minRows || config.styling.grid.minRows;
+    const maxRows = serviceConfig.maxRows || config.styling.grid.maxRows;
+
     const widgetWrapper = document.createElement('div');
     widgetWrapper.className = 'widget-wrapper';
     widgetWrapper.style.position = 'relative'; // Ensure widgetWrapper has position: relative
+
+    // Ensure initial spans respect constraints
+    gridColumnSpan = Math.min(Math.max(gridColumnSpan, minColumns), maxColumns);
+    gridRowSpan = Math.min(Math.max(gridRowSpan, minRows), maxRows);
 
     // Set initial grid spans
     widgetWrapper.style.gridColumn = `span ${gridColumnSpan}`;
@@ -104,7 +129,7 @@ function createWidget(url, gridColumnSpan = 1, gridRowSpan = 1) {
 
     // Add full-screen button
     const fullScreenButton = document.createElement('button');
-    fullScreenButton.innerHTML = emojiList.fullscreen.unicode; // Full-screen icon (you can choose another if needed)
+    fullScreenButton.innerHTML = emojiList.fullscreen.unicode; // Full-screen icon
     fullScreenButton.classList.add('widget-button', 'fullscreen-btn');
     widgetMenu.appendChild(fullScreenButton);
 
@@ -147,19 +172,21 @@ function createWidget(url, gridColumnSpan = 1, gridRowSpan = 1) {
     return widgetWrapper;
 }
 
-function addWidget(url) {
+async function addWidget(url) {
     console.log('Adding widget with URL:', url);
     const widgetContainer = document.getElementById('widget-container');
     if (!widgetContainer) {
         console.error('Widget container not found');
         return;
     }
-    const widget = createWidget(url);
+    const widget = await createWidget(url);
     widget.setAttribute('data-order', widgetContainer.children.length);
     widgetContainer.appendChild(widget);
 
     console.log('Widget appended to container:', widget);
 
+    // Assuming services is defined somewhere else
+    const services = await fetchServices(); // Ensure the imported function is used
     const service = services.find(service => service.url === url);
     if (service && service.type === 'api') {
         fetchData(url, data => {
@@ -176,10 +203,11 @@ function removeWidget(widgetElement) {
     saveWidgetState();
 }
 
-function configureWidget(iframeElement) {
+async function configureWidget(iframeElement) {
     const newUrl = prompt('Enter new URL for the widget:', iframeElement.src);
     if (newUrl) {
         iframeElement.src = newUrl;
+        const services = await fetchServices(); // Ensure the imported function is used
         const service = services.find(service => service.url === newUrl);
         if (service && service.type === 'api') {
             fetchData(newUrl, data => {
@@ -350,4 +378,4 @@ function handleDragLeave(e, widgetWrapper) {
     widgetWrapper.classList.remove('drag-over');
 }
 
-export { addWidget, removeWidget, updateWidgetOrders, createWidget, handleDragStart, handleDrop, handleDragOver, handleDragLeave };
+export { addWidget, removeWidget, updateWidgetOrders, createWidget, handleDragStart, handleDrop, handleDragOver, handleDragLeave, getConfig };

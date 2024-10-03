@@ -1,42 +1,61 @@
-# ASD Dashboard
+# asd-dashboard
 
-ASD Dashboard is a single-page application (SPA) built using VanillaJS, HTML, and CSS. It allows users to manage remote services through widgets displayed in iframes. Users can add, resize, reorder, and configure widgets, with their preferences being saved in local storage.
+A pure VanillaJS dashboard for managing remote services through widgets displayed in iframes. This single-page application (SPA) allows users to dynamically add, resize, reorder, and configure widgets, with preferences stored in local storage.
 
 ## Overview
 
-The ASD Dashboard is designed as a pure VanillaJS application, focusing on frontend functionality without any backend requirements. The project is structured as follows:
+The `asd-dashboard` is built using plain HTML, CSS, and JavaScript without any frameworks. The architecture is designed as a single-page application (SPA) focusing solely on frontend functionality. The main components include:
 
-- **index.html**: Main entry point of the application.
-- **styles.css**: Stylesheet for the application.
-- **main.js**: Core JavaScript file that initializes the application.
-- **boardboardMode.js**: Manages the boardboard mode for widget reordering.
-- **fetchData.js**: Handles data fetching from remote services.
-- **localStorage.js**: Manages saving and loading widget states using local storage.
-- **resizeMenu.js**: Provides functionality for resizing widgets.
-- **serverWorkerRegistration.js**: Manages service worker registration and unregistration.
-- **serviceWorker.js**: Implements caching strategies for offline functionality.
-- **uiInteractions.js**: Initializes user interface interactions.
-- **unicodeEmoji.js**: Defines a list of Unicode emojis used in the application.
-- **utils.js**: Contains utility functions like debounce.
-- **widgetManagement.js**: Implements functions for creating, adding, removing, configuring, and reordering widgets.
-- **fullscreenToggle.js**: Provides functionality to toggle full-screen mode for widgets.
-- **services.json**: Contains a list of remote services.
+- **index.html**: Basic layout of the application.
+- **styles.css**: Styling for the application.
+- **main.js**: Core JavaScript functionality, handling dynamic iframe loading, event listeners for user interactions, and AJAX calls to remote services.
+
+### Technologies Used
+
+- **Node.js**: JavaScript runtime required to run the application.
+
+### Project Structure
+
+```
+.
+├── .gitignore
+├── README.md
+├── boardboardMode.js
+├── config.json
+├── fetchData.js
+├── fullscreenToggle.js
+├── index.html
+├── localStorage.js
+├── main.js
+├── package.json
+├── resizeMenu.js
+├── serverWorkerRegistration.js
+├── serviceWorker.js
+├── services.json
+├── styles.css
+├── uiInteractions.js
+├── unicodeEmoji.js
+├── utils.js
+└── widgetManagement.js
+```
 
 ## Features
 
-- **Add Widgets**: Users can add widgets by selecting a service from a dropdown or entering a URL manually.
-- **Resize Widgets**: Widgets can be resized both horizontally and vertically.
-- **Reorder Widgets**: Widgets can be reordered using a dropdown menu in boardboard mode.
-- **Save Preferences**: User preferences, including widget order and size, are saved in local storage and restored on page reload.
-- **Full-Screen Mode**: Widgets can be toggled to full-screen mode.
-- **Service Worker**: Option to enable or disable the service worker for offline capabilities.
-- **Reset Settings**: Users can reset the dashboard to its default settings.
+- **Widget Management**: Add, resize, reorder, and configure widgets. 
+- **Local Storage**: Save and restore widget state (order, size, and URL) across sessions.
+- **Grid Layout**: Utilizes CSS Grid for layout, with constraints on minimum and maximum grid columns and rows.
+- **Full-Screen Mode**: Toggle full-screen mode for widgets.
+- **Service Selection**: Add widgets by selecting services from a `services.json` file or entering a URL.
+- **Configuration Options**: Show/hide buttons for removing and configuring widgets.
+- **Boardboard Mode**: Reorder widgets using a unique number-based system.
+- **Reset Settings**: Button to reset settings to default.
 
 ## Getting Started
 
 ### Requirements
 
-- **Node.js**: JavaScript runtime for building and running the application.
+Ensure you have the following installed on your computer:
+- **Node.js**: [Download and install Node.js](https://nodejs.org/)
 
 ### Quickstart
 
@@ -56,9 +75,15 @@ The ASD Dashboard is designed as a pure VanillaJS application, focusing on front
     npm start
     ```
 
-4. **Open the application**:
-    Open your web browser and navigate to `http://localhost:3000` to view the dashboard.
+4. **Open your browser and navigate to**:
+    ```
+    http://localhost:3000
+    ```
 
 ### License
 
-The project is proprietary (not open source). Copyright (c) 2024.
+The project is proprietary (not open source). 
+
+```
+© 2024.
+```

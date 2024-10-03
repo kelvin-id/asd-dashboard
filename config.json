@@ -1,0 +1,10 @@
+{
+    "styling": {
+        "grid": {
+            "minColumns": 1,
+            "maxColumns": 6,
+            "minRows": 1,
+            "maxRows": 6
+        }
+    }
+}

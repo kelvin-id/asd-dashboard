@@ -16,7 +16,6 @@ function initializeUIInteractions() {
 
         if (url) {
             addWidget(url);
-            attachDragAndDropListeners(document.querySelector('#widget-container .widget-wrapper:last-child'));
         } else {
             alert('Please select a service or enter a URL.');
         }

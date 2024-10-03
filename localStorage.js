@@ -1,4 +1,6 @@
 import { createWidget } from './widgetManagement.js';
+import { getConfig } from './widgetManagement.js'; // Import getConfig function
+import { fetchServices } from './fetchServices.js'; // Import fetchServices function
 
 function saveWidgetState() {
     try {
@@ -22,24 +24,37 @@ function saveWidgetState() {
     }
 }
 
-function loadWidgetState() {
+async function loadWidgetState() {
     try {
         const savedState = JSON.parse(localStorage.getItem('widgetState'));
         console.log('Loaded widget state from localStorage:', savedState);
         if (savedState) {
+            const config = await getConfig(); // Load config once
+            const services = await fetchServices(); // Fetch services.json
             const widgetContainer = document.getElementById('widget-container');
             widgetContainer.innerHTML = ''; // Clear existing widgets
-            savedState.forEach(widgetData => {
+            for (const widgetData of savedState) {
                 console.log('Creating widget with data:', widgetData);
-                const widget = createWidget(
+                const serviceConfig = services.find(service => service.url === widgetData.url)?.config || {};
+                const minColumns = serviceConfig.minColumns || config.styling.grid.minColumns;
+                const maxColumns = serviceConfig.maxColumns || config.styling.grid.maxColumns;
+                const minRows = serviceConfig.minRows || config.styling.grid.minRows;
+                const maxRows = serviceConfig.maxRows || config.styling.grid.maxRows;
+
+                // Ensure widget dimensions respect constraints
+                const columns = Math.min(Math.max(widgetData.columns, minColumns), maxColumns);
+                const rows = Math.min(Math.max(widgetData.rows, minRows), maxRows);
+
+                const widget = await createWidget(
                     widgetData.url,
-                    parseInt(widgetData.columns),
-                    parseInt(widgetData.rows)
+                    columns,
+                    rows
                 );
+                console.log('Created widget:', widget);
                 widget.setAttribute('data-order', widgetData.order);
                 widget.style.order = widgetData.order;
                 widgetContainer.appendChild(widget);
-            });
+            }
         }
     } catch (error) {
         console.error('Error loading widget state:', error);

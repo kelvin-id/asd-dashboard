@@ -3,6 +3,11 @@ import { initializeUIInteractions } from './uiInteractions.js';
 import { debounce } from './utils.js';
 import { initializeFullScreenToggle } from './fullscreenToggle.js';
 
+window.asd = {
+    services: [],
+    config: {}
+};
+
 document.addEventListener('DOMContentLoaded', () => {
     // Fetch services from services.json and populate the service selector
     fetch('services.json')
@@ -13,6 +18,9 @@ document.addEventListener('DOMContentLoaded', () => {
             return response.json();
         })
         .then(fetchedServices => {
+            console.log('Fetched services:', fetchedServices);
+            window.asd.services = fetchedServices;
+
             const serviceSelector = document.getElementById('service-selector');
             fetchedServices.forEach(service => {
                 const option = document.createElement('option');

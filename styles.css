@@ -8,6 +8,7 @@ body {
     margin: 0;
     padding: 0;
     height: 100vh;
+    overflow-y: hidden;
 }
 
 header {
@@ -304,4 +305,13 @@ header {
     top: -2px;
     right: 135px;
     font-size: 1.6rem;
+}
+
+/* Add styles for visual feedback */
+.widget-wrapper.exceeding-max {
+    border: 2px solid red;
+}
+
+.widget-wrapper.below-min {
+    border: 2px solid orange;
 }
