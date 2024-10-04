@@ -38,7 +38,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initializeFullScreenToggle(); // Initialize full-screen toggle functionality
 
     // Add event listener for window resize
-    window.addEventListener('resize', debounce(saveWidgetState, 250));
+    // window.addEventListener('resize', debounce(saveWidgetState, 250));
 
     // Initialize drag and drop functionality
     const widgetContainer = document.getElementById('widget-container');

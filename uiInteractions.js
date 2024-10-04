@@ -34,80 +34,73 @@ function initializeUIInteractions() {
     });
 
     // Add event listeners for showing resize menu block
-    document.addEventListener('click', async (event) => {
-        if (event.target.classList.contains('widget-icon-resize-block')) {
-            const widgetWrapper = event.target.closest('.widget-wrapper');
-            if (!widgetWrapper) {
-                console.error('No widget wrapper found for resize icon');
-                return;
-            }
+    // document.addEventListener('click', async (event) => {
+    //     if (event.target.classList.contains('widget-icon-resize-block')) {
+    //         const widgetWrapper = event.target.closest('.widget-wrapper');
+    //         if (!widgetWrapper) {
+    //             console.error('No widget wrapper found for resize icon');
+    //             return;
+    //         }
 
-            const widgetUrl = widgetWrapper.dataset.url;
-            if (!widgetUrl) {
-                console.error('No URL found for widget');
-                return;
-            }
+    //         const widgetUrl = widgetWrapper.dataset.url;
+    //         if (!widgetUrl) {
+    //             console.error('No URL found for widget');
+    //             return;
+    //         }
 
-            try {
-                const services = await fetchServices();
-                const config = await getConfig();
-                const service = services.find(s => widgetUrl.startsWith(s.url));
+    //         try {
+    //             const services = await fetchServices();
+    //             const config = await getConfig();
+    //             const service = services.find(s => widgetUrl.startsWith(s.url));
 
-                if (!service) {
-                    console.error(`No service found for URL: ${widgetUrl}`);
-                    return;
-                }
+    //             if (!service) {
+    //                 console.error(`No service found for URL: ${widgetUrl}`);
+    //                 return;
+    //             }
 
-                const widgetConstraints = service.config || {};
-                showResizeMenuBlock(event.target, widgetWrapper, widgetConstraints, config.styling.grid);
-            } catch (error) {
-                console.error('Error fetching services or config:', error);
-            }
-        }
-    });
+    //             const widgetConstraints = service.config || {};
+    //             showResizeMenuBlock(event.target, widgetWrapper, widgetConstraints, config.styling.grid);
+    //         } catch (error) {
+    //             console.error('Error fetching services or config:', error);
+    //         }
+    //     }
+    // });
 
-    // Add event listener for hiding resize menu block
-    document.addEventListener('mouseleave', (event) => {
-        if (event.target.classList.contains('widget-wrapper')) {
-            hideResizeMenuBlock(event.target);
-        }
-    }, true);
+    // // Add event listeners for resizing widgets
+    // document.addEventListener('click', async (event) => {
+    //     if (event.target.classList.contains('resize-button')) {
+    //         const widgetWrapper = event.target.closest('.widget-wrapper');
+    //         if (!widgetWrapper) {
+    //             console.error('No widget wrapper found for resize button');
+    //             return;
+    //         }
 
-    // Add event listeners for resizing widgets
-    document.addEventListener('click', async (event) => {
-        if (event.target.classList.contains('resize-button')) {
-            const widgetWrapper = event.target.closest('.widget-wrapper');
-            if (!widgetWrapper) {
-                console.error('No widget wrapper found for resize button');
-                return;
-            }
+    //         const direction = event.target.dataset.direction;
+    //         const increase = event.target.dataset.increase === 'true';
 
-            const direction = event.target.dataset.direction;
-            const increase = event.target.dataset.increase === 'true';
+    //         try {
+    //             const services = await fetchServices();
+    //             const config = await getConfig();
+    //             const widgetUrl = widgetWrapper.dataset.url;
+    //             const service = services.find(s => widgetUrl.startsWith(s.url));
 
-            try {
-                const services = await fetchServices();
-                const config = await getConfig();
-                const widgetUrl = widgetWrapper.dataset.url;
-                const service = services.find(s => widgetUrl.startsWith(s.url));
+    //             if (!service) {
+    //                 console.error(`No service found for URL: ${widgetUrl}`);
+    //                 return;
+    //             }
 
-                if (!service) {
-                    console.error(`No service found for URL: ${widgetUrl}`);
-                    return;
-                }
+    //             const widgetConstraints = service.config || {};
 
-                const widgetConstraints = service.config || {};
-
-                if (direction === 'horizontal') {
-                    await resizeHorizontally(widgetWrapper, increase, widgetConstraints, config.styling.grid);
-                } else if (direction === 'vertical') {
-                    await resizeVertically(widgetWrapper, increase, widgetConstraints, config.styling.grid);
-                }
-            } catch (error) {
-                console.error('Error resizing widget:', error);
-            }
-        }
-    });
+    //             if (direction === 'horizontal') {
+    //                 await resizeHorizontally(widgetWrapper, increase, widgetConstraints, config.styling.grid);
+    //             } else if (direction === 'vertical') {
+    //                 await resizeVertically(widgetWrapper, increase, widgetConstraints, config.styling.grid);
+    //             }
+    //         } catch (error) {
+    //             console.error('Error resizing widget:', error);
+    //         }
+    //     }
+    // });
 }
 
 export { initializeUIInteractions };

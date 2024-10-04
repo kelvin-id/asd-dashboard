@@ -1,4 +1,5 @@
 function fetchData(url, callback) {
+    console.log('Fetching data from:', url);
     fetch(url, {
         headers: {
             'Authorization': `Bearer ${getAuthToken()}`
