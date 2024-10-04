@@ -1,6 +1,8 @@
 import emojiList from './unicodeEmoji.js';
 import { saveWidgetState } from './localStorage.js';
+import { fetchServices } from './fetchServices.js';
 
+// Function to fetch configuration
 async function getConfig() {
     try {
         const response = await fetch('config.json');
@@ -14,31 +16,83 @@ async function getConfig() {
     }
 }
 
+// Function to resize widget horizontally
 async function resizeHorizontally(widget, increase = true) {
     try {
         const config = await getConfig();
+        const services = await fetchServices();
+        const widgetUrl = widget.dataset.url;
+        const serviceConfig = services.find(service => service.url === widgetUrl)?.config || {};
+
         let currentSpan = parseInt(widget.dataset.columns) || config.styling.grid.minColumns;
         let newSpan = increase ? currentSpan + 1 : currentSpan - 1;
-        newSpan = Math.min(Math.max(newSpan, config.styling.grid.minColumns), config.styling.grid.maxColumns); // Apply constraints
+
+        const minColumns = serviceConfig.minColumns || config.styling.grid.minColumns;
+        const maxColumns = serviceConfig.maxColumns || config.styling.grid.maxColumns;
+
+        // Apply constraints and provide visual feedback
+        if (newSpan < minColumns) {
+            widget.classList.add('below-min');
+            console.log('Cannot resize below minimum columns');
+            return;
+        } else if (newSpan > maxColumns) {
+            widget.classList.add('exceeding-max');
+            console.log('Cannot resize beyond maximum columns');
+            return;
+        } else {
+            widget.classList.remove('below-min', 'exceeding-max');
+        }
+
         widget.dataset.columns = newSpan;
         widget.style.gridColumn = `span ${newSpan}`;
         console.log(`Widget resized horizontally to span ${newSpan} columns`);
         saveWidgetState();
+
+        // Log dimensions and overflow state of widget container
+        const widgetContainer = document.getElementById('widget-container');
+        console.log('Widget Container Dimensions:', widgetContainer.getBoundingClientRect());
+        console.log('Widget Container Overflow:', window.getComputedStyle(widgetContainer).overflow);
     } catch (error) {
         console.error('Error resizing widget horizontally:', error);
     }
 }
 
+// Function to resize widget vertically
 async function resizeVertically(widget, increase = true) {
     try {
         const config = await getConfig();
+        const services = await fetchServices();
+        const widgetUrl = widget.dataset.url;
+        const serviceConfig = services.find(service => service.url === widgetUrl)?.config || {};
+
         let currentSpan = parseInt(widget.dataset.rows) || config.styling.grid.minRows;
         let newSpan = increase ? currentSpan + 1 : currentSpan - 1;
-        newSpan = Math.min(Math.max(newSpan, config.styling.grid.minRows), config.styling.grid.maxRows); // Apply constraints
+
+        const minRows = serviceConfig.minRows || config.styling.grid.minRows;
+        const maxRows = serviceConfig.maxRows || config.styling.grid.maxRows;
+
+        // Apply constraints and provide visual feedback
+        if (newSpan < minRows) {
+            widget.classList.add('below-min');
+            console.log('Cannot resize below minimum rows');
+            return;
+        } else if (newSpan > maxRows) {
+            widget.classList.add('exceeding-max');
+            console.log('Cannot resize beyond maximum rows');
+            return;
+        } else {
+            widget.classList.remove('below-min', 'exceeding-max');
+        }
+
         widget.dataset.rows = newSpan;
         widget.style.gridRow = `span ${newSpan}`;
         console.log(`Widget resized vertically to span ${newSpan} rows`);
         saveWidgetState();
+
+        // Log dimensions and overflow state of widget container
+        const widgetContainer = document.getElementById('widget-container');
+        console.log('Widget Container Dimensions:', widgetContainer.getBoundingClientRect());
+        console.log('Widget Container Overflow:', window.getComputedStyle(widgetContainer).overflow);
     } catch (error) {
         console.error('Error resizing widget vertically:', error);
     }
@@ -64,6 +118,7 @@ async function shrink(widget) {
     }
 }
 
+// Function to show resize menu
 async function showResizeMenu(icon) {
     try {
         const widget = icon.closest('.widget-wrapper');
@@ -75,19 +130,19 @@ async function showResizeMenu(icon) {
 
             const horizontalIncreaseButton = document.createElement('button');
             horizontalIncreaseButton.innerHTML = emojiList.arrowRight.unicode;
-            horizontalIncreaseButton.addEventListener('click', () => resizeHorizontally(widget, true));
+            horizontalIncreaseButton.addEventListener('click', async () => await resizeHorizontally(widget, true));
 
             const horizontalDecreaseButton = document.createElement('button');
             horizontalDecreaseButton.innerHTML = emojiList.arrowLeft.unicode;
-            horizontalDecreaseButton.addEventListener('click', () => resizeHorizontally(widget, false));
+            horizontalDecreaseButton.addEventListener('click', async () => await resizeHorizontally(widget, false));
 
             const verticalIncreaseButton = document.createElement('button');
             verticalIncreaseButton.innerHTML = emojiList.arrowUp.unicode;
-            verticalIncreaseButton.addEventListener('click', () => resizeVertically(widget, false));
+            verticalIncreaseButton.addEventListener('click', async () => await resizeVertically(widget, false));
 
             const verticalDecreaseButton = document.createElement('button');
             verticalDecreaseButton.innerHTML = emojiList.arrowDown.unicode;
-            verticalDecreaseButton.addEventListener('click', () => resizeVertically(widget, true));
+            verticalDecreaseButton.addEventListener('click', async () => await resizeVertically(widget, true));
 
             menu.appendChild(verticalDecreaseButton);
             menu.appendChild(horizontalIncreaseButton);
@@ -114,9 +169,10 @@ async function showResizeMenu(icon) {
     }
 }
 
+// Function to hide resize menu
 async function hideResizeMenu(icon) {
     try {
-        const widget = icon.closest('.widget-wrapper')
+        const widget = icon.closest('.widget-wrapper');
         const menu = widget.querySelector('.resize-menu');
         if (menu) {
             menu.style.display = 'none';
@@ -127,9 +183,26 @@ async function hideResizeMenu(icon) {
     }
 }
 
+// Function to show resize menu block
 async function showResizeMenuBlock(icon, widgetWrapper) {
     try {
         const config = await getConfig();
+        console.log('Loaded config:', config);
+
+        const widgetUrl = widgetWrapper.dataset.url;
+        console.log('Widget URL:', widgetUrl);
+
+        const services = await fetchServices();
+        console.log('Fetched services:', services);
+
+        const widgetService = services.find(service => service.url === widgetUrl);
+        console.log('Found widget service:', widgetService);
+
+        if (!widgetService || !widgetService.config) {
+            console.error(`No constraints found for URL: ${widgetUrl}`);
+            return;
+        }
+
         let existingMenu = widgetWrapper.querySelector('.resize-menu-block');
         if (existingMenu) {
             existingMenu.remove();
@@ -138,12 +211,16 @@ async function showResizeMenuBlock(icon, widgetWrapper) {
         const menu = document.createElement('div');
         menu.className = 'resize-menu-block';
 
+        const { minColumns, maxColumns, minRows, maxRows } = widgetService.config;
+
         const gridOptions = [];
-        for (let cols = config.styling.grid.minColumns; cols <= config.styling.grid.maxColumns; cols++) {
-            for (let rows = config.styling.grid.minRows; rows <= config.styling.grid.maxRows; rows++) {
+        for (let cols = minColumns; cols <= maxColumns; cols++) {
+            for (let rows = minRows; rows <= maxRows; rows++) {
                 gridOptions.push({ cols, rows });
             }
         }
+
+        console.log('Grid options:', gridOptions);
 
         gridOptions.forEach(option => {
             const button = document.createElement('button');
@@ -172,6 +249,7 @@ async function showResizeMenuBlock(icon, widgetWrapper) {
     }
 }
 
+// Function to hide resize menu block
 async function hideResizeMenuBlock(widgetWrapper) {
     console.log('Removing resize menu block');
     try {
@@ -187,11 +265,22 @@ async function hideResizeMenuBlock(widgetWrapper) {
     }
 }
 
+// Function to adjust widget size
 async function adjustWidgetSize(widgetWrapper, columns, rows) {
     try {
         const config = await getConfig();
-        columns = Math.min(Math.max(columns, config.styling.grid.minColumns), config.styling.grid.maxColumns); // Apply constraints
-        rows = Math.min(Math.max(rows, config.styling.grid.minRows), config.styling.grid.maxRows); // Apply constraints
+        const services = await fetchServices();
+        const widgetUrl = widgetWrapper.dataset.url;
+        const serviceConfig = services.find(service => service.url === widgetUrl)?.config || {};
+
+        const minColumns = serviceConfig.minColumns || config.styling.grid.minColumns;
+        const maxColumns = serviceConfig.maxColumns || config.styling.grid.maxColumns;
+        const minRows = serviceConfig.minRows || config.styling.grid.minRows;
+        const maxRows = serviceConfig.maxRows || config.styling.grid.maxRows;
+
+        columns = Math.min(Math.max(columns, minColumns), maxColumns);
+        rows = Math.min(Math.max(rows, minRows), maxRows);
+
         widgetWrapper.dataset.columns = columns;
         widgetWrapper.dataset.rows = rows;
         widgetWrapper.style.gridColumn = `span ${columns}`;

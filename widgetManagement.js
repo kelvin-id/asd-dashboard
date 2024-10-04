@@ -3,9 +3,8 @@ import { fetchData } from './fetchData.js';
 import { showResizeMenu, hideResizeMenu, showResizeMenuBlock, hideResizeMenuBlock } from './resizeMenu.js';
 import emojiList from './unicodeEmoji.js';
 import { debounce } from './utils.js';
-import { fetchServices } from './fetchServices.js'; // Ensure this import is used consistently
+import { fetchServices } from './fetchServices.js';
 
-// Function to initialize configuration
 async function getConfig() {
     try {
         const response = await fetch('config.json');
@@ -19,11 +18,11 @@ async function getConfig() {
     }
 }
 
-async function createWidget(url, gridColumnSpan = 1, gridRowSpan = 1) {
+async function createWidget(service, url, gridColumnSpan = 1, gridRowSpan = 1) {
     console.log('Creating widget with URL:', url);
     const config = await getConfig();
-    const services = await fetchServices(); // Ensure the imported function is used
-    const serviceConfig = services.find(service => service.url === url)?.config || {};
+    const services = await fetchServices();
+    const serviceConfig = services.find(s => s.name === service)?.config || {};
     const minColumns = serviceConfig.minColumns || config.styling.grid.minColumns;
     const maxColumns = serviceConfig.maxColumns || config.styling.grid.maxColumns;
     const minRows = serviceConfig.minRows || config.styling.grid.minRows;
@@ -31,13 +30,14 @@ async function createWidget(url, gridColumnSpan = 1, gridRowSpan = 1) {
 
     const widgetWrapper = document.createElement('div');
     widgetWrapper.className = 'widget-wrapper';
-    widgetWrapper.style.position = 'relative'; // Ensure widgetWrapper has position: relative
+    widgetWrapper.style.position = 'relative';
+    widgetWrapper.dataset.service = service;
+    widgetWrapper.dataset.url = url;
+    console.log(`Creating widget for service: ${service}`);
 
-    // Ensure initial spans respect constraints
     gridColumnSpan = Math.min(Math.max(gridColumnSpan, minColumns), maxColumns);
     gridRowSpan = Math.min(Math.max(gridRowSpan, minRows), maxRows);
 
-    // Set initial grid spans
     widgetWrapper.style.gridColumn = `span ${gridColumnSpan}`;
     widgetWrapper.style.gridRow = `span ${gridRowSpan}`;
     widgetWrapper.dataset.columns = gridColumnSpan;
@@ -57,11 +57,9 @@ async function createWidget(url, gridColumnSpan = 1, gridRowSpan = 1) {
         console.error('Error loading iframe:', url);
     };
 
-    // Create widget menu wrapper
     const widgetMenu = document.createElement('div');
     widgetMenu.classList.add('widget-menu');
 
-    // Add existing buttons (remove, configure, resize, etc.) to widgetMenu
     const removeButton = document.createElement('button');
     removeButton.innerHTML = emojiList.cross.unicode;
     removeButton.classList.add('widget-button', 'remove');
@@ -76,10 +74,8 @@ async function createWidget(url, gridColumnSpan = 1, gridRowSpan = 1) {
         configureWidget(iframe);
     });
 
-    // Resize menu icons
     const buttonDebounce = 100;
 
-    // Debounced hide functions using debounce utility
     const debouncedHideResizeMenu = debounce((icon) => {
         hideResizeMenu(icon);
     }, buttonDebounce);
@@ -88,7 +84,6 @@ async function createWidget(url, gridColumnSpan = 1, gridRowSpan = 1) {
         hideResizeMenuBlock(widgetWrapper);
     }, buttonDebounce);
 
-    // resize-menu icon
     const resizeMenuIcon = document.createElement('button');
     resizeMenuIcon.innerHTML = emojiList.triangularRuler.unicode;
     resizeMenuIcon.classList.add('widget-button', 'widget-icon-resize');
@@ -103,7 +98,6 @@ async function createWidget(url, gridColumnSpan = 1, gridRowSpan = 1) {
         }
     });
 
-    // resize-menu-block icon
     const resizeMenuBlockIcon = document.createElement('button');
     resizeMenuBlockIcon.innerHTML = emojiList.puzzle.unicode;
     resizeMenuBlockIcon.classList.add('widget-button', 'widget-icon-resize-block');
@@ -119,39 +113,30 @@ async function createWidget(url, gridColumnSpan = 1, gridRowSpan = 1) {
         }
     });
 
-    // Add drag handle
     const dragHandle = document.createElement('span');
-    dragHandle.classList.add('widget-icon-drag');
-    dragHandle.classList.add('widget-button');
+    dragHandle.classList.add('widget-icon-drag', 'widget-button');
     dragHandle.innerHTML = emojiList.pinching.icon;
     dragHandle.draggable = true;
     widgetMenu.appendChild(dragHandle);
 
-    // Add full-screen button
     const fullScreenButton = document.createElement('button');
-    fullScreenButton.innerHTML = emojiList.fullscreen.unicode; // Full-screen icon
+    fullScreenButton.innerHTML = emojiList.fullscreen.unicode;
     fullScreenButton.classList.add('widget-button', 'fullscreen-btn');
     widgetMenu.appendChild(fullScreenButton);
 
-    // Append buttons to widget menu
     widgetMenu.appendChild(removeButton);
     widgetMenu.appendChild(configureButton);
     widgetMenu.appendChild(resizeMenuIcon);
     widgetMenu.appendChild(resizeMenuBlockIcon);
 
-    // Append iframe and widget menu to widget wrapper
     widgetWrapper.appendChild(iframe);
     widgetWrapper.appendChild(widgetMenu);
 
-    // Attach drag event listeners to the drag handle
     dragHandle.addEventListener('dragstart', (e) => {
         console.log('Drag start event triggered');
         e.dataTransfer.setData('text/plain', widgetWrapper.getAttribute('data-order'));
         e.dataTransfer.effectAllowed = 'move';
-
-        // Set the drag image to be the entire widget
         e.dataTransfer.setDragImage(widgetWrapper, 0, 0);
-
         widgetWrapper.classList.add('dragging');
         handleDragStart(e, widgetWrapper);
     });
@@ -163,7 +148,6 @@ async function createWidget(url, gridColumnSpan = 1, gridRowSpan = 1) {
     });
 
     console.log('Drag start event listener attached to drag handle');
-
     console.log('Widget created with grid spans:', {
         columns: gridColumnSpan,
         rows: gridRowSpan
@@ -179,22 +163,31 @@ async function addWidget(url) {
         console.error('Widget container not found');
         return;
     }
-    const widget = await createWidget(url);
-    widget.setAttribute('data-order', widgetContainer.children.length);
-    widgetContainer.appendChild(widget);
+    const service = await getServiceFromUrl(url);
+    console.log('Extracted service:', service);
+    const widgetWrapper = await createWidget(service, url);
+    widgetWrapper.setAttribute('data-order', widgetContainer.children.length);
+    widgetContainer.appendChild(widgetWrapper);
 
-    console.log('Widget appended to container:', widget);
+    console.log('Widget appended to container:', widgetWrapper);
 
-    // Assuming services is defined somewhere else
-    const services = await fetchServices(); // Ensure the imported function is used
-    const service = services.find(service => service.url === url);
-    if (service && service.type === 'api') {
+    const services = await fetchServices();
+    const serviceObj = services.find(s => s.name === service);
+    if (serviceObj && serviceObj.type === 'api') {
         fetchData(url, data => {
-            displayDataInIframe(widget.querySelector('iframe'), data);
+            displayDataInIframe(widgetWrapper.querySelector('iframe'), data);
         });
     }
 
     saveWidgetState();
+}
+
+async function getServiceFromUrl(url) {
+    const services = await fetchServices();
+    console.log('Matching URL:', url);
+    const service = services.find(service => url.startsWith(service.url));
+    console.log('Matched service:', service);
+    return service ? service.name : 'defaultService';
 }
 
 function removeWidget(widgetElement) {
@@ -206,10 +199,11 @@ function removeWidget(widgetElement) {
 async function configureWidget(iframeElement) {
     const newUrl = prompt('Enter new URL for the widget:', iframeElement.src);
     if (newUrl) {
+        const service = await getServiceFromUrl(newUrl);
+        const services = await fetchServices();
+        const serviceObj = services.find(s => s.name === service);
         iframeElement.src = newUrl;
-        const services = await fetchServices(); // Ensure the imported function is used
-        const service = services.find(service => service.url === newUrl);
-        if (service && service.type === 'api') {
+        if (serviceObj && serviceObj.type === 'api') {
             fetchData(newUrl, data => {
                 displayDataInIframe(iframeElement, data);
             });
@@ -231,7 +225,6 @@ function updateWidgetOrders() {
     const widgetContainer = document.getElementById('widget-container');
     const widgets = Array.from(widgetContainer.children);
 
-    // Widgets are already in the correct order in the DOM, so update CSS 'order' and 'data-order' accordingly
     widgets.forEach((widget, index) => {
         widget.setAttribute('data-order', index);
         widget.style.order = index;
@@ -251,7 +244,6 @@ function handleDragStart(e, draggedWidgetWrapper) {
     e.dataTransfer.effectAllowed = 'move';
     console.log('Data transfer set with widget order:', widgetOrder);
 
-    // Add dragOverlays to other widgets
     const widgetContainer = document.getElementById('widget-container');
     const widgets = Array.from(widgetContainer.children);
     widgets.forEach(widget => {
@@ -262,7 +254,6 @@ function handleDragStart(e, draggedWidgetWrapper) {
 }
 
 function handleDragEnd(e) {
-    // Remove dragOverlays from all widgets
     const widgetContainer = document.getElementById('widget-container');
     const widgets = Array.from(widgetContainer.children);
     widgets.forEach(widget => {
@@ -272,20 +263,17 @@ function handleDragEnd(e) {
 }
 
 function addDragOverlay(widgetWrapper) {
-    // Create the drag overlay
     const dragOverlay = document.createElement('div');
     dragOverlay.classList.add('drag-overlay');
 
-    // Style the overlay to cover the entire widget
     dragOverlay.style.position = 'absolute';
     dragOverlay.style.top = '0';
     dragOverlay.style.left = '0';
     dragOverlay.style.width = '100%';
     dragOverlay.style.height = '100%';
-    dragOverlay.style.zIndex = '10000'; // Ensure it sits above other elements
-    dragOverlay.style.backgroundColor = 'rgba(0, 0, 0, 0)'; // Transparent background
+    dragOverlay.style.zIndex = '10000';
+    dragOverlay.style.backgroundColor = 'rgba(0, 0, 0, 0)';
 
-    // Add event listeners to the overlay
     dragOverlay.addEventListener('dragover', (e) => {
         e.preventDefault();
         handleDragOver(e, widgetWrapper);
@@ -297,11 +285,9 @@ function addDragOverlay(widgetWrapper) {
         handleDrop(e, widgetWrapper);
     });
 
-    // Attach the overlay to the widgetWrapper
     widgetWrapper.appendChild(dragOverlay);
     widgetWrapper.classList.add('has-overlay');
 }
-
 
 function removeDragOverlay(widgetWrapper) {
     const dragOverlay = widgetWrapper.querySelector('.drag-overlay');
@@ -340,30 +326,21 @@ function handleDrop(e, targetWidgetWrapper) {
         targetWidgetOrder: targetWidget.getAttribute('data-order')
     });
 
-    // Remove draggedWidget from its current position
     widgetContainer.removeChild(draggedWidget);
 
-    // Insert draggedWidget before or after targetWidget based on their order
     if (parseInt(draggedOrder) < parseInt(targetOrder)) {
-        // Insert after targetWidget
         if (targetWidget.nextSibling) {
             widgetContainer.insertBefore(draggedWidget, targetWidget.nextSibling);
         } else {
             widgetContainer.appendChild(draggedWidget);
         }
     } else {
-        // Insert before targetWidget
         widgetContainer.insertBefore(draggedWidget, targetWidget);
     }
 
-    // No need to update data-order attributes here if updateWidgetOrders will handle it
-    // But if you prefer to update them here, you can do so
-
-    // Remove drag-over class from all widgets
     const updatedWidgets = Array.from(widgetContainer.children);
     updatedWidgets.forEach(widget => widget.classList.remove('drag-over'));
 
-    // Update widget orders
     updateWidgetOrders();
 }
 
