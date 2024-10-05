@@ -1,7 +1,7 @@
-import { saveWidgetState, loadWidgetState } from './localStorage.js';
+import { saveWidgetState, loadWidgetState } from './storage/localStorage.js';
 import { initializeUIInteractions } from './uiInteractions.js';
-import { debounce } from './utils.js';
-import { initializeFullScreenToggle } from './fullscreenToggle.js';
+import { debounce } from './utils/utils.js';
+import { initializeFullScreenToggle } from './widget/events/fullscreenToggle.js';
 
 window.asd = {
     services: [],

@@ -1,29 +1,13 @@
-import { saveWidgetState } from './localStorage.js';
-import { fetchData } from './fetchData.js';
-import { showResizeMenu, hideResizeMenu, showResizeMenuBlock, hideResizeMenuBlock } from './resizeMenu.js';
-import emojiList from './unicodeEmoji.js';
-import { debounce } from './utils.js';
-import { fetchServices } from './fetchServices.js';
+import { saveWidgetState } from '../storage/localStorage.js';
+import { fetchData } from './utils/fetchData.js';
+import { showResizeMenu, hideResizeMenu, showResizeMenuBlock, hideResizeMenuBlock } from './menu/resizeMenu.js';
+import emojiList from '../ui/unicodeEmoji.js';
+import { debounce } from '../utils/utils.js';
+import { fetchServices } from './utils/fetchServices.js';
+import { getServiceFromUrl } from './utils/widgetUtils.js';
+import { getConfig } from './utils/getConfig.js';
+import { handleDragStart, handleDragEnd } from './events/dragDrop.js';
 
-async function getConfig() {
-    if (window.asd.config && Object.keys(window.asd.config).length > 0) {
-        console.log('Using cached configuration');
-        return window.asd.config;
-    }
-
-    try {
-        const response = await fetch('config.json');
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
-        const config = await response.json();
-        window.asd.config = config; // Cache the configuration
-        return config;
-    } catch (error) {
-        console.error('Error fetching config.json:', error);
-        throw new Error('Failed to load configuration');
-    }
-}
 
 async function createWidget(service, url, gridColumnSpan = 1, gridRowSpan = 1) {
     console.log('Creating widget with URL:', url);
@@ -189,14 +173,6 @@ async function addWidget(url) {
     saveWidgetState();
 }
 
-async function getServiceFromUrl(url) {
-    const services = await fetchServices();
-    console.log('Matching URL:', url);
-    const service = services.find(service => url.startsWith(service.url));
-    console.log('Matched service:', service);
-    return service ? service.name : 'defaultService';
-}
-
 function removeWidget(widgetElement) {
     widgetElement.remove();
     updateWidgetOrders();
@@ -244,122 +220,4 @@ function updateWidgetOrders() {
     saveWidgetState();
 }
 
-function handleDragStart(e, draggedWidgetWrapper) {
-    const widgetOrder = draggedWidgetWrapper.getAttribute('data-order');
-    console.log('Drag started for widget with order:', widgetOrder);
-    e.dataTransfer.setData('text/plain', widgetOrder);
-    e.dataTransfer.effectAllowed = 'move';
-    console.log('Data transfer set with widget order:', widgetOrder);
-
-    const widgetContainer = document.getElementById('widget-container');
-    const widgets = Array.from(widgetContainer.children);
-    widgets.forEach(widget => {
-        if (widget !== draggedWidgetWrapper) {
-            addDragOverlay(widget);
-        }
-    });
-}
-
-function handleDragEnd(e) {
-    const widgetContainer = document.getElementById('widget-container');
-    const widgets = Array.from(widgetContainer.children);
-    widgets.forEach(widget => {
-        removeDragOverlay(widget);
-        widget.classList.remove('drag-over');
-    });
-}
-
-function addDragOverlay(widgetWrapper) {
-    const dragOverlay = document.createElement('div');
-    dragOverlay.classList.add('drag-overlay');
-
-    dragOverlay.style.position = 'absolute';
-    dragOverlay.style.top = '0';
-    dragOverlay.style.left = '0';
-    dragOverlay.style.width = '100%';
-    dragOverlay.style.height = '100%';
-    dragOverlay.style.zIndex = '10000';
-    dragOverlay.style.backgroundColor = 'rgba(0, 0, 0, 0)';
-
-    dragOverlay.addEventListener('dragover', (e) => {
-        e.preventDefault();
-        handleDragOver(e, widgetWrapper);
-    });
-
-    dragOverlay.addEventListener('drop', (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        handleDrop(e, widgetWrapper);
-    });
-
-    widgetWrapper.appendChild(dragOverlay);
-    widgetWrapper.classList.add('has-overlay');
-}
-
-function removeDragOverlay(widgetWrapper) {
-    const dragOverlay = widgetWrapper.querySelector('.drag-overlay');
-    if (dragOverlay) {
-        dragOverlay.remove();
-    }
-    widgetWrapper.classList.remove('has-overlay');
-}
-
-function handleDrop(e, targetWidgetWrapper) {
-    e.preventDefault();
-    console.log('Drop event on overlay for widget:', targetWidgetWrapper);
-
-    const draggedOrder = e.dataTransfer.getData('text/plain');
-    const targetOrder = targetWidgetWrapper.getAttribute('data-order');
-
-    console.log(`Drop event: draggedOrder=${draggedOrder}, targetOrder=${targetOrder}`);
-
-    if (draggedOrder === null || targetOrder === null) {
-        console.error('Invalid drag or drop target');
-        return;
-    }
-
-    const widgetContainer = document.getElementById('widget-container');
-
-    const draggedWidget = widgetContainer.querySelector(`[data-order='${draggedOrder}']`);
-    const targetWidget = widgetContainer.querySelector(`[data-order='${targetOrder}']`);
-
-    if (!draggedWidget || !targetWidget) {
-        console.error('Invalid widget elements for dragging or dropping');
-        return;
-    }
-
-    console.log('Before rearrangement:', {
-        draggedWidgetOrder: draggedWidget.getAttribute('data-order'),
-        targetWidgetOrder: targetWidget.getAttribute('data-order')
-    });
-
-    widgetContainer.removeChild(draggedWidget);
-
-    if (parseInt(draggedOrder) < parseInt(targetOrder)) {
-        if (targetWidget.nextSibling) {
-            widgetContainer.insertBefore(draggedWidget, targetWidget.nextSibling);
-        } else {
-            widgetContainer.appendChild(draggedWidget);
-        }
-    } else {
-        widgetContainer.insertBefore(draggedWidget, targetWidget);
-    }
-
-    const updatedWidgets = Array.from(widgetContainer.children);
-    updatedWidgets.forEach(widget => widget.classList.remove('drag-over'));
-
-    updateWidgetOrders();
-}
-
-function handleDragOver(e, widgetWrapper) {
-    e.preventDefault();
-    console.log('Drag over event on overlay for widget:', widgetWrapper);
-    widgetWrapper.classList.add('drag-over');
-}
-
-function handleDragLeave(e, widgetWrapper) {
-    console.log('Drag leave event on overlay for widget:', widgetWrapper);
-    widgetWrapper.classList.remove('drag-over');
-}
-
-export { addWidget, removeWidget, updateWidgetOrders, createWidget, handleDragStart, handleDrop, handleDragOver, handleDragLeave, getConfig };
+export { addWidget, removeWidget, updateWidgetOrders, createWidget };

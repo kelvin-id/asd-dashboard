@@ -1,5 +1,8 @@
-import { createWidget, getConfig } from './widgetManagement.js';
-import { fetchServices } from './fetchServices.js';
+import { createWidget } from '../widget/widgetManagement.js';
+import { fetchServices } from '../widget/utils/fetchServices.js';
+import { getConfig } from '../widget/utils/getConfig.js';
+import { getServiceFromUrl } from '../widget/utils/widgetUtils.js';
+
 
 async function saveWidgetState() {
     try {
@@ -57,19 +60,6 @@ async function loadWidgetState() {
         }
     } catch (error) {
         console.error('Error loading widget state:', error);
-    }
-}
-
-async function getServiceFromUrl(url) {
-    try {
-        const services = await fetchServices();
-        console.log('Matching URL:', url);
-        const service = services.find(service => url.startsWith(service.url));
-        console.log('Matched service:', service);
-        return service ? service.name : 'defaultService';
-    } catch (error) {
-        console.error('Error in getServiceFromUrl:', error);
-        return 'defaultService';
     }
 }
 

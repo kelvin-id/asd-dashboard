@@ -1,4 +1,4 @@
-import { saveWidgetState } from './localStorage.js';
+import { saveWidgetState } from '../../storage/localStorage.js';
 
 function enterBoardboardMode() {
     const widgets = Array.from(document.querySelectorAll('.widget-wrapper'));

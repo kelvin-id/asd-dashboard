@@ -1,20 +1,7 @@
-import emojiList from './unicodeEmoji.js';
-import { saveWidgetState } from './localStorage.js';
-import { fetchServices } from './fetchServices.js';
-
-// Function to fetch configuration
-async function getConfig() {
-    try {
-        const response = await fetch('config.json');
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
-        return await response.json();
-    } catch (error) {
-        console.error('Error fetching config.json:', error);
-        throw new Error('Failed to load configuration');
-    }
-}
+import emojiList from '../../ui/unicodeEmoji.js';
+import { saveWidgetState } from '../../storage/localStorage.js';
+import { fetchServices } from '../utils/fetchServices.js';
+import { getConfig } from '../utils/getConfig.js';
 
 // Function to resize widget horizontally
 async function resizeHorizontally(widget, increase = true) {

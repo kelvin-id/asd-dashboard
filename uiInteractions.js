@@ -1,8 +1,5 @@
-import { addWidget } from './widgetManagement.js';
-import { toggleBoardboardMode, toggleButtons, exitBoardboardMode } from './boardboardMode.js';
-import { showResizeMenuBlock, hideResizeMenuBlock, resizeHorizontally, resizeVertically } from './resizeMenu.js';
-import { fetchServices } from './fetchServices.js';
-import { getConfig } from './widgetManagement.js';
+import { addWidget } from './widget/widgetManagement.js';
+import { toggleBoardboardMode, toggleButtons, exitBoardboardMode } from './component/controls/boardboardMode.js';
 
 let uiInitialized = false; // Guard variable
 
