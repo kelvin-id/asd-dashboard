@@ -40,14 +40,12 @@ self.addEventListener('activate', function (event) {
   const cacheWhitelist = [CACHE_NAME] // Only keep the current cache
   event.waitUntil(
     caches.keys().then(function (cacheNames) {
-      return Promise.all(
-        cacheNames.map(function (cacheName) {
-          if (cacheWhitelist.indexOf(cacheName) === -1) {
-            console.log('[Service Worker] Deleting old cache: ', cacheName)
-            return caches.delete(cacheName)
-          }
-        })
-      )
+      cacheNames.forEach(function (cacheName) {
+        if (cacheWhitelist.indexOf(cacheName) === -1) {
+          console.log('[Service Worker] Deleting old cache: ', cacheName)
+          return caches.delete(cacheName)
+        }
+      })
     })
   )
 })

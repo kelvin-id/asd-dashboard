@@ -46,11 +46,18 @@ The architecture of the ASD Dashboard is a single-page application built using p
 
 - **Node.js**: Ensure you have Node.js installed on your computer.
 
+### Development
+
+- **Linting**:
+    ```sh
+    npm run lint-fix
+    ```
+
 ### Quickstart
 
 1. **Clone the Repository**:
     ```sh
-    git clone https://github.com/your-repo/asd-dashboard.git
+    git clone https://github.com/kelvin-id/asd-dashboard.git
     cd asd-dashboard
     ```
 
@@ -62,11 +69,6 @@ The architecture of the ASD Dashboard is a single-page application built using p
 3. **Run the Application**:
     ```sh
     npm start
-    ```
-
-4. **Build the Application**:
-    ```sh
-    npm run build
     ```
 
 ### License

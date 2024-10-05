@@ -1,3 +1,5 @@
+import { updateWidgetOrders } from '../widgetManagement.js'
+
 function handleDragStart (e, draggedWidgetWrapper) {
   const widgetOrder = draggedWidgetWrapper.getAttribute('data-order')
   console.log('Drag started for widget with order:', widgetOrder)
