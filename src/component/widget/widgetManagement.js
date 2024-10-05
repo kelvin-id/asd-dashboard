@@ -1,8 +1,8 @@
-import { saveWidgetState } from '../storage/localStorage.js';
+import { saveWidgetState } from '../../storage/localStorage.js';
 import { fetchData } from './utils/fetchData.js';
 import { showResizeMenu, hideResizeMenu, showResizeMenuBlock, hideResizeMenuBlock } from './menu/resizeMenu.js';
-import emojiList from '../ui/unicodeEmoji.js';
-import { debounce } from '../utils/utils.js';
+import emojiList from '../../ui/unicodeEmoji.js';
+import { debounce } from '../../utils/utils.js';
 import { fetchServices } from './utils/fetchServices.js';
 import { getServiceFromUrl } from './utils/widgetUtils.js';
 import { getConfig } from './utils/getConfig.js';

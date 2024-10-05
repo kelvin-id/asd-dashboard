@@ -1,7 +1,7 @@
-import { createWidget } from '../widget/widgetManagement.js';
-import { fetchServices } from '../widget/utils/fetchServices.js';
-import { getConfig } from '../widget/utils/getConfig.js';
-import { getServiceFromUrl } from '../widget/utils/widgetUtils.js';
+import { createWidget } from '../component/widget/widgetManagement.js';
+import { fetchServices } from '../component/widget/utils/fetchServices.js';
+import { getConfig } from '../component/widget/utils/getConfig.js';
+import { getServiceFromUrl } from '../component/widget/utils/widgetUtils.js';
 
 
 async function saveWidgetState() {

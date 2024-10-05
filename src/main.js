@@ -1,7 +1,5 @@
 import { saveWidgetState, loadWidgetState } from './storage/localStorage.js';
-import { initializeUIInteractions } from './uiInteractions.js';
-import { debounce } from './utils/utils.js';
-import { initializeFullScreenToggle } from './widget/events/fullscreenToggle.js';
+import { initializeDashboardMenu } from './component/menu/dashboardMenu.js';
 
 window.asd = {
     services: [],
@@ -33,9 +31,9 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error('Error fetching services:', error);
         });
 
-    initializeUIInteractions(); // Ensure this is called only once
+    initializeDashboardMenu(); // Ensure this is called only once
     loadWidgetState();
-    initializeFullScreenToggle(); // Initialize full-screen toggle functionality
+    // initializeFullScreenToggle(); // Initialize full-screen toggle functionality
 
     // Add event listener for window resize
     // window.addEventListener('resize', debounce(saveWidgetState, 250));
