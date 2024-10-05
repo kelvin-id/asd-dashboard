@@ -1,4 +1,3 @@
-
 /* eslint-env serviceworker */
 const CACHE_NAME = 'my-cache-v3' // Make sure this matches the cache name in the main.js file
 

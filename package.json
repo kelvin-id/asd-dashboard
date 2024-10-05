@@ -16,16 +16,17 @@
   "devDependencies": {
     "standard": "*"
   },
-  "config": {
-    "standard": {
-      "globals": [
-        "document",
-        "window",
-        "navigator",
-        "console",
-        "alert",
-        "confirm"
-      ]
-    }
+  "standard": {
+    "globals": [
+      "document",
+      "window",
+      "navigator",
+      "console",
+      "alert",
+      "confirm",
+      "prompt",
+      "localStorage",
+      "location"
+    ]
   }
 }
