@@ -21,16 +21,16 @@ function handleEscapeKey(event) {
     }
 }
 
-function initializeFullScreenToggle() {
-    const fullScreenButtons = document.querySelectorAll('.fullscreen-btn');
-    fullScreenButtons.forEach(button => {
-        button.addEventListener('click', event => {
-            event.preventDefault();
-            const widget = event.target.closest('.widget-wrapper');
-            toggleFullScreen(widget);
-        });
-    });
-    console.log('Full-screen toggle initialized');
-}
+// function initializeFullScreenToggle(widgetWrapper) {
+//     const fullScreenButtons = document.querySelectorAll('.fullscreen-btn');
+//     fullScreenButtons.forEach(button => {
+//         button.addEventListener('click', event => {
+//             event.preventDefault();
+//             const widget = event.target.closest('.widget-wrapper');
+//             toggleFullScreen(widget);
+//         });
+//     });
+//     console.log('Full-screen toggle initialized');
+// }
 
-export { initializeFullScreenToggle };
+export { toggleFullScreen };

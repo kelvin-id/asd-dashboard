@@ -33,7 +33,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     initializeDashboardMenu(); // Ensure this is called only once
     loadWidgetState();
-    // initializeFullScreenToggle(); // Initialize full-screen toggle functionality
 
     // Add event listener for window resize
     // window.addEventListener('resize', debounce(saveWidgetState, 250));

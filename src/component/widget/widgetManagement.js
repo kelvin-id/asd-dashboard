@@ -7,7 +7,7 @@ import { fetchServices } from './utils/fetchServices.js';
 import { getServiceFromUrl } from './utils/widgetUtils.js';
 import { getConfig } from './utils/getConfig.js';
 import { handleDragStart, handleDragEnd } from './events/dragDrop.js';
-
+import { toggleFullScreen } from './events/fullscreenToggle.js';
 
 async function createWidget(service, url, gridColumnSpan = 1, gridRowSpan = 1) {
     console.log('Creating widget with URL:', url);
@@ -113,6 +113,11 @@ async function createWidget(service, url, gridColumnSpan = 1, gridRowSpan = 1) {
     const fullScreenButton = document.createElement('button');
     fullScreenButton.innerHTML = emojiList.fullscreen.unicode;
     fullScreenButton.classList.add('widget-button', 'fullscreen-btn');
+    fullScreenButton.addEventListener('click', event => {
+        event.preventDefault();
+        toggleFullScreen(widgetWrapper);
+    });
+
     widgetMenu.appendChild(fullScreenButton);
 
     widgetMenu.appendChild(removeButton);
