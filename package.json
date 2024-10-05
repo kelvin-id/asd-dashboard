@@ -9,6 +9,23 @@
   "scripts": {
     "start": "python3 -m http.server 8000",
     "build": "mkdir -p dist && cp *.js *.css *.html dist/",
-    "deploy": "npm run build"
+    "deploy": "npm run build",
+    "lint": "npx standard",
+    "lint-fix": "npx standard --fix"
+  },
+  "devDependencies": {
+    "standard": "*"
+  },
+  "config": {
+    "standard": {
+      "globals": [
+        "document",
+        "window",
+        "navigator",
+        "console",
+        "alert",
+        "confirm"
+      ]
+    }
   }
 }
