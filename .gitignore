@@ -2,3 +2,8 @@ services.json
 package-lock.json
 dist
 config.json
+node_modules
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
