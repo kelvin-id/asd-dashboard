@@ -7,7 +7,7 @@
   "author": "contact@kelvin.id",
   "license": "MIT",
   "scripts": {
-    "start": "python3 -m http.server 8000",
+    "start": "python3 -m http.server 8000 --directory src",
     "build": "mkdir -p dist && cp *.js *.css *.html dist/",
     "deploy": "npm run build",
     "lint": "npx standard",
