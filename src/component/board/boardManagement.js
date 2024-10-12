@@ -84,7 +84,6 @@ export async function switchView (boardId, viewId) {
 export function updateViewSelector (boardId) {
   const viewSelector = document.getElementById('view-selector')
   viewSelector.innerHTML = '' // Clear existing options
-  window.test = document.querySelector('.board')
   const currentBoardId = document.querySelector('.board').id
   const board = boards.find(b => b.id === currentBoardId)
 
@@ -162,4 +161,105 @@ export function addBoardToUI (board) {
   option.value = board.id
   option.textContent = board.name
   boardSelector.appendChild(option)
+}
+
+export function renameBoard (boardId, newBoardName) {
+  const board = boards.find(b => b.id === boardId)
+  if (board) {
+    board.name = newBoardName
+    saveBoardState(boards)
+    console.log(`Renamed board ${boardId} to ${newBoardName}`)
+    updateBoardSelector()
+  } else {
+    console.error(`Board with ID ${boardId} not found`)
+  }
+}
+
+export function deleteBoard (boardId) {
+  const boardIndex = boards.findIndex(b => b.id === boardId)
+  if (boardIndex !== -1) {
+    boards.splice(boardIndex, 1)
+    saveBoardState(boards)
+    console.log(`Deleted board ${boardId}`)
+    updateBoardSelector()
+    if (boards.length > 0) {
+      const firstBoardId = boards[0].id
+      switchBoard(firstBoardId)
+    } else {
+      clearWidgetContainer()
+      document.querySelector('.board').id = ''
+      document.querySelector('.board-view').id = ''
+    }
+  } else {
+    console.error(`Board with ID ${boardId} not found`)
+  }
+}
+
+export function renameView (boardId, viewId, newViewName) {
+  const board = boards.find(b => b.id === boardId)
+  if (board) {
+    const view = board.views.find(v => v.id === viewId)
+    if (view) {
+      view.name = newViewName
+      saveBoardState(boards)
+      console.log(`Renamed view ${viewId} to ${newViewName}`)
+      updateViewSelector(boardId)
+    } else {
+      console.error(`View with ID ${viewId} not found`)
+    }
+  } else {
+    console.error(`Board with ID ${boardId} not found`)
+  }
+}
+
+export function deleteView (boardId, viewId) {
+  const board = boards.find(b => b.id === boardId)
+  if (board) {
+    const viewIndex = board.views.findIndex(v => v.id === viewId)
+    if (viewIndex !== -1) {
+      board.views.splice(viewIndex, 1)
+      saveBoardState(boards)
+      console.log(`Deleted view ${viewId}`)
+      updateViewSelector(boardId)
+      if (board.views.length > 0) {
+        const firstViewId = board.views[0].id
+        switchView(boardId, firstViewId)
+      } else {
+        clearWidgetContainer()
+        document.querySelector('.board-view').id = ''
+      }
+    } else {
+      console.error(`View with ID ${viewId} not found`)
+    }
+  } else {
+    console.error(`Board with ID ${boardId} not found`)
+  }
+}
+
+export function resetView (boardId, viewId) {
+  const board = boards.find(b => b.id === boardId)
+  if (board) {
+    const view = board.views.find(v => v.id === viewId)
+    if (view) {
+      view.widgetState = [] // Reset widget state
+      saveBoardState(boards)
+      console.log(`Reset view ${viewId}`)
+      clearWidgetContainer()
+    } else {
+      console.error(`View with ID ${viewId} not found`)
+    }
+  } else {
+    console.error(`Board with ID ${boardId} not found`)
+  }
+}
+
+function updateBoardSelector () {
+  const boardSelector = document.getElementById('board-selector')
+  boardSelector.innerHTML = ''
+  boards.forEach(board => {
+    const option = document.createElement('option')
+    option.value = board.id
+    option.textContent = board.name
+    boardSelector.appendChild(option)
+  })
 }

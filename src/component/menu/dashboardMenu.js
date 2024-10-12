@@ -1,5 +1,17 @@
 import { addWidget } from '../widget/widgetManagement.js'
-import { switchBoard, createBoard, addBoardToUI, createView, switchView, updateViewSelector } from '../../component/board/boardManagement.js'
+import {
+  switchBoard,
+  createBoard,
+  addBoardToUI,
+  createView,
+  switchView,
+  updateViewSelector,
+  renameBoard,
+  deleteBoard,
+  renameView,
+  deleteView,
+  resetView
+} from '../../component/board/boardManagement.js'
 import { saveWidgetState } from '../../storage/localStorage.js'
 
 let uiInitialized = false // Guard variable
@@ -40,29 +52,79 @@ function initializeDashboardMenu () {
     }
   })
 
+  document.getElementById('rename-board-button').addEventListener('click', () => {
+    const boardId = getCurrentBoardId()
+    const newBoardName = prompt('Enter new board name:')
+    if (newBoardName) {
+      renameBoard(boardId, newBoardName)
+    }
+  })
+
+  document.getElementById('delete-board-button').addEventListener('click', () => {
+    const boardId = getCurrentBoardId()
+    if (confirm('Are you sure you want to delete this board?')) {
+      deleteBoard(boardId)
+    }
+  })
+
   document.getElementById('create-view-button').addEventListener('click', () => {
-    const boardId = document.querySelector('.board').id
+    const boardId = getCurrentBoardId()
     const viewName = prompt('Enter view name:')
     if (viewName) {
       createView(boardId, viewName)
-      updateViewSelector()
+      updateViewSelector(boardId)
+    }
+  })
+
+  document.getElementById('rename-view-button').addEventListener('click', () => {
+    const boardId = getCurrentBoardId()
+    const viewId = getCurrentViewId()
+    const newViewName = prompt('Enter new view name:')
+    if (newViewName) {
+      renameView(boardId, viewId, newViewName)
+      updateViewSelector(boardId)
+    }
+  })
+
+  document.getElementById('delete-view-button').addEventListener('click', () => {
+    const boardId = getCurrentBoardId()
+    const viewId = getCurrentViewId()
+    if (confirm('Are you sure you want to delete this view?')) {
+      deleteView(boardId, viewId)
+      updateViewSelector(boardId)
+    }
+  })
+
+  document.getElementById('reset-view-button').addEventListener('click', () => {
+    const boardId = getCurrentBoardId()
+    const viewId = getCurrentViewId()
+    if (confirm('Are you sure you want to reset this view?')) {
+      resetView(boardId, viewId)
     }
   })
 
   document.getElementById('board-selector').addEventListener('change', (event) => {
     const selectedBoardId = event.target.value
-    const currentBoardId = document.querySelector('.board').id
+    const currentBoardId = getCurrentBoardId()
     saveWidgetState(currentBoardId) // Save the state of the current board before switching
     switchBoard(selectedBoardId)
-    updateViewSelector()
+    updateViewSelector(selectedBoardId)
   })
 
   document.getElementById('view-selector').addEventListener('change', (event) => {
-    const selectedBoardId = document.querySelector('.board').id
+    const selectedBoardId = getCurrentBoardId()
     const selectedViewId = event.target.value
     console.debug(`Switching to selected view ${selectedViewId} in board ${selectedBoardId}`) // Add this log
     switchView(selectedBoardId, selectedViewId)
   })
+}
+
+function getCurrentBoardId () {
+  return document.querySelector('.board').id
+}
+
+function getCurrentViewId () {
+  return document.querySelector('.board-view').id
 }
 
 export { initializeDashboardMenu }
