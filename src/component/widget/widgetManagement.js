@@ -186,7 +186,9 @@ async function addWidget (url, columns = 1, rows = 1, type = 'iframe', boardId, 
   const serviceObj = services.find(s => s.name === service)
   if (serviceObj && serviceObj.type === 'api') {
     fetchData(url, data => {
-      displayDataInIframe(widgetWrapper.querySelector('iframe'), data)
+      const iframe = widgetWrapper.querySelector('iframe')
+      iframe.contentWindow.postMessage(data, '*')
+      console.log('Data posted to iframe for API service:', data)
     })
   }
 
@@ -197,7 +199,10 @@ async function addWidget (url, columns = 1, rows = 1, type = 'iframe', boardId, 
 function removeWidget (widgetElement) {
   widgetElement.remove()
   updateWidgetOrders()
-  saveWidgetState()
+  const boardId = document.querySelector('.board').id
+  const viewId = document.querySelector('.board-view').id
+  console.log(`Saving widget state after removal for board ${boardId} and view ${viewId}`)
+  saveWidgetState(boardId, viewId)
 }
 
 async function configureWidget (iframeElement) {
@@ -209,19 +214,14 @@ async function configureWidget (iframeElement) {
     iframeElement.src = newUrl
     if (serviceObj && serviceObj.type === 'api') {
       fetchData(newUrl, data => {
-        displayDataInIframe(iframeElement, data)
+        iframeElement.contentWindow.postMessage(data, '*')
+        console.log('Data posted to iframe for API service:', data)
       })
     }
-    saveWidgetState()
-  }
-}
-
-function displayDataInIframe (iframe, data) {
-  if (iframe.contentWindow) {
-    const message = JSON.stringify(data, null, 2)
-    iframe.contentWindow.postMessage(message, '*')
-  } else {
-    console.error('Unable to access iframe contentWindow')
+    const boardId = document.querySelector('.board').id
+    const viewId = document.querySelector('.board-view').id
+    console.log(`Saving widget state after configuration for board ${boardId} and view ${viewId}`)
+    saveWidgetState(boardId, viewId)
   }
 }
 
@@ -238,7 +238,10 @@ function updateWidgetOrders () {
     })
   })
 
-  saveWidgetState()
+  const boardId = document.querySelector('.board').id
+  const viewId = document.querySelector('.board-view').id
+  console.log(`Saving widget state after updating orders for board ${boardId} and view ${viewId}`)
+  saveWidgetState(boardId, viewId)
 }
 
 export { addWidget, removeWidget, updateWidgetOrders, createWidget }

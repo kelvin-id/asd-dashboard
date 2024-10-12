@@ -46,6 +46,13 @@ export function createView (boardId, viewName, viewId = null) {
   }
 }
 
+function clearWidgetContainer () {
+  const widgetContainer = document.getElementById('widget-container')
+  while (widgetContainer.firstChild) {
+    widgetContainer.removeChild(widgetContainer.firstChild)
+  }
+}
+
 export async function switchView (boardId, viewId) {
   if (isLoading) {
     console.log('Currently loading, please wait...')
@@ -59,10 +66,7 @@ export async function switchView (boardId, viewId) {
     const view = board.views.find(v => v.id === viewId)
     if (view) {
       document.querySelector('.board-view').id = viewId
-      const widgetContainer = document.getElementById('widget-container')
-      while (widgetContainer.firstChild) {
-        widgetContainer.removeChild(widgetContainer.firstChild)
-      }
+      clearWidgetContainer()
       console.log(`Loading widgets for view ${viewId}:`, view.widgetState)
       for (const widget of view.widgetState) {
         console.log(`Adding widget from state: ${JSON.stringify(widget)}`)
@@ -78,17 +82,22 @@ export async function switchView (boardId, viewId) {
 }
 
 function updateViewSelector (boardId) {
+  console.log(`Updating view selector for board: ${boardId}`)
   const viewSelector = document.getElementById('view-selector')
   viewSelector.innerHTML = '' // Clear existing options
 
   const board = boards.find(b => b.id === boardId)
   if (board) {
+    console.log(`Found board with ID: ${boardId}, adding its views to the selector`)
     board.views.forEach(view => {
+      console.log(`Adding view to selector: ${view.name} with ID: ${view.id}`)
       const option = document.createElement('option')
       option.value = view.id
       option.textContent = view.name
       viewSelector.appendChild(option)
     })
+  } else {
+    console.error(`Board with ID ${boardId} not found`)
   }
 }
 
@@ -99,21 +108,19 @@ export async function switchBoard (boardId) {
   }
 
   isLoading = true
+  console.log(`Attempting to switch to board: ${boardId}`)
   const board = boards.find(b => b.id === boardId)
   if (board) {
     console.log(`Switching to board ${boardId}`)
     document.querySelector('.board').id = boardId
-    const widgetContainer = document.getElementById('widget-container')
-    while (widgetContainer.firstChild) {
-      widgetContainer.removeChild(widgetContainer.firstChild)
-    }
+    clearWidgetContainer()
     updateViewSelector(boardId)
     if (board.views.length > 0) {
       const firstViewId = board.views[0].id
       console.log(`Switching to first view ${firstViewId} in board ${boardId}`)
-      document.querySelector('.board-view').id = firstViewId // Update board-view ID
+      document.querySelector('.board-view').id = firstViewId
       await switchView(boardId, firstViewId)
-      await loadWidgetState(boardId, firstViewId) // Load widget state for the first view
+      await loadWidgetState(boardId, firstViewId)
     }
   } else {
     console.error(`Board with ID ${boardId} not found`)
