@@ -1,7 +1,7 @@
 {
     "globalSettings": {
         "theme": "light",
-        "widgetStoreUrl": ["*/services.json"],
+        "widgetStoreUrl": ["*/services.json", "http://example.com/widgets.json"],
         "database": "localStorage",
         "localStorage": {
             "enabled": "true"

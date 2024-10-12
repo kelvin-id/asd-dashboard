@@ -309,3 +309,22 @@ header {
 .widget-wrapper.below-min {
     border: 2px solid orange;
 }
+
+/* New styles for board management UI elements */
+#control-panel {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+#board-selector {
+    padding: 5px;
+    font-size: 14px;
+}
+
+#create-board-button {
+    padding: 5px 10px;
+    font-size: 14px;
+    cursor: pointer;
+}

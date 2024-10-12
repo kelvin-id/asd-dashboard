@@ -3,9 +3,9 @@ import { fetchServices } from '../component/widget/utils/fetchServices.js'
 import { getConfig } from '../component/widget/utils/getConfig.js'
 import { getServiceFromUrl } from '../component/widget/utils/widgetUtils.js'
 
-async function saveWidgetState () {
+async function saveWidgetState (boardId) {
   try {
-    console.log('saveWidgetState function called')
+    console.log('saveWidgetState function called for board:', boardId)
     const widgetContainer = document.getElementById('widget-container')
     const widgets = Array.from(widgetContainer.children)
     const widgetState = widgets.map(widget => {
@@ -18,18 +18,28 @@ async function saveWidgetState () {
       console.log('Saving widget state:', state)
       return state
     })
-    localStorage.setItem('widgetState', JSON.stringify(widgetState))
-    console.log('Saved widget state to localStorage:', widgetState)
+    const boards = await loadBoardState()
+    const board = boards.find(b => b.id === boardId)
+    if (board) {
+      board.views = [{ widgetState }]
+      await saveBoardState(boards)
+      console.log('Saved widget state to board:', board)
+    } else {
+      console.error('Board not found:', boardId) // here we break
+    }
+
   } catch (error) {
     console.error('Error saving widget state:', error)
   }
 }
 
-async function loadWidgetState () {
+async function loadWidgetState (boardId) {
   try {
-    const savedState = JSON.parse(localStorage.getItem('widgetState'))
-    console.log('Loaded widget state from localStorage:', savedState)
-    if (savedState) {
+    const boards = await loadBoardState()
+    const board = boards.find(b => b.id === boardId)
+    if (board && board.views.length > 0) {
+      const savedState = board.views[0].widgetState
+      console.log('Loaded widget state from board:', savedState)
       const config = await getConfig()
       const services = await fetchServices()
       console.log('Fetched services:', services)
@@ -56,9 +66,34 @@ async function loadWidgetState () {
         widgetContainer.appendChild(widgetWrapper)
         console.log('Created widget:', widgetWrapper)
       }
+    } else {
+      console.log('No saved state found for board:', boardId)
     }
   } catch (error) {
     console.error('Error loading widget state:', error)
+  }
+}
+
+export async function saveBoardState(boards) {
+  try {
+    console.log('Saving board state:', boards);
+    localStorage.setItem('boards', JSON.stringify(boards));
+    console.log('Board state saved to localStorage');
+  } catch (error) {
+    console.error('Error saving board state:', error);
+  }
+}
+
+export async function loadBoardState() {
+  try {
+    const boards = localStorage.getItem('boards');
+    console.log('Loaded board state from localStorage:', boards);
+    const parsedBoards = boards ? JSON.parse(boards) : [];
+    console.log('Parsed board state:', parsedBoards);
+    return parsedBoards;
+  } catch (error) {
+    console.error('Error loading board state:', error);
+    return [];
   }
 }
 
