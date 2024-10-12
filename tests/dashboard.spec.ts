@@ -248,7 +248,7 @@ test.describe('ASD Dashboard', () => {
 
     const widgets = page.locator('.widget-wrapper');
     const firstWidget = widgets.nth(0);
-    await firstWidget.locator('.widget-icon-configure').click();
+    await firstWidget.locator('.widget-icon-link').click();
     // Removed the page.fill line as the URL is now provided in the dialog accept
     await expect(firstWidget.locator('iframe')).toHaveAttribute('src', 'https://new.url');
   });
@@ -261,7 +261,7 @@ test.describe('ASD Dashboard', () => {
     const firstWidget = widgets.nth(0);
 
     // Test fullscreen
-    await firstWidget.locator('.fullscreen-btn').click();
+    await firstWidget.locator('.widget-icon-fullscreen').click();
     await expect(firstWidget).toHaveClass(/fullscreen/);
     await page.keyboard.press('Escape');
     await expect(firstWidget).not.toHaveClass(/fullscreen/);

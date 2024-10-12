@@ -53,19 +53,19 @@ async function createWidget (service, url, gridColumnSpan = 1, gridRowSpan = 1) 
 
   const removeButton = document.createElement('button')
   removeButton.innerHTML = emojiList.cross.unicode
-  removeButton.classList.add('widget-button', 'remove')
+  removeButton.classList.add('widget-button', 'widget-icon-remove')
   removeButton.addEventListener('click', () => {
     removeWidget(widgetWrapper)
   })
 
   const configureButton = document.createElement('button')
   configureButton.innerHTML = emojiList.link.unicode
-  configureButton.classList.add('widget-button', 'widget-icon-configure')
+  configureButton.classList.add('widget-button', 'widget-icon-link')
   configureButton.addEventListener('click', () => {
     configureWidget(iframe)
   })
 
-  const buttonDebounce = 100
+  const buttonDebounce = 200
 
   const debouncedHideResizeMenu = debounce((icon) => {
     hideResizeMenu(icon)
@@ -82,9 +82,11 @@ async function createWidget (service, url, gridColumnSpan = 1, gridRowSpan = 1) 
     console.log('Mouse enter resize menu icon')
     showResizeMenu(resizeMenuIcon)
   })
+
   resizeMenuIcon.addEventListener('mouseleave', (event) => {
     console.log('Mouse left resize menu icon')
-    if (!event.relatedTarget || !event.relatedTarget.classList.contains('resize-menu')) {
+    const related = event.relatedTarget
+    if (!related || !related.closest('.resize-menu')) {
       debouncedHideResizeMenu(resizeMenuIcon)
     }
   })
@@ -105,14 +107,14 @@ async function createWidget (service, url, gridColumnSpan = 1, gridRowSpan = 1) 
   })
 
   const dragHandle = document.createElement('span')
-  dragHandle.classList.add('widget-icon-drag', 'widget-button')
+  dragHandle.classList.add('widget-button', 'widget-icon-drag')
   dragHandle.innerHTML = emojiList.pinching.icon
   dragHandle.draggable = true
   widgetMenu.appendChild(dragHandle)
 
   const fullScreenButton = document.createElement('button')
   fullScreenButton.innerHTML = emojiList.fullscreen.unicode
-  fullScreenButton.classList.add('widget-button', 'fullscreen-btn')
+  fullScreenButton.classList.add('widget-button', 'widget-icon-fullscreen')
   fullScreenButton.addEventListener('click', event => {
     event.preventDefault()
     toggleFullScreen(widgetWrapper)

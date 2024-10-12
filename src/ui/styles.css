@@ -105,10 +105,6 @@ header {
     transform: scale(0.95);
 }
 
-.widget-button.widget-icon-configure {
-    right: 30px;
-}
-
 #toggle-widget-order, #toggle-widget-buttons {
     padding: 0.5rem 1rem;
     font-size: 1rem;
@@ -137,29 +133,6 @@ header {
 
 .hide-widget-menu .widget-button {
     display: none;
-}
-
-.widget-menu {
-    padding: 10px;
-    z-index: 10;
-}
-
-.widget-button {
-    position: absolute;
-    top: 5px;
-    right: 5px;
-    background: none;
-    border: none;
-    cursor: pointer;
-    font-size: 1.2rem;
-    z-index: 10;
-    opacity: 0.5;
-    /* Set this on purpose to prevent overlap, use margins */
-    padding: 0px; 
-}
-
-.widget-button:hover {
-    opacity: 1;
 }
 
 #save-widget-order {
@@ -191,20 +164,65 @@ header {
     z-index: 10;
 }
 
-.widget-button.widget-icon-resize {
-    right: 55px;
-    font-size: 1.2rem;
-    opacity: 0.5;
+.widget-menu {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    display: grid;
+    grid-auto-flow: column;
+    gap: 10px;
+    z-index: 10;
 }
 
-.widget-button.widget-icon-resize:hover {
+.widget-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.2rem;
+    opacity: 0.2;
+    transition: opacity 0.3s ease;
+    padding: 0;
+    margin: 0;
+}
+
+.widget-button:hover {
     opacity: 1;
+}
+
+.widget-icon-remove {
+    order: 6
+}
+
+.widget-icon-link{
+    order: 5
+}
+
+.widget-icon-resize-block {
+    order: 2
+}
+
+.widget-icon-resize {
+    order: 1
+}
+
+.widget-icon-fullscreen {
+    font-size: 1.6rem;
+    order: 0
+}
+
+.widget-icon-drag {
+    cursor: grab;
+    order: -1
+}
+
+.widget-icon-drag:active {
+    cursor: grabbing;
 }
 
 .resize-menu {
     position: absolute;
     top: 30px;
-    right: 5px;
+    right: 75px;
     display: flex;
     flex-direction: column;
     background-color: #fff;
@@ -228,16 +246,6 @@ header {
 
 .resize-menu button:hover {
     background-color: #f0f0f0;
-}
-
-.widget-button.widget-icon-resize-block {
-    right: 80px;
-    font-size: 1.2rem;
-    opacity: 0.5;
-}
-
-.widget-button.widget-icon-resize-block:hover {
-    opacity: 1;
 }
 
 .resize-menu-block {
@@ -269,20 +277,6 @@ header {
     background-color: #f0f0f0;
 }
 
-.widget-icon-drag {
-    cursor: grab;
-    right: 115px;
-    transition: opacity 0.3s ease;
-}
-
-.widget-icon-drag:hover {
-    opacity: 1;
-}
-
-.widget-icon-drag:active {
-    cursor: grabbing;
-}
-
 .widget-wrapper.drag-over {
     border: 2px dashed #4CAF50;
 }
@@ -301,12 +295,6 @@ header {
 
 .widget-wrapper.fullscreen .widget-iframe {
     flex-grow: 1;
-}
-
-.widget-wrapper .fullscreen-btn {
-    top: -2px;
-    right: 135px;
-    font-size: 1.6rem;
 }
 
 /* Add styles for visual feedback */

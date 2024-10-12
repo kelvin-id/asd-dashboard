@@ -22,7 +22,7 @@ function handleEscapeKey (event) {
 }
 
 // function initializeFullScreenToggle(widgetWrapper) {
-//     const fullScreenButtons = document.querySelectorAll('.fullscreen-btn');
+//     const fullScreenButtons = document.querySelectorAll('.widget-icon-fullscreen');
 //     fullScreenButtons.forEach(button => {
 //         button.addEventListener('click', event => {
 //             event.preventDefault();
