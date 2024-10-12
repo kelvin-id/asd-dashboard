@@ -4,6 +4,9 @@ import { getConfig } from '../component/widget/utils/getConfig.js'
 import { getServiceFromUrl } from '../component/widget/utils/widgetUtils.js'
 
 async function saveWidgetState (boardId) {
+  if (!boardId) {
+    boardId = document.querySelector('.board').id
+  }
   try {
     console.log('saveWidgetState function called for board:', boardId) // Add this log
     const widgetContainer = document.getElementById('widget-container')
