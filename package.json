@@ -7,6 +7,8 @@
   "author": "contact@kelvin.id",
   "license": "MIT",
   "scripts": {
+    "prepare": "husky",
+    "postinstall": "husky",
     "start": "python3 -m http.server 8000 --directory src",
     "build": "mkdir -p dist && cp *.js *.css *.html dist/",
     "deploy": "npm run build",
@@ -19,6 +21,7 @@
   "devDependencies": {
     "@playwright/test": "^1.47.2",
     "@types/node": "^22.7.4",
+    "husky": "^9.1.6",
     "playwright": "^1.47.2",
     "standard": "*"
   },
