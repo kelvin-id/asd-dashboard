@@ -112,18 +112,25 @@ test.describe('ASD Dashboard', () => {
     await expect(firstWidget).toHaveAttribute('data-columns', '3');
     await expect(firstWidget).toHaveAttribute('data-rows', '3');
 
-    // Store data-order attributes in a dictionary
+    // Store data-order and url attributes in a dictionary
     const initialOrder = {};
     console.log('Before Drag-and-Drop:');
     for (let i = 0; i < 3; i++) {
       const widget = widgets.nth(i);
       const order = await widget.getAttribute('data-order');
-      initialOrder[i] = order;
-      console.log(`Widget ${i} data-order: ${order}`);
+      const url = await widget.getAttribute('data-url'); // Fetch the url attribute
+
+      if (url !== null) {
+        initialOrder[url] = order; // Use url as the key
+      } else {
+        console.error(`Widget ${i} has a null url attribute`);
+      }
+
+      console.log(`Widget ${i} data-order: ${order}, url: ${url}`);
     }
 
     // Test drag and drop
-    const secondWidget = widgets.nth(1);
+    const secondWidget = widgets.nth(2);
     const dragHandle = firstWidget.locator('.widget-icon-drag');
     const dropTarget = secondWidget.locator('.widget-icon-drag');
 
@@ -135,17 +142,56 @@ test.describe('ASD Dashboard', () => {
     for (let i = 0; i < 3; i++) {
       const widget = widgets.nth(i);
       const order = await widget.getAttribute('data-order');
-      finalOrder[i] = order;
-      console.log(`Widget ${i} data-order: ${order}`);
+      const url = await widget.getAttribute('data-url'); // Fetch the url attribute
+      
+      if (url !== null) {
+        finalOrder[url] = order; // Use url as the key
+      } else {
+        console.error(`Widget ${i} has a null url attribute`);
+      }
+
+      console.log(`Widget ${i} data-order: ${order}, url: ${url}`);
     }
 
-    // Compare initial and final order
+    // Compare initial and final order by url
     console.log('Order comparison:');
-    for (let i = 0; i < 3; i++) {
-      console.log(`Widget ${i} initial: ${initialOrder[i]}, final: ${finalOrder[i]}`);
+    for (const url in initialOrder) {
+      console.log(`Widget url: ${url}, initial: ${initialOrder[url]}, final: ${finalOrder[url]}`);
     }
-    // The order does not change, disabled below code untill I fix the ordering bug.
+    
+    // The order does not change, disabled below code until I fix the ordering bug.
     // await expect(firstWidget).toHaveAttribute('data-order', '1');
     // await expect(secondWidget).toHaveAttribute('data-order', '0');
+
+    // Reload the page to restore widgets from local storage
+    // await page.reload();
+
+    // // Verify the order of widgets after reload
+    // const restoredOrder = {};
+    // console.log('After Reload:');
+    // for (let i = 0; i < 3; i++) {
+    //   const widget = widgets.nth(i);
+    //   const order = await widget.getAttribute('data-order');
+    //   const url = await widget.getAttribute('data-url'); // Fetch the url attribute
+
+    //   if (url !== null) {
+    //     restoredOrder[url] = order; // Use url as the key
+    //   } else {
+    //     console.error(`Widget ${i} has a null url attribute`);
+    //   }
+
+    //   console.log(`Widget ${i} data-order: ${order}, url: ${url}`);
+    // }
+
+    // // Compare initial and restored order by url
+    // console.log('Order comparison after reload:');
+    // for (const url in initialOrder) {
+    //   console.log(`Widget url: ${url}, initial: ${initialOrder[url]}, restored: ${restoredOrder[url]}`);
+    // }
+
+    // // Verify the expected order using url
+    // for (const url in initialOrder) {
+    //   await expect(widgets.locator(`[data-url="${url}"]`)).toHaveAttribute('data-order', restoredOrder[url]);
+    // }
   });
 });
