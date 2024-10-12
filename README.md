@@ -1,77 +1,103 @@
-# asd-dashboard
+```markdown
+# ASD Dashboard
 
-ASD Dashboard is a pure VanillaJS single-page application (SPA) for managing remote services through widgets displayed in iframes. The application allows users to add, resize, reorder, and configure widgets, with all user preferences stored in localStorage. The dashboard is designed to fully utilize screen space and provides a user-friendly interface for managing various services.
+ASD Dashboard is a pure VanillaJS Progressive Web App (PWA) designed for managing remote services through widgets displayed in iframes. The dashboard allows users to add, resize, reorder, and configure widgets dynamically, with all user preferences stored in localStorage to ensure persistence across sessions.
 
 ## Overview
 
-The architecture of the ASD Dashboard is a single-page application built using plain HTML, CSS, and JavaScript without any frameworks. The main components include:
-- `index.html`: The main entry point with a basic layout.
-- `styles.css`: The stylesheet for styling the application.
-- `main.js`: The core JavaScript functionality, split into multiple feature files for better organization and maintainability.
+The 'asd-dashboard' is a single-page application (SPA) built using plain HTML, CSS, and JavaScript without any frameworks. The main components include:
+- `index.html`: Basic layout of the application.
+- `styles.css`: Styling for the application.
+- `main.js`: Core JavaScript functionality divided into feature files for better organization and maintainability.
 
-### Technologies Used
-- **Node.js**: JavaScript runtime for building and running the application.
+The application uses Node.js as a runtime environment to facilitate running the app. The architecture focuses solely on frontend functionality, making AJAX calls to remote services as needed.
 
 ### Project Structure
-- **index.html**: Defines the basic structure of the web page.
-- **styles.css**: Contains the styling rules for the application.
-- **main.js**: Initializes the application.
-- **config.json**: Configuration settings for grid layout constraints.
-- **services.json**: List of services available for widgets.
-- **boardboardMode.js**: Implements the boardboard mode functionality.
-- **fetchData.js**: Fetches data from remote services.
-- **fetchServices.js**: Fetches the list of services from `services.json`.
-- **fullscreenToggle.js**: Toggles full-screen mode for widgets.
-- **localStorage.js**: Manages saving and loading widget states using localStorage.
-- **resizeMenu.js**: Provides functionality to resize widgets.
-- **serverWorkerRegistration.js**: Manages service worker registration.
-- **serviceWorker.js**: Implements caching strategies for offline capabilities.
-- **uiInteractions.js**: Initializes user interface interactions.
-- **unicodeEmoji.js**: Defines a collection of emoji metadata.
-- **utils.js**: Contains utility functions like debounce.
-- **widgetManagement.js**: Manages the creation, addition, removal, and configuration of widgets.
+
+```
+asd-dashboard/
+├── .github/workflows/
+│   └── playwright.yml
+├── src/
+│   ├── component/
+│   │   ├── menu/
+│   │   │   ├── boardMode.js
+│   │   │   └── dashboardMenu.js
+│   │   ├── widget/
+│   │   │   ├── events/
+│   │   │   │   ├── dragDrop.js
+│   │   │   │   └── fullscreenToggle.js
+│   │   │   ├── menu/
+│   │   │   │   └── resizeMenu.js
+│   │   │   ├── utils/
+│   │   │   │   ├── fetchData.js
+│   │   │   │   ├── fetchServices.js
+│   │   │   │   ├── getConfig.js
+│   │   │   │   └── widgetUtils.js
+│   │   │   └── widgetManagement.js
+│   ├── storage/
+│   │   └── localStorage.js
+│   ├── ui/
+│   │   ├── styles.css
+│   │   └── unicodeEmoji.js
+│   ├── setup/
+│   │   ├── example-config.json
+│   │   └── example-services.json
+│   ├── index.html
+│   ├── main.js
+│   ├── serviceWorker.js
+│   ├── config.json
+│   ├── services.json
+├── tests/
+│   └── dashboard.spec.ts
+├── .gitignore
+├── package.json
+├── playwright.config.ts
+└── README.md
+```
 
 ## Features
 
-1. **Widget Management**: Add, resize, reorder, and configure widgets.
-2. **Local Storage**: Stores user preferences such as widget order and size.
-3. **Boardboard Mode**: Allows users to reorder widgets using a numeric input.
-4. **Full-Screen Mode**: Toggle widgets to full-screen mode.
-5. **Grid Layout**: Uses CSS Grid for layout management, ensuring widgets fully utilize screen space.
-6. **Service Worker**: Caches assets for improved performance and offline functionality.
+- **Widget Management**: Add, resize, reorder, and configure widgets dynamically.
+- **Local Storage**: User preferences, including widget order and size, are stored in localStorage to ensure persistence across sessions.
+- **Responsive Design**: Utilizes CSS Grid for flexible and responsive layouts.
+- **Full-Screen Mode**: Toggle widgets to full-screen mode.
+- **Grid Layout**: Uses CSS Grid for layout management, ensuring widgets fully utilize screen space.
+- **Keyboard Navigation**: Use keyboard shortcuts for various actions.
+- **Service Selection**: Add widgets by selecting services from a pre-defined JSON file.
+- **Playwright Tests**: Automated tests for adding services, configuring widgets, and ensuring UI functionality.
 
-## Getting Started
+## Getting started
 
 ### Requirements
 
-- **Node.js**: Ensure you have Node.js installed on your computer.
-
-### Development
-
-- **Linting**:
-    ```sh
-    npm run lint-fix
-    ```
+- Node.js (latest LTS version)
+- Yarn (for dependency management)
 
 ### Quickstart
 
-1. **Clone the Repository**:
-    ```sh
-    git clone https://github.com/kelvin-id/asd-dashboard.git
+1. **Clone the repository**:
+    ```bash
+    git clone git@github.com:kelvin-id/asd-dashboard.git
     cd asd-dashboard
     ```
 
-2. **Install Dependencies**:
-    ```sh
-    npm install
+2. **Install dependencies**:
+    ```bash
+    yarn install
     ```
 
-3. **Run the Application**:
-    ```sh
+3. **Start the application**:
+    ```bash
     npm start
+    ```
+
+4. **Run Playwright tests**:
+    ```bash
+    npm test
     ```
 
 ### License
 
-The project is proprietary (not open source).  
-Copyright (c) 2024.
+The project is proprietary (not open source). Copyright (c) 2024.
+```
