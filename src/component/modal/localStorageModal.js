@@ -1,4 +1,10 @@
 export function openLocalStorageModal () {
+  // Check if the modal already exists
+  if (document.getElementById('localStorage-modal')) {
+    console.log('LocalStorage modal is already open')
+    return
+  }
+
   console.log('Opening LocalStorage modal')
   const modal = document.createElement('div')
   modal.id = 'localStorage-modal'

@@ -1,3 +1,4 @@
+/* Styles for the LocalStorage Editing Modal */
 #localStorage-modal {
     position: fixed;
     top: 50%;
@@ -13,12 +14,17 @@
     padding: 20px;
     width: 60vw;
     height: 60vh;
+    display: flex;
+    flex-direction: column;
 }
 
 #localStorage-content {
     width: 100%;
     height: 80%;
     margin-bottom: 10px;
+    resize: none;
+    font-family: monospace;
+    overflow: auto;
 }
 
 #save-localStorage,
@@ -26,4 +32,14 @@
     padding: 5px 10px;
     margin-right: 5px;
     cursor: pointer;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 3px;
+    transition: background-color 0.3s ease;
+}
+
+#save-localStorage:hover,
+#cancel-localStorage:hover {
+    background-color: #45a049;
 }
