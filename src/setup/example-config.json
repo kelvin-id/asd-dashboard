@@ -1,10 +1,81 @@
 {
+    "globalSettings": {
+        "theme": "light",
+        "widgetStoreUrl": ["*/services.json"],
+        "database": "localStorage",
+        "localStorage": {
+            "enabled": "true"
+        },
+        "network": {
+            "autoRefresh": true,
+            "refreshInterval": 60,
+            "errorHandling": {
+                "retryCount": 3,
+                "retryInterval": 30
+            }
+        }
+    },
+    "dashboard": {
+        "defaultView": "ASD-0-exampleView",
+        "boards": [{
+            "viewname": "ASD Example 0",
+            "order": 0,
+            "id": "ASD-0-exampleView",
+            "views": [
+                {
+                    "name": "default",
+                    "order": 0,
+                    "widgetState": [
+                        {
+                            "order": "0",
+                            "url": "http://localhost:8000/asd/Terminal",
+                            "columns": "4",
+                            "rows": "4",
+                            "type": "web",
+                            "metadata": {
+                                "title": "Terminal"
+                            }
+                        },
+                        {
+                            "order": "1",
+                            "url": "http://localhost:8000/asd/health",
+                            "columns": "1",
+                            "rows": "1",
+                            "type": "api",
+                            "metadata": {
+                                "title": "Health"
+                            },
+                            "network": {
+                                "refreshInterval": 120,
+                                "errorHandling": {
+                                    "retryCount": 5,
+                                    "retryInterval": 20
+                                }
+                            }
+                        }
+                    ]
+                }
+            ]
+        }]
+    },
     "styling": {
         "grid": {
             "minColumns": 1,
             "maxColumns": 6,
             "minRows": 1,
             "maxRows": 6
+        },
+        "themes": {
+            "light": {
+                "background": "#ffffff",
+                "primaryColor": "#4CAF50",
+                "textColor": "#000000"
+            },
+            "dark": {
+                "background": "#333333",
+                "primaryColor": "#4CAF50",
+                "textColor": "#ffffff"
+            }
         }
     }
 }
