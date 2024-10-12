@@ -9,7 +9,8 @@
                 "loadDashboardFromConfig": "true"
             }
         },
-        "defaultView": "board-1728763634657"
+        "defaultBoard": "board-1728763634657",
+        "defaultView": "view-1728763634657"
     },
     "boards": [ 
         {
