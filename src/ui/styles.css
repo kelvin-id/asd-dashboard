@@ -277,6 +277,10 @@ header {
     background-color: #f0f0f0;
 }
 
+.widget-wrapper {
+    overflow: visible;
+}
+
 .widget-wrapper.drag-over {
     border: 2px dashed #4CAF50;
 }
