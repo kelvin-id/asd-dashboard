@@ -50,6 +50,9 @@ function saveLocalStorageChanges () {
     }
     console.log('LocalStorage updated successfully')
     alert('LocalStorage updated successfully!')
+
+    // Reload the page to reflect changes
+    location.reload()
   } catch (error) {
     console.error('Invalid JSON format:', error)
     alert('Invalid JSON format!')
