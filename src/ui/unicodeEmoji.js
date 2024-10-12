@@ -15,7 +15,7 @@ const emojiList = {
   hammerAndWrench: { icon: '🛠️', unicode: '\u{1F6E0}', description: 'Wrench' },
   compass: { icon: '🧭', unicode: '\u{1F9ED}', description: 'Compass' },
   globe: { icon: '🌐', unicode: '\u{1F310}', description: 'Globe' },
-  pinching: { icon: '🤏', unicode: '\u{1F9F0}', description: 'Drag and drop' },
+  pinching: { icon: '🤏', unicode: '\u{1F90F}', description: 'Drag and drop' },
   fullscreen: { icon: '▢', unicode: '\u{25A2}', description: 'Fullscreen' },
   dna: { icon: '🧬', unicode: '\u{1F9EC}', description: 'Settings' },
   gear: { icon: '⚙️', unicode: '\u{2699}', description: 'Settings' },

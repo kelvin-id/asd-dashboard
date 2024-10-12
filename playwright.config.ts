@@ -23,11 +23,18 @@ export default defineConfig({
   workers: process.env.CI ? 1 : undefined,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
   reporter: 'html',
+  // There is no reason to wait so long in a PWA with hardly any content
+  // Faster feedback and less spend minutes in Githun Actions
+  timeout: 10000, // Timeout for each test (in milliseconds) default is 30000
+  expect: {
+      timeout: 2000, // Timeout for `expect` assertions
+  },
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
     /* Base URL to use in actions like `await page.goto('/')`. */
     // baseURL: 'http://127.0.0.1:3000',
-
+    actionTimeout: 2000, // Default timeout for actions like clicks, waits, etc.
+    navigationTimeout: 6000,
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: 'on-first-retry',
   },
