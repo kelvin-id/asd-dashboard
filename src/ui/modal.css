@@ -11,12 +11,13 @@
 
 .modal-content {
     padding: 20px;
-    width: 400px;
+    width: 60vw;
+    height: 60vh;
 }
 
 #localStorage-content {
     width: 100%;
-    height: 200px;
+    height: 80%;
     margin-bottom: 10px;
 }
 

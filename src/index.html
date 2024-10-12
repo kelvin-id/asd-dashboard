@@ -11,7 +11,7 @@
         <label>
             <input type="checkbox" id="sw-toggle">📡
         </label>
-        <button id="localStorage-edit-button">💾</button> <!-- Add this line -->
+        <button id="localStorage-edit-button">💾</button>
         <select id="service-selector">
             <option value="">Select a Service</option>
             <!-- Options will be dynamically populated -->
@@ -44,15 +44,11 @@
         </div>
     </main>
     <script>
-        const swToggle = document.getElementById('sw-toggle'); // Add this line to get the checkbox element
-        // Check saved preference in localStorage and set the checkbox state accordingly
+        const swToggle = document.getElementById('sw-toggle');
         const swEnabled = localStorage.getItem('swEnabled') === 'true';
-
-        // Set the checkbox to the saved state (enabled/disabled)
         swToggle.checked = swEnabled;
 
         if ('serviceWorker' in navigator) {
-            // Function to register Service Worker
             function registerServiceWorker() {
                 navigator.serviceWorker.register('/serviceWorker.js', { scope: '/' })
                     .then(function (registration) {
@@ -63,7 +59,6 @@
                     });
             }
 
-            // Function to unregister Service Worker
             function unregisterServiceWorker() {
                 navigator.serviceWorker.getRegistrations()
                     .then(function (registrations) {
@@ -77,7 +72,6 @@
                                 });
                         }
                     });
-                // Optional: Clear cached files
                 caches.keys().then(function (cacheNames) {
                     return Promise.all(
                         cacheNames.map(function (cacheName) {
@@ -89,18 +83,14 @@
                 });
             }
 
-            // Initial load: Register or unregister based on stored preference
             if (swEnabled) {
                 registerServiceWorker();
             } else {
                 unregisterServiceWorker();
             }
 
-            // Listen for toggle change (enable/disable service worker)
             swToggle.addEventListener('change', function () {
                 const isEnabled = swToggle.checked;
-
-                // Update localStorage with the new preference
                 localStorage.setItem('swEnabled', isEnabled);
 
                 if (isEnabled) {

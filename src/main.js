@@ -5,7 +5,6 @@ import { initializeDragAndDrop } from './component/widget/events/dragDrop.js'
 import { fetchServices } from './utils/fetchServices.js'
 import { getConfig } from './utils/getConfig.js'
 import { openLocalStorageModal } from './component/modal/localStorageModal.js' // Import modal logic
-// import './ui/modal.css' // Import modal styles
 
 window.asd = {
   services: [],
@@ -37,5 +36,11 @@ document.addEventListener('DOMContentLoaded', async () => {
   initializeDragAndDrop()
 
   // Add event listener for the localStorage edit button
-  document.getElementById('localStorage-edit-button').addEventListener('click', openLocalStorageModal)
+  document.getElementById('localStorage-edit-button').addEventListener('click', () => {
+    try {
+      openLocalStorageModal()
+    } catch (error) {
+      console.error('Error opening LocalStorage modal:', error)
+    }
+  })
 })

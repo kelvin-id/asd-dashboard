@@ -1,6 +1,6 @@
 @import url('/ui/widget.css');
-@import url('/ui/modal.css');
 @import url('/ui/controls.css');
+@import url('/ui/modal.css');
 
 /* Universal box-sizing */
 *, *::before, *::after {

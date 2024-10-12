@@ -5,7 +5,7 @@ export function openLocalStorageModal () {
   modal.innerHTML = `
         <div class="modal-content">
             <h2>Edit LocalStorage</h2>
-            <textarea id="localStorage-content">${JSON.stringify(localStorage, null, 2)}</textarea>
+            <textarea id="localStorage-content">${JSON.stringify(getLocalStorageData(), null, 2)}</textarea>
             <button id="save-localStorage">Save</button>
             <button id="cancel-localStorage">Cancel</button>
         </div>
@@ -48,4 +48,18 @@ function saveLocalStorageChanges () {
     console.error('Invalid JSON format:', error)
     alert('Invalid JSON format!')
   }
+}
+
+function getLocalStorageData () {
+  const data = {}
+  for (let i = 0; i < localStorage.length; i++) {
+    const key = localStorage.key(i)
+    try {
+      data[key] = JSON.parse(localStorage.getItem(key))
+    } catch (error) {
+      console.error(`Error parsing localStorage item with key "${key}":`, error)
+      data[key] = localStorage.getItem(key)
+    }
+  }
+  return data
 }
