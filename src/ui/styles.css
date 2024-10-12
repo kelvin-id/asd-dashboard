@@ -1,3 +1,7 @@
+@import url('/ui/widget.css');
+@import url('/ui/modal.css');
+@import url('/ui/controls.css');
+
 /* Universal box-sizing */
 *, *::before, *::after {
     box-sizing: border-box;
@@ -17,72 +21,6 @@ header {
     text-align: center;
 }
 
-#widget-container {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    grid-auto-rows: minmax(100px, auto);
-    gap: 0.5rem;
-    overflow-y: auto; /* Ensure vertical scrolling */
-    overflow-x: hidden; /* Prevent horizontal scrolling */
-    width: 100%;
-    box-sizing: border-box;
-    grid-template-rows: repeat(2, 200px);
-    margin-left: 0.5rem;
-}
-
-/* Wide screen adjustments */
-@media (min-width: 1280px) {
-    #widget-container {
-        grid-template-columns: repeat(6, 2fr);
-        grid-template-rows: repeat(4, 200px);
-    }
-}
-
-/* Ultra-wide screen adjustments */
-@media (min-width: 1600px) {
-    #widget-container {
-        grid-template-columns: repeat(8, 2fr);
-        grid-template-rows: repeat(6, 200px);
-    }
-}
-
-#controls {
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-    position: sticky;
-    padding: 0.5rem;
-    background-color: #fff;
-    z-index: 1001;
-    box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
-}
-
-#controls select,
-#controls input {
-    padding: 0.4rem;
-    font-size: 0.9rem;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-}
-
-#controls button,
-#toggle-widget-buttons {
-    padding: 0.4rem 0.8rem;
-    font-size: 0.9rem;
-    border: none;
-    background-color: #4CAF50;
-    color: white;
-    cursor: pointer;
-    border-radius: 4px;
-    transition: background-color 0.3s ease;
-}
-
-#controls button:hover,
-#toggle-widget-buttons:hover {
-    background-color: #45a049;
-}
-
 .widget-wrapper {
     position: relative;
     overflow: auto;
@@ -99,147 +37,6 @@ header {
 .widget-wrapper.dragging {
     opacity: 0.5;
     transform: scale(0.95);
-}
-
-#toggle-widget-buttons {
-    padding: 0.5rem 1rem;
-    font-size: 1rem;
-    border: none;
-    background-color: #4CAF50;
-    color: white;
-    cursor: pointer;
-    border-radius: 4px;
-    transition: background-color 0.3s ease;
-}
-
-#toggle-widget-buttons:hover {
-    background-color: #45a049;
-}
-
-.hide-widget-menu .widget-button {
-    display: none;
-}
-
-.order-input {
-    position: absolute;
-    top: 5px;
-    left: 5px;
-    width: 50px;
-    font-size: 1rem;
-    z-index: 10;
-}
-
-.widget-menu {
-    position: absolute;
-    top: 5px;
-    right: 5px;
-    display: grid;
-    grid-auto-flow: column;
-    gap: 10px;
-    z-index: 10;
-}
-
-.widget-button {
-    background: none;
-    border: none;
-    cursor: pointer;
-    font-size: 1.2rem;
-    opacity: 0.2;
-    transition: opacity 0.3s ease;
-    padding: 0;
-    margin: 0;
-}
-
-.widget-button:hover {
-    opacity: 1;
-}
-
-.widget-icon-remove {
-    order: 6
-}
-
-.widget-icon-link{
-    order: 5
-}
-
-.widget-icon-resize-block {
-    order: 2
-}
-
-.widget-icon-resize {
-    order: 1
-}
-
-.widget-icon-fullscreen {
-    font-size: 1.6rem;
-    order: 0
-}
-
-.widget-icon-drag {
-    cursor: grab;
-    order: -1
-}
-
-.widget-icon-drag:active {
-    cursor: grabbing;
-}
-
-.resize-menu {
-    position: absolute;
-    top: 30px;
-    right: 75px;
-    display: flex;
-    flex-direction: column;
-    background-color: #fff;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    z-index: 20;
-    max-height: 200px;
-    overflow-y: auto;
-}
-
-.resize-menu button {
-    background: none;
-    border: none;
-    cursor: pointer;
-    font-size: 0.9rem;
-    padding: 0.3rem;
-    text-align: left;
-    transition: background-color 0.3s ease;
-}
-
-.resize-menu button:hover {
-    background-color: #f0f0f0;
-}
-
-.resize-menu-block {
-    position: absolute;
-    top: 30px;
-    right: 5px;
-    display: flex;
-    flex-direction: column;
-    background-color: #fff;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    z-index: 20;
-    max-height: 200px;
-    overflow-y: auto;
-}
-
-.resize-menu-block button {
-    background: none;
-    border: none;
-    cursor: pointer;
-    font-size: 0.9rem;
-    padding: 0.3rem;
-    text-align: left;
-    transition: background-color 0.3s ease;
-}
-
-.resize-menu-block button:hover {
-    background-color: #f0f0f0;
 }
 
 .widget-wrapper {
@@ -273,23 +70,4 @@ header {
 
 .widget-wrapper.below-min {
     border: 2px solid orange;
-}
-
-/* New styles for board management UI elements */
-#control-panel {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 10px;
-}
-
-#board-selector {
-    padding: 5px;
-    font-size: 14px;
-}
-
-#create-board-button {
-    padding: 5px 10px;
-    font-size: 14px;
-    cursor: pointer;
 }

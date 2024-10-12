@@ -1,0 +1,28 @@
+#localStorage-modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    border: 1px solid #ccc;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    z-index: 1001;
+}
+
+.modal-content {
+    padding: 20px;
+    width: 400px;
+}
+
+#localStorage-content {
+    width: 100%;
+    height: 200px;
+    margin-bottom: 10px;
+}
+
+#save-localStorage,
+#cancel-localStorage {
+    padding: 5px 10px;
+    margin-right: 5px;
+    cursor: pointer;
+}

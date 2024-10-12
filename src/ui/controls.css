@@ -1,0 +1,69 @@
+#controls {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    position: sticky;
+    padding: 0.5rem;
+    background-color: #fff;
+    z-index: 1001;
+    box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
+}
+
+#controls select,
+#controls input {
+    padding: 0.4rem;
+    font-size: 0.9rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+#controls button,
+#toggle-widget-buttons {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.9rem;
+    border: none;
+    background-color: #4CAF50;
+    color: white;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+}
+
+#controls button:hover,
+#toggle-widget-buttons:hover {
+    background-color: #45a049;
+}
+#toggle-widget-buttons {
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    border: none;
+    background-color: #4CAF50;
+    color: white;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+}
+
+#toggle-widget-buttons:hover {
+    background-color: #45a049;
+}
+
+/* Styles for board management UI elements */
+#control-panel {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+#board-selector {
+    padding: 5px;
+    font-size: 14px;
+}
+
+#create-board-button {
+    padding: 5px 10px;
+    font-size: 14px;
+    cursor: pointer;
+}
