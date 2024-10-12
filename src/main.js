@@ -10,18 +10,28 @@ window.asd = {
   boards: []
 }
 
-const defaultBoardId = 'default-0' // Assuming 'default-0' is the default board ID
-const defaultViewId = 'default-0-view' // Assuming 'default-0-view' is the default view ID
+// const defaultBoardId = 'default-0' // Assuming 'default-0' is the default board ID
+// const defaultViewId = 'default-0-view' // Assuming 'default-0-view' is the default view ID
 
 document.addEventListener('DOMContentLoaded', () => {
   console.log('DOMContentLoaded event fired')
   fetchServices()
 
-  initializeBoards()
   initializeDashboardMenu()
-  initializeDragAndDrop()
+
+  initializeBoards().then(initialBoardView => {
+    if (initialBoardView) {
+      console.log(`Initial View ${initialBoardView.viewId}`)
+      // You can use initialBoardView.boardId and initialBoardView.viewId here
+      loadWidgetState(initialBoardView.boardId, initialBoardView.viewId)
+    }
+  }).catch(error => {
+    console.error('Failed to initialize boards:', error)
+  })
 
   // Load the state of the default board and view initially
-  loadWidgetState(defaultBoardId, defaultViewId)
-  console.log('Default board and view loaded:', defaultBoardId, defaultViewId) // Add this log
+
+  //
+  initializeDragAndDrop()
+  // console.log('Default board and view loaded:', defaultBoardId, defaultViewId) // Add this log
 })

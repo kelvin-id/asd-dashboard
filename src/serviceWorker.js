@@ -1,5 +1,21 @@
 /* eslint-env serviceworker */
 const CACHE_NAME = 'my-cache-v3' // Make sure this matches the cache name in the main.js file
+// self.addEventListener('fetch', (event) => {
+//   const testUrls = [
+//     "http://localhost:8000/asd/toolbox",
+//     "http://localhost:8000/asd/terminal",
+//     "http://localhost:8000/asd/tunnel",
+//     "http://localhost:8000/asd/containers"
+//   ];
+
+//   if (testUrls.includes(event.request.url)) {
+//     event.respondWith(
+//       new Response('<html><body></body></html>', {
+//         headers: { 'Content-Type': 'text/html' }
+//       })
+//     );
+//   }
+// });
 
 self.addEventListener('install', function (event) {
   console.log('[Service Worker] Installed')

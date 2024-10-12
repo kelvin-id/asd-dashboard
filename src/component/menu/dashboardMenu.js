@@ -61,6 +61,7 @@ function initializeDashboardMenu () {
   document.getElementById('view-selector').addEventListener('change', (event) => {
     const selectedBoardId = document.querySelector('.board').id
     const selectedViewId = event.target.value
+    console.log(`Switching to selected view ${selectedViewId} in board ${selectedBoardId}`) // Add this log
     switchView(selectedBoardId, selectedViewId)
   })
 }

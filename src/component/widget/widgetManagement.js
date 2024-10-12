@@ -182,6 +182,7 @@ async function addWidget (url, columns = 1, rows = 1, type = 'iframe', boardId, 
     })
   }
 
+  console.log(`Saving widget state for board ${boardId} and view ${viewId}`) // Add this log
   saveWidgetState(boardId, viewId)
 }
 
