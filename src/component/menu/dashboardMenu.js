@@ -4,11 +4,6 @@ import { saveWidgetState } from '../../storage/localStorage.js'
 
 let uiInitialized = false // Guard variable
 
-function toggleButtons () {
-  const widgetContainer = document.getElementById('widget-container')
-  widgetContainer.classList.toggle('hide-widget-menu')
-}
-
 function initializeDashboardMenu () {
   if (uiInitialized) return // Guard clause
   uiInitialized = true
@@ -27,7 +22,10 @@ function initializeDashboardMenu () {
     }
   })
 
-  document.getElementById('toggle-widget-buttons').addEventListener('click', toggleButtons)
+  document.getElementById('toggle-widget-buttons').addEventListener('click', () => {
+    const widgetContainer = document.getElementById('widget-container')
+    widgetContainer.classList.toggle('hide-widget-menu')
+  })
 
   document.getElementById('reset-button').addEventListener('click', () => {
     localStorage.clear()

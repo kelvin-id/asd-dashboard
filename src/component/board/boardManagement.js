@@ -1,16 +1,15 @@
-import { saveBoardState, loadBoardState } from '../../storage/localStorage.js'
+import { saveBoardState, loadBoardState, loadWidgetState } from '../../storage/localStorage.js'
 import { addWidget } from '../widget/widgetManagement.js'
 
 let boards = []
 let isLoading = false
 
+function generateUniqueId (prefix) {
+  return `${prefix}-${Date.now()}`
+}
+
 export function createBoard (boardName, boardId = null, viewId = null) {
-  let newBoardId
-  if (boardId) {
-    newBoardId = boardId
-  } else {
-    newBoardId = `board-${Date.now()}`
-  }
+  const newBoardId = boardId || generateUniqueId('board')
   const newBoard = {
     id: newBoardId,
     name: boardName,
@@ -18,18 +17,13 @@ export function createBoard (boardName, boardId = null, viewId = null) {
     views: []
   }
   boards.push(newBoard)
-  saveBoardState(boards)
 
-  let defaultViewId
-
-  if (viewId) {
-    defaultViewId = viewId
-  } else {
-    // Create a default view for the new board
-    defaultViewId = `view-${Date.now()}`
-  }
+  const defaultViewId = viewId || generateUniqueId('view')
   createView(newBoardId, 'Default View', defaultViewId)
   console.log(`Created default view ${defaultViewId} for new board ${newBoardId}`)
+
+  // Save the board state after creating the default view
+  saveBoardState(boards)
 
   return newBoard
 }
@@ -37,12 +31,7 @@ export function createBoard (boardName, boardId = null, viewId = null) {
 export function createView (boardId, viewName, viewId = null) {
   const board = boards.find(b => b.id === boardId)
   if (board) {
-    let newViewId
-    if (viewId) {
-      newViewId = viewId
-    } else {
-      newViewId = `view-${Date.now()}`
-    }
+    const newViewId = viewId || generateUniqueId('view')
     const newView = {
       id: newViewId,
       name: viewName,
@@ -88,6 +77,21 @@ export async function switchView (boardId, viewId) {
   isLoading = false
 }
 
+function updateViewSelector (boardId) {
+  const viewSelector = document.getElementById('view-selector')
+  viewSelector.innerHTML = '' // Clear existing options
+
+  const board = boards.find(b => b.id === boardId)
+  if (board) {
+    board.views.forEach(view => {
+      const option = document.createElement('option')
+      option.value = view.id
+      option.textContent = view.name
+      viewSelector.appendChild(option)
+    })
+  }
+}
+
 export async function switchBoard (boardId) {
   if (isLoading) {
     console.log('Currently loading, please wait...')
@@ -103,9 +107,13 @@ export async function switchBoard (boardId) {
     while (widgetContainer.firstChild) {
       widgetContainer.removeChild(widgetContainer.firstChild)
     }
+    updateViewSelector(boardId)
     if (board.views.length > 0) {
-      console.log(`Switching to first view ${board.views[0].id} in board ${boardId}`)
-      await switchView(boardId, board.views[0].id)
+      const firstViewId = board.views[0].id
+      console.log(`Switching to first view ${firstViewId} in board ${boardId}`)
+      document.querySelector('.board-view').id = firstViewId // Update board-view ID
+      await switchView(boardId, firstViewId)
+      await loadWidgetState(boardId, firstViewId) // Load widget state for the first view
     }
   } else {
     console.error(`Board with ID ${boardId} not found`)

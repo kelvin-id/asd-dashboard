@@ -156,13 +156,21 @@ async function createWidget (service, url, gridColumnSpan = 1, gridRowSpan = 1) 
 
 async function addWidget (url, columns = 1, rows = 1, type = 'iframe', boardId, viewId) {
   console.log('Adding widget with URL:', url)
-  console.log('Board ID in addWidget:', boardId)
-  console.log('View ID in addWidget:', viewId)
-  const widgetContainer = document.getElementById('widget-container')
 
+  const widgetContainer = document.getElementById('widget-container')
   if (!widgetContainer) {
     console.error('Widget container not found')
     return
+  }
+
+  // Default to current board and view if not provided
+  if (!boardId) {
+    boardId = document.querySelector('.board').id
+    console.log('Defaulting boardId to current board:', boardId)
+  }
+  if (!viewId) {
+    viewId = document.querySelector('.board-view').id
+    console.log('Defaulting viewId to current view:', viewId)
   }
 
   const service = await getServiceFromUrl(url)
@@ -182,7 +190,7 @@ async function addWidget (url, columns = 1, rows = 1, type = 'iframe', boardId, 
     })
   }
 
-  console.log(`Saving widget state for board ${boardId} and view ${viewId}`) // Add this log
+  console.log(`Saving widget state for board ${boardId} and view ${viewId}`)
   saveWidgetState(boardId, viewId)
 }
 

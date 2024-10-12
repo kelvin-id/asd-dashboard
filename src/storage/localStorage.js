@@ -50,11 +50,7 @@ async function loadWidgetState (boardId, viewId) {
   try {
     console.log('loadWidgetState function called for board:', boardId, 'and view:', viewId) // Add this log
 
-    // Set the boardId and viewId
-    const boardElement = document.querySelector('.board')
-    boardElement.id = boardId
-    const viewElement = document.querySelector('.board-view')
-    viewElement.id = viewId
+    setBoardAndViewIds(boardId, viewId)
 
     // Fetch board details
     const boards = await loadBoardState()
@@ -105,6 +101,13 @@ async function loadWidgetState (boardId, viewId) {
   } catch (error) {
     console.error('Error loading widget state:', error)
   }
+}
+
+function setBoardAndViewIds (boardId, viewId) {
+  const boardElement = document.querySelector('.board')
+  boardElement.id = boardId
+  const viewElement = document.querySelector('.board-view')
+  viewElement.id = viewId
 }
 
 export async function saveBoardState (boards) {
