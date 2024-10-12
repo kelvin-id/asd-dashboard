@@ -1,4 +1,5 @@
 import { updateWidgetOrders } from '../widgetManagement.js'
+import { saveWidgetState } from '../../../storage/localStorage.js'
 
 function handleDragStart (e, draggedWidgetWrapper) {
   const widgetOrder = draggedWidgetWrapper.getAttribute('data-order')
@@ -118,7 +119,7 @@ function handleDragLeave (e, widgetWrapper) {
   widgetWrapper.classList.remove('drag-over')
 }
 
-function initializeDragAndDrop() {
+function initializeDragAndDrop () {
   const widgetContainer = document.getElementById('widget-container')
   widgetContainer.addEventListener('dragover', (e) => {
     e.preventDefault()

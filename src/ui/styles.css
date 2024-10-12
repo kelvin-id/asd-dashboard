@@ -67,9 +67,7 @@ header {
 }
 
 #controls button,
-#toggle-widget-order,
-#toggle-widget-buttons,
-#save-widget-order {
+#toggle-widget-buttons {
     padding: 0.4rem 0.8rem;
     font-size: 0.9rem;
     border: none;
@@ -81,9 +79,7 @@ header {
 }
 
 #controls button:hover,
-#toggle-widget-order:hover,
-#toggle-widget-buttons:hover,
-#save-widget-order:hover {
+#toggle-widget-buttons:hover {
     background-color: #45a049;
 }
 
@@ -105,7 +101,7 @@ header {
     transform: scale(0.95);
 }
 
-#toggle-widget-order, #toggle-widget-buttons {
+#toggle-widget-buttons {
     padding: 0.5rem 1rem;
     font-size: 1rem;
     border: none;
@@ -116,43 +112,12 @@ header {
     transition: background-color 0.3s ease;
 }
 
-#toggle-widget-order:hover, #toggle-widget-buttons:hover {
+#toggle-widget-buttons:hover {
     background-color: #45a049;
-}
-
-.boardboard-mode .widget-wrapper::before {
-    content: attr(data-order);
-    position: absolute;
-    top: 5px;
-    left: 5px;
-    background: rgba(0, 0, 0, 0.5);
-    color: #fff;
-    padding: 2px 5px;
-    border-radius: 3px;
 }
 
 .hide-widget-menu .widget-button {
     display: none;
-}
-
-#save-widget-order {
-    padding: 0.5rem 1rem;
-    font-size: 1rem;
-    border: none;
-    background-color: #4CAF50;
-    color: white;
-    cursor: pointer;
-    border-radius: 4px;
-    transition: background-color 0.3s ease;
-    display: none;
-}
-
-#save-widget-order:hover {
-    background-color: #45a049;
-}
-
-.boardboard-mode #save-widget-order {
-    display: inline-block;
 }
 
 .order-input {

@@ -158,12 +158,15 @@ async function addWidget (url, columns = 1, rows = 1, type = 'iframe', boardId) 
   console.log('Adding widget with URL:', url)
   console.log('Board ID in addWidget:', boardId)
   const widgetContainer = document.getElementById('widget-container')
+
   if (!widgetContainer) {
     console.error('Widget container not found')
     return
   }
+
   const service = await getServiceFromUrl(url)
   console.log('Extracted service:', service)
+
   const widgetWrapper = await createWidget(service, url, columns, rows)
   widgetWrapper.setAttribute('data-order', widgetContainer.children.length)
   widgetContainer.appendChild(widgetWrapper)
