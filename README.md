@@ -1,4 +1,3 @@
-```markdown
 # ASD Dashboard
 
 ASD Dashboard is a VanillaJS Progressive Web App (PWA) designed for Accelerated Software Development and Automated Service Deployment. It allows users to manage remote services through dynamic, resizable widgets within iframes. The app supports multiple boards and views, ensuring flexible configuration, with user settings stored in localStorage for persistence across sessions. Configuration can be fetched via a config.json file, either remotely or locally.
