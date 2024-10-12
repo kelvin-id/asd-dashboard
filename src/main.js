@@ -1,4 +1,4 @@
-import { initializeBoards } from './component/board/boardManagement.js'
+import { initializeBoards, updateViewSelector } from './component/board/boardManagement.js'
 import { initializeDashboardMenu } from './component/menu/dashboardMenu.js'
 import { loadWidgetState } from './storage/localStorage.js'
 import { initializeDragAndDrop } from './component/widget/events/dragDrop.js'
@@ -20,6 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (initialBoardView) {
       console.log(`Initial View ${initialBoardView.viewId}`)
       loadWidgetState(initialBoardView.boardId, initialBoardView.viewId)
+      updateViewSelector(initialBoardView.boardId)
     }
   }).catch(error => {
     console.error('Failed to initialize boards:', error)

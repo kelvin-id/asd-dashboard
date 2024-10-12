@@ -1,5 +1,5 @@
 import { addWidget } from '../widget/widgetManagement.js'
-import { switchBoard, createBoard, addBoardToUI, createView, switchView, addViewToUI } from '../../component/board/boardManagement.js'
+import { switchBoard, createBoard, addBoardToUI, createView, switchView, updateViewSelector } from '../../component/board/boardManagement.js'
 import { saveWidgetState } from '../../storage/localStorage.js'
 
 let uiInitialized = false // Guard variable
@@ -44,8 +44,8 @@ function initializeDashboardMenu () {
     const boardId = document.querySelector('.board').id
     const viewName = prompt('Enter view name:')
     if (viewName) {
-      const newView = createView(boardId, viewName)
-      addViewToUI(boardId, newView)
+      createView(boardId, viewName)
+      updateViewSelector()
     }
   })
 
@@ -54,12 +54,13 @@ function initializeDashboardMenu () {
     const currentBoardId = document.querySelector('.board').id
     saveWidgetState(currentBoardId) // Save the state of the current board before switching
     switchBoard(selectedBoardId)
+    updateViewSelector()
   })
 
   document.getElementById('view-selector').addEventListener('change', (event) => {
     const selectedBoardId = document.querySelector('.board').id
     const selectedViewId = event.target.value
-    console.log(`Switching to selected view ${selectedViewId} in board ${selectedBoardId}`) // Add this log
+    console.debug(`Switching to selected view ${selectedViewId} in board ${selectedBoardId}`) // Add this log
     switchView(selectedBoardId, selectedViewId)
   })
 }

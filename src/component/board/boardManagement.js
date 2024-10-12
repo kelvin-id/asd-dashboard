@@ -81,13 +81,14 @@ export async function switchView (boardId, viewId) {
   isLoading = false
 }
 
-function updateViewSelector (boardId) {
-  console.log(`Updating view selector for board: ${boardId}`)
+export function updateViewSelector (boardId) {
   const viewSelector = document.getElementById('view-selector')
   viewSelector.innerHTML = '' // Clear existing options
+  window.test = document.querySelector('.board')
+  const currentBoardId = document.querySelector('.board').id
+  const board = boards.find(b => b.id === currentBoardId)
 
-  const board = boards.find(b => b.id === boardId)
-  if (board) {
+  if (currentBoardId) {
     console.log(`Found board with ID: ${boardId}, adding its views to the selector`)
     board.views.forEach(view => {
       console.log(`Adding view to selector: ${view.name} with ID: ${view.id}`)
@@ -97,7 +98,7 @@ function updateViewSelector (boardId) {
       viewSelector.appendChild(option)
     })
   } else {
-    console.error(`Board with ID ${boardId} not found`)
+    console.error(`Board with ID ${currentBoardId} not found`)
   }
 }
 
@@ -114,7 +115,6 @@ export async function switchBoard (boardId) {
     console.log(`Switching to board ${boardId}`)
     document.querySelector('.board').id = boardId
     clearWidgetContainer()
-    updateViewSelector(boardId)
     if (board.views.length > 0) {
       const firstViewId = board.views[0].id
       console.log(`Switching to first view ${firstViewId} in board ${boardId}`)
@@ -143,18 +143,12 @@ export function initializeBoards () {
     boards.forEach(board => {
       console.log('Initializing board:', board)
       addBoardToUI(board)
-
-      board.views.forEach(view => {
-        console.log('Initializing view:', view)
-        addViewToUI(board.id, view)
-      })
     })
 
     // Return the first board and its first view
     if (boards.length > 0) {
       const firstBoard = boards[0]
       const firstView = firstBoard.views.length > 0 ? firstBoard.views[0] : null
-
       return { boardId: firstBoard.id, viewId: firstView.id }
     }
   }).catch(error => {
@@ -170,10 +164,10 @@ export function addBoardToUI (board) {
   boardSelector.appendChild(option)
 }
 
-export function addViewToUI (boardId, view) {
-  const viewSelector = document.getElementById('view-selector')
-  const option = document.createElement('option')
-  option.value = view.id
-  option.textContent = view.name
-  viewSelector.appendChild(option)
-}
+// export function addViewToUI (boardId, view) {
+//   const viewSelector = document.getElementById('view-selector')
+//   const option = document.createElement('option')
+//   option.value = view.id
+//   option.textContent = view.name
+//   viewSelector.appendChild(option)
+// }
