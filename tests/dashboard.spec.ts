@@ -67,6 +67,20 @@ async function routeServices(page: Page) {
       await route.fulfill({ json });
     });
 
+    await page.route('**/config.json', async route => {
+      const json = {
+        "styling": {
+            "grid": {
+                "minColumns": 1,
+                "maxColumns": 6,
+                "minRows": 1,
+                "maxRows": 6
+            }
+        }
+      };
+      await route.fulfill({ json });
+    });
+
     // Mock individual service APIs
     await page.route('**/asd/toolbox', route => {
       route.fulfill({
