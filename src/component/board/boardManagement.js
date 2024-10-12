@@ -163,11 +163,3 @@ export function addBoardToUI (board) {
   option.textContent = board.name
   boardSelector.appendChild(option)
 }
-
-// export function addViewToUI (boardId, view) {
-//   const viewSelector = document.getElementById('view-selector')
-//   const option = document.createElement('option')
-//   option.value = view.id
-//   option.textContent = view.name
-//   viewSelector.appendChild(option)
-// }

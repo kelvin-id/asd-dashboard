@@ -17,8 +17,7 @@
             "boardOrder": 0,
             "views": [
                 {
-                    "viewname": "View 1",
-                    "viewOrder": 0,
+                    "name": "View 1",
                     "id": "view-1728763634657",
                     "widgetState": [
                                 {
@@ -75,8 +74,7 @@
                             ]
                 },
                 {
-                    "viewname": "Another view",
-                    "viewOrder": 1,
+                    "name": "Another view",
                     "id": "view-1728763637807",
                     "widgetState": [
                                 {
@@ -121,11 +119,6 @@
                             ]
                         }
                     ]
-                },
-                {
-                    "name": "Empty Board",
-                    "id": "board-1728763634657",
-                    "boardOrder": 0
                 }
     ],
     "styling": {
