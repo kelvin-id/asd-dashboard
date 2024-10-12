@@ -1,63 +1,141 @@
 {
     "globalSettings": {
         "theme": "light",
-        "widgetStoreUrl": ["*/services.json", "http://example.com/widgets.json"],
+        "widgetStoreUrl": ["*/services.json"],
         "database": "localStorage",
         "localStorage": {
-            "enabled": "true"
-        },
-        "network": {
-            "autoRefresh": true,
-            "refreshInterval": 60,
-            "errorHandling": {
-                "retryCount": 3,
-                "retryInterval": 30
+            "enabled": "true",
+            "onEmpty": {
+                "loadDashboardFromConfig": "true"
             }
-        }
+        },
+        "defaultView": "board-1728763634657"
     },
-    "dashboard": {
-        "defaultView": "ASD-0-exampleView",
-        "boards": [{
-            "viewname": "ASD Example 0",
-            "order": 0,
-            "id": "ASD-0-exampleView",
+    "boards": [ 
+        {
+            "name": "Default Board",
+            "id": "board-1728763634657",
+            "boardOrder": 0,
             "views": [
                 {
-                    "name": "default",
-                    "order": 0,
-                    "widgetState": [
+                    "viewname": "View 1",
+                    "viewOrder": 0,
+                    "id": "view-1728763634657",
+                    "tabs": [
                         {
-                            "order": "0",
-                            "url": "http://localhost:8000/asd/Terminal",
-                            "columns": "4",
-                            "rows": "4",
-                            "type": "web",
-                            "metadata": {
-                                "title": "Terminal"
-                            }
-                        },
-                        {
-                            "order": "1",
-                            "url": "http://localhost:8000/asd/health",
-                            "columns": "1",
-                            "rows": "1",
-                            "type": "api",
-                            "metadata": {
-                                "title": "Health"
-                            },
-                            "network": {
-                                "refreshInterval": 120,
-                                "errorHandling": {
-                                    "retryCount": 5,
-                                    "retryInterval": 20
+                            "name": "default",
+                            "order": 0,
+                            "widgetState": [
+                                {
+                                    "order": "0",
+                                    "url": "http://localhost:8000/asd/terminal",
+                                    "columns": "2",
+                                    "rows": "2",
+                                    "settings": {
+                                        "autoRefresh": false,
+                                        "refreshInterval": 0
+                                    },
+                                    "metadata": {
+                                        "title": "Terminal"
+                                    }
+                                },
+                                {
+                                    "order": "1",
+                                    "url": "http://localhost:8000/asd/terminal",
+                                    "columns": "2",
+                                    "rows": "2",
+                                    "settings": {
+                                        "autoRefresh": false,
+                                        "refreshInterval": 0
+                                    },
+                                    "metadata": {
+                                        "title": "Terminal"
+                                    }
+                                },
+                                {
+                                    "order": "2",
+                                    "url": "http://localhost:8000/asd/terminal",
+                                    "columns": "2",
+                                    "rows": "2",
+                                    "settings": {
+                                        "autoRefresh": false,
+                                        "refreshInterval": 0
+                                    },
+                                    "metadata": {
+                                        "title": "Terminal"
+                                    }
+                                },
+                                {
+                                    "order": "3",
+                                    "url": "http://localhost:8000/asd/tunnel",
+                                    "columns": "1",
+                                    "rows": "1"
+                                },
+                                {
+                                    "order": "4",
+                                    "url": "http://localhost:8000/asd/tunnel",
+                                    "columns": "1",
+                                    "rows": "1"
                                 }
-                            }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "viewname": "Another view",
+                    "viewOrder": 1,
+                    "id": "view-1728763637807",
+                    "tabs": [
+                        {
+                            "name": "test",
+                            "order": 0,
+                            "widgetState": [
+                                {
+                                    "order": "0",
+                                    "url": "http://localhost:8000/asd/terminal",
+                                    "columns": "2",
+                                    "rows": "2",
+                                    "settings": {
+                                        "autoRefresh": false,
+                                        "refreshInterval": 0
+                                    },
+                                    "metadata": {
+                                        "title": "Terminal"
+                                    }
+                                },
+                                {
+                                    "order": "1",
+                                    "url": "http://localhost:8000/asd/terminal",
+                                    "columns": "2",
+                                    "rows": "2",
+                                    "settings": {
+                                        "autoRefresh": false,
+                                        "refreshInterval": 0
+                                    },
+                                    "metadata": {
+                                        "title": "Terminal"
+                                    }
+                                },
+                                {
+                                    "order": "2",
+                                    "url": "http://localhost:8000/asd/terminal",
+                                    "columns": "2",
+                                    "rows": "2",
+                                    "settings": {
+                                        "autoRefresh": false,
+                                        "refreshInterval": 0
+                                    },
+                                    "metadata": {
+                                        "title": "Terminal"
+                                    }
+                                }
+                            ]
                         }
                     ]
                 }
             ]
-        }]
-    },
+        }
+    ],
     "styling": {
         "grid": {
             "minColumns": 1,
@@ -66,16 +144,8 @@
             "maxRows": 6
         },
         "themes": {
-            "light": {
-                "background": "#ffffff",
-                "primaryColor": "#4CAF50",
-                "textColor": "#000000"
-            },
-            "dark": {
-                "background": "#333333",
-                "primaryColor": "#4CAF50",
-                "textColor": "#ffffff"
-            }
+            "light": {},
+            "dark": {}
         }
     }
 }
