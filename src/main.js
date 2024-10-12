@@ -11,6 +11,7 @@ window.asd = {
 }
 
 const defaultBoardId = 'default-0' // Assuming 'default-0' is the default board ID
+const defaultViewId = 'default-0-view' // Assuming 'default-0-view' is the default view ID
 
 document.addEventListener('DOMContentLoaded', () => {
   console.log('DOMContentLoaded event fired')
@@ -20,7 +21,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initializeDashboardMenu()
   initializeDragAndDrop()
 
-  // const defaultBoardId = document.querySelector('.board').id;
-  // Load the state of the default board initially
-  loadWidgetState(defaultBoardId)
+  // Load the state of the default board and view initially
+  loadWidgetState(defaultBoardId, defaultViewId)
+  console.log('Default board and view loaded:', defaultBoardId, defaultViewId) // Add this log
 })

@@ -154,9 +154,10 @@ async function createWidget (service, url, gridColumnSpan = 1, gridRowSpan = 1) 
   return widgetWrapper
 }
 
-async function addWidget (url, columns = 1, rows = 1, type = 'iframe', boardId) {
+async function addWidget (url, columns = 1, rows = 1, type = 'iframe', boardId, viewId) {
   console.log('Adding widget with URL:', url)
   console.log('Board ID in addWidget:', boardId)
+  console.log('View ID in addWidget:', viewId)
   const widgetContainer = document.getElementById('widget-container')
 
   if (!widgetContainer) {
@@ -181,7 +182,7 @@ async function addWidget (url, columns = 1, rows = 1, type = 'iframe', boardId) 
     })
   }
 
-  saveWidgetState(boardId)
+  saveWidgetState(boardId, viewId)
 }
 
 function removeWidget (widgetElement) {
