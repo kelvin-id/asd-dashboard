@@ -1,7 +1,7 @@
 import emojiList from '../../../ui/unicodeEmoji.js'
 import { saveWidgetState } from '../../../storage/localStorage.js'
 import { fetchServices } from '../utils/fetchServices.js'
-import { getConfig } from '../utils/getConfig.js'
+import { getConfig } from '../../../utils/getConfig.js'
 
 // Function to resize widget horizontally
 async function resizeHorizontally (widget, increase = true) {

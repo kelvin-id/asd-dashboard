@@ -1,6 +1,4 @@
 import { createWidget } from '../component/widget/widgetManagement.js'
-import { fetchServices } from '../component/widget/utils/fetchServices.js'
-import { getConfig } from '../component/widget/utils/getConfig.js'
 import { getServiceFromUrl } from '../component/widget/utils/widgetUtils.js'
 
 async function saveWidgetState (boardId, viewId) {
@@ -11,7 +9,7 @@ async function saveWidgetState (boardId, viewId) {
     viewId = document.querySelector('.board-view').id
   }
   try {
-    console.log(`saveWidgetState function called for board: ${boardId}, view: ${viewId}`) // Consolidated log
+    console.log(`saveWidgetState function called for board: ${boardId}, view: ${viewId}`)
     const widgetContainer = document.getElementById('widget-container')
     const widgets = Array.from(widgetContainer.children)
     const widgetState = widgets.map(widget => {
@@ -19,27 +17,30 @@ async function saveWidgetState (boardId, viewId) {
         order: widget.getAttribute('data-order'),
         url: widget.querySelector('iframe').src,
         columns: widget.dataset.columns || 1,
-        rows: widget.dataset.rows || 1
+        rows: widget.dataset.rows || 1,
+        type: widget.dataset.type || 'iframe',
+        metadata: widget.dataset.metadata ? JSON.parse(widget.dataset.metadata) : {},
+        settings: widget.dataset.settings ? JSON.parse(widget.dataset.settings) : {}
       }
-      console.log('Saving widget state:', state) // Consolidated log
+      console.log('Saving widget state:', state)
       return state
     })
     const boards = await loadBoardState()
-    console.log(`Loaded board state from localStorage: ${boards}`) // Consolidated log
+    console.log(`Loaded board state from localStorage: ${boards}`)
     const board = boards.find(b => b.id === boardId)
     if (board) {
-      console.log(`Found board: ${board}`) // Consolidated log
+      console.log(`Found board: ${board}`)
       const view = board.views.find(v => v.id === viewId)
       if (view) {
-        console.log(`Found view: ${view}`) // Consolidated log
+        console.log(`Found view: ${view}`)
         view.widgetState = widgetState
         await saveBoardState(boards)
-        console.log(`Saved widget state to view: ${viewId} in board: ${boardId}`) // Consolidated log
+        console.log(`Saved widget state to view: ${viewId} in board: ${boardId}`)
       } else {
-        console.error(`View not found: ${viewId}`) // Consolidated log
+        console.error(`View not found: ${viewId}`)
       }
     } else {
-      console.error(`Board not found: ${boardId}`) // Consolidated log
+      console.error(`Board not found: ${boardId}`)
     }
   } catch (error) {
     console.error('Error saving widget state:', error)
@@ -48,58 +49,59 @@ async function saveWidgetState (boardId, viewId) {
 
 async function loadWidgetState (boardId, viewId) {
   try {
-    console.log('loadWidgetState function called for board:', boardId, 'and view:', viewId) // Add this log
+    console.log('loadWidgetState function called for board:', boardId, 'and view:', viewId)
 
     setBoardAndViewIds(boardId, viewId)
 
-    // Fetch board details
     const boards = await loadBoardState()
-    console.log('Loaded board state from localStorage:', boards) // Add this log
+    console.log('Loaded board state from localStorage:', boards)
     const board = boards.find(b => b.id === boardId)
 
     if (board) {
-      console.log('Found board:', board) // Add this log
+      console.log('Found board:', board)
       const view = board.views.find(v => v.id === viewId)
 
-      if (view) {
-        console.log('Found view:', view) // Add this log
-        if (view.widgetState.length > 0) {
-          console.log('Found widget state in view:', view.widgetState) // Add this log
-          const savedState = view.widgetState
-          const config = await getConfig()
-          const services = await fetchServices()
-          const widgetContainer = document.getElementById('widget-container')
-          widgetContainer.innerHTML = ''
+      if (view && view.widgetState.length > 0) {
+        console.log('Found widget state in view:', view.widgetState)
+        const savedState = view.widgetState
+        const widgetContainer = document.getElementById('widget-container')
+        widgetContainer.innerHTML = ''
 
-          for (const widgetData of savedState) {
-            console.log('Loading widget data:', widgetData) // Add this log
-            const serviceConfig = services.find(service => service.url === widgetData.url)?.config || {}
-
-            const minColumns = serviceConfig.minColumns || config.styling.grid.minColumns
-            const maxColumns = serviceConfig.maxColumns || config.styling.grid.maxColumns
-            const minRows = serviceConfig.minRows || config.styling.grid.minRows
-            const maxRows = serviceConfig.maxRows || config.styling.grid.maxRows
-
-            const columns = Math.min(Math.max(widgetData.columns, minColumns), maxColumns)
-            const rows = Math.min(Math.max(widgetData.rows, minRows), maxRows)
-
-            const service = await getServiceFromUrl(widgetData.url)
-            const widgetWrapper = await createWidget(service, widgetData.url, columns, rows)
-            widgetWrapper.dataset.order = widgetData.order
-            widgetWrapper.style.order = widgetData.order
-            widgetContainer.appendChild(widgetWrapper)
-          }
-        } else {
-          console.log('No widget state found in view:', viewId) // Add this log
+        for (const widgetData of savedState) {
+          console.log('Loading widget data:', widgetData)
+          const service = await getServiceFromUrl(widgetData.url)
+          const widgetWrapper = await createWidget(
+            service,
+            widgetData.url,
+            widgetData.columns,
+            widgetData.rows
+          )
+          widgetWrapper.dataset.order = widgetData.order
+          widgetWrapper.style.order = widgetData.order
+          widgetWrapper.dataset.type = widgetData.type
+          widgetWrapper.dataset.metadata = JSON.stringify(widgetData.metadata)
+          widgetWrapper.dataset.settings = JSON.stringify(widgetData.settings)
+          widgetContainer.appendChild(widgetWrapper)
         }
       } else {
-        console.error('View not found:', viewId) // Add this log
+        console.log('No widget state found in view:', viewId)
       }
     } else {
-      console.error('Board not found:', boardId) // Add this log
+      console.error('Board not found:', boardId)
     }
   } catch (error) {
     console.error('Error loading widget state:', error)
+  }
+}
+
+async function loadInitialConfig () {
+  try {
+    const boards = window.asd.config.boards
+    if (boards.length > 0) {
+      await saveBoardState(boards)
+    }
+  } catch (error) {
+    console.error('Error loading initial configuration:', error)
   }
 }
 
@@ -133,4 +135,4 @@ export async function loadBoardState () {
   }
 }
 
-export { saveWidgetState, loadWidgetState }
+export { saveWidgetState, loadWidgetState, loadInitialConfig }

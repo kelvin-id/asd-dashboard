@@ -5,7 +5,7 @@ import emojiList from '../../ui/unicodeEmoji.js'
 import { debounce } from '../../utils/utils.js'
 import { fetchServices } from './utils/fetchServices.js'
 import { getServiceFromUrl } from './utils/widgetUtils.js'
-import { getConfig } from './utils/getConfig.js'
+import { getConfig } from '../../utils/getConfig.js'
 import { handleDragStart, handleDragEnd } from './events/dragDrop.js'
 import { toggleFullScreen } from './events/fullscreenToggle.js'
 

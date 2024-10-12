@@ -5,12 +5,10 @@
         "database": "localStorage",
         "localStorage": {
             "enabled": "true",
-            "onEmpty": {
-                "loadDashboardFromConfig": "true"
-            }
-        },
-        "defaultBoard": "board-1728763634657",
-        "defaultView": "view-1728763634657"
+            "loadDashboardFromConfig": "true",
+            "defaultBoard": "board-1728763634657",
+            "defaultView": "view-1728763634657"
+        }
     },
     "boards": [ 
         {
@@ -22,11 +20,7 @@
                     "viewname": "View 1",
                     "viewOrder": 0,
                     "id": "view-1728763634657",
-                    "tabs": [
-                        {
-                            "name": "default",
-                            "order": 0,
-                            "widgetState": [
+                    "widgetState": [
                                 {
                                     "order": "0",
                                     "url": "http://localhost:8000/asd/terminal",
@@ -79,18 +73,12 @@
                                     "rows": "1"
                                 }
                             ]
-                        }
-                    ]
                 },
                 {
                     "viewname": "Another view",
                     "viewOrder": 1,
                     "id": "view-1728763637807",
-                    "tabs": [
-                        {
-                            "name": "test",
-                            "order": 0,
-                            "widgetState": [
+                    "widgetState": [
                                 {
                                     "order": "0",
                                     "url": "http://localhost:8000/asd/terminal",
@@ -133,9 +121,12 @@
                             ]
                         }
                     ]
+                },
+                {
+                    "name": "Empty Board",
+                    "id": "board-1728763634657",
+                    "boardOrder": 0
                 }
-            ]
-        }
     ],
     "styling": {
         "grid": {
