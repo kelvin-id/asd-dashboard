@@ -1,5 +1,5 @@
 services.json
-package-lock.json
+yarn.lock
 dist
 config.json
 node_modules
