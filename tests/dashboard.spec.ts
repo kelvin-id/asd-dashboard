@@ -1,142 +1,14 @@
 import { test, expect, type Page } from '@playwright/test';
 import emojiList from '../src/ui/unicodeEmoji'; // Adjust the path as necessary
+import { routeServicesConfig } from './shared/mocking';
+import { addServices, selectServiceByName } from './shared/common';
+import { widgetUrlOne, widgetUrlTwo, widgetUrlThree, widgetUrlFour } from './shared/constant';
 
-
-// Helper function to add services
-async function addServices(page: Page, count: number) {
-  for (let i = 0; i < count; i++) {
-    await page.selectOption('#service-selector', { index: i + 1 });
-    await page.click('#add-widget-button');
-  }
-}
-
-async function selectServiceByName(page: Page, serviceName: string) {
-  await page.selectOption('#service-selector', { label: serviceName });
-  await page.click('#add-widget-button');
-}
-
-async function routeServices(page: Page) {
-    // Mock services.json
-    await page.route('**/services.json', async route => {
-      const json = [
-        {
-          "name": "ASD-toolbox",
-          "url": "http://localhost:8000/asd/toolbox",
-          "type": "api",
-          "config": {
-            "minColumns": 1,
-            "maxColumns": 4,
-            "minRows": 1,
-            "maxRows": 4
-          }
-        },
-        {
-          "name": "ASD-terminal",
-          "url": "http://localhost:8000/asd/terminal",
-          "type": "web",
-          "config": {
-            "minColumns": 2,
-            "maxColumns": 6,
-            "minRows": 2,
-            "maxRows": 6
-          }
-        },
-        {
-          "name": "ASD-tunnel",
-          "url": "http://localhost:8000/asd/tunnel",
-          "type": "web",
-          "config": {
-            "minColumns": 1,
-            "maxColumns": 6,
-            "minRows": 1,
-            "maxRows": 6
-          }
-        },
-        {
-          "name": "ASD-containers",
-          "url": "http://localhost:8000/asd/containers",
-          "type": "web",
-          "config": {
-            "minColumns": 2,
-            "maxColumns": 4,
-            "minRows": 2,
-            "maxRows": 6
-          }
-        },
-      ];
-      await route.fulfill({ json });
-    });
-
-    await page.route('**/config.json', async route => {
-      const json = {
-        "globalSettings": {
-          "theme": "light",
-          "widgetStoreUrl": ["*/services.json"],
-          "database": "localStorage",
-          "localStorage": {
-              "enabled": "true",
-              "loadDashboardFromConfig": "true",
-              "defaultBoard": "board-1728763634657",
-              "defaultView": "view-1728763634657"
-          }
-        },
-        "boards": [],
-        "styling": {
-            "grid": {
-                "minColumns": 1,
-                "maxColumns": 6,
-                "minRows": 1,
-                "maxRows": 6
-            }
-        }
-      };
-      await route.fulfill({ json });
-    });
-
-    // Mock individual service APIs
-    await page.route('**/asd/toolbox', route => {
-      route.fulfill({
-        contentType: 'application/json',
-        body: JSON.stringify({ "name": "ASD-toolbox" })
-      });
-    });
-
-    await page.route('**/asd/terminal', route => {
-      route.fulfill({
-        contentType: 'application/json',
-        body: JSON.stringify({ "name": "ASD-terminal" })
-      });
-    });
-
-    await page.route('**/asd/tunnel', route => {
-      route.fulfill({
-        contentType: 'application/json',
-        body: JSON.stringify({ "name": "ASD-tunnel" })
-      });
-    });
-
-    await page.route('**/asd/containers', route => {
-      route.fulfill({
-        contentType: 'application/json',
-        body: JSON.stringify({ "name": "ASD-containers" })
-      });
-    });
-}
-
-const widgetUrlOne = "http://localhost:8000/asd/toolbox"
-const widgetUrlTwo = "http://localhost:8000/asd/terminal"
-const widgetUrlThree = "http://localhost:8000/asd/tunnel"
-const widgetUrlFour = "http://localhost:8000/asd/containers"
-
-// https://playwright.dev/docs/test-retries#reuse-single-page-between-tests
-// test.describe.configure({ mode: 'serial' });
-
-// let page: Page;
 
 test.describe('ASD Dashboard', () => {
 
   test.beforeEach(async ({ page }) => {
-    await routeServices(page)
+    await routeServicesConfig(page)
     await page.goto('http://localhost:8000');
   });
 

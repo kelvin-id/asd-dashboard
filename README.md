@@ -51,7 +51,7 @@ The project structure includes:
    ```
 
 4. **Access the dashboard**:
-   Open your web browser and navigate to `http://localhost:3000`.
+   Open your web browser and navigate to `http://localhost:8000`.
 
 ### License
 
