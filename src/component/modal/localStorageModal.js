@@ -1,3 +1,7 @@
+import { showNotification } from '../dialog/notification.js'
+
+window.s = () => showNotification('<textarea id= <textarea id= <textarea id= <textarea id=', 10000)
+
 export function openLocalStorageModal () {
   // Check if the modal already exists
   if (document.getElementById('localStorage-modal')) {
@@ -12,8 +16,10 @@ export function openLocalStorageModal () {
         <div class="modal-content">
             <h2>Edit LocalStorage</h2>
             <textarea id="localStorage-content">${JSON.stringify(getLocalStorageData(), null, 2)}</textarea>
-            <button id="save-localStorage">Save</button>
-            <button id="cancel-localStorage">Cancel</button>
+            <div class="modal-buttons">
+                <button id="save-localStorage">Save</button>
+                <button id="cancel-localStorage">Cancel</button>
+            </div>
         </div>
     `
   document.body.appendChild(modal)

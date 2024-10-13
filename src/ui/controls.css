@@ -6,9 +6,9 @@ menu {
 /* Wrapper for all controls */
 #controls {
     display: flex;
-    justify-content: flex-start; /* Align groups to the left like a menu */
-    gap: 1rem; /* Slightly reduce the gap between groups */
-    padding: 0.5rem; /* Reduce padding to save space */
+    justify-content: flex-start;
+    gap: 1rem;
+    padding: 0.5rem; 
     background-color: #fff;
     z-index: 1001;
     box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
@@ -47,14 +47,29 @@ menu {
     width: auto; /* Auto width to fit content */
     transition: background-color 0.3s ease;
 }
-
+    
 #controls button:hover,
 #toggle-widget-buttons:hover {
     background-color: #45a049;
 }
 
-/* Dropdown styles with smaller buttons */
 .dropdown-content a {
-    font-size: 0.8rem; /* Smaller font size for dropdown */
-    padding: 6px 10px; /* Smaller padding */
+    font-size: 0.8rem;
+    padding: 6px 10px;
+}
+
+
+/* Service Worker Toggle */
+/* Hide the original checkbox input */
+#sw-toggle {
+    display: none;
+}
+
+/* Style the label to act as a clickable icon */
+#localStorage-edit-button,
+.icon-checkbox {
+    cursor: pointer;
+    font-size: 1.2rem; /* Adjust the icon size */
+    display: inline-block;
+    user-select: none;
 }
