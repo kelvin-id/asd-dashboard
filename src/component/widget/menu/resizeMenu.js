@@ -176,7 +176,6 @@ async function hideResizeMenu (icon) {
 // Function to show resize menu block
 async function showResizeMenuBlock (icon, widgetWrapper) {
   try {
-    const config = await getConfig()
     const widgetUrl = widgetWrapper.dataset.url
     const services = await fetchServices()
     const widgetService = services.find(service => service.url === widgetUrl)

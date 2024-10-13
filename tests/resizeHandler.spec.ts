@@ -26,7 +26,7 @@ test.describe('Resize Handler Functionality', () => {
     await expect(widget).toHaveAttribute('data-rows', '1');
 
     // Resize to maximum size allowed by config
-    await resizeWidget(page, resizeHandle, 800, 600, maxColumns, maxRows);
+    await resizeWidget(page, resizeHandle, 1200, 900, maxColumns, maxRows);
 
     // Reload and verify persistence
     await page.reload();
@@ -34,7 +34,7 @@ test.describe('Resize Handler Functionality', () => {
     await expect(widget).toHaveAttribute('data-rows', `${maxRows}`);
 
     // Resize to minimum size
-    await resizeWidget(page, resizeHandle, -800, -600, 1, 1);
+    await resizeWidget(page, resizeHandle, -1200, -900, 1, 1);
 
     // Reload and verify persistence
     await page.reload();

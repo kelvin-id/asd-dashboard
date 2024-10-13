@@ -1,6 +1,8 @@
 import { saveWidgetState } from '../../../storage/localStorage.js'
 import { getCurrentBoardId, getCurrentViewId } from '../../../utils/elements.js'
-import { debounce } from '../../../utils/utils.js'
+// import { debounce } from '../../../utils/utils.js'
+// The logger and debounce function makes resizeHandler.spec.ts flaky. Need to research why.
+// Does the test not wait for the correct size of the widget?
 import { Logger } from '../../../utils/Logger.js'
 
 const logger = new Logger('resizeHandler.js')
@@ -45,12 +47,9 @@ async function handleResizeStart (event, widget) {
 
   const widgetUrl = widget.dataset.url
   const serviceConfig = window.asd.services.find(service => service.url === widgetUrl)?.config || {}
-  const config = window.asd.config
 
-  // const minColumns = serviceConfig.minColumns || config.styling.widget.minColumns
-  const gridColumns = serviceConfig.maxColumns || config.styling.widget.maxColumns
-  // const minRows = serviceConfig.minRows || config.styling.widget.minRows
-  const gridRows = serviceConfig.maxRows || config.styling.widget.maxRows
+  const gridColumns = serviceConfig.maxColumns || window.asd.config.styling.widget.maxColumns
+  const gridRows = serviceConfig.maxRows || window.asd.config.styling.widget.maxRows
 
   const gridColumnSize = widget.parentElement.offsetWidth / gridColumns || 1
   const gridRowSize = widget.parentElement.offsetHeight / gridRows || 1
@@ -60,12 +59,6 @@ async function handleResizeStart (event, widget) {
 
   // Create and append an overlay to capture all mouse events
   const overlay = createResizeOverlay()
-
-  const debouncedSaveState = debounce(() => {
-    const boardId = getCurrentBoardId()
-    const viewId = getCurrentViewId()
-    saveWidgetState(boardId, viewId)
-  }, 500)
 
   function handleResize (event) {
     try {
@@ -80,7 +73,6 @@ async function handleResizeStart (event, widget) {
       widget.dataset.columns = snappedWidth
       widget.dataset.rows = snappedHeight
 
-      debouncedSaveState()
       logger.info(`Widget resized to columns: ${snappedWidth}, rows: ${snappedHeight}`)
     } catch (error) {
       logger.error('Error during widget resize:', error)
@@ -98,6 +90,9 @@ async function handleResizeStart (event, widget) {
       // Remove the overlay
       document.body.removeChild(overlay)
 
+      const boardId = getCurrentBoardId()
+      const viewId = getCurrentViewId()
+      saveWidgetState(boardId, viewId)
       logger.info('Resize stopped and widget state saved.')
     } catch (error) {
       logger.error('Error stopping resize:', error)
