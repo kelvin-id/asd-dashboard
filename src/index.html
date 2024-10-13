@@ -7,41 +7,57 @@
     <link rel="stylesheet" href="ui/styles.css">
 </head>
 <body>
-    <div id="controls">
-        <label>
-            <input type="checkbox" id="sw-toggle">📡
-        </label>
-        <button id="localStorage-edit-button">💾</button>
-        <select id="service-selector">
-            <option value="">Select a Service</option>
-            <!-- Options will be dynamically populated -->
-        </select>
-        <input type="text" id="widget-url" placeholder="Or enter URL manually">
-        <button id="add-widget-button">Add Widget</button>
-        <button id="toggle-widget-buttons">Widget menu</button>
-        <button id="reset-button">Reset</button>
-    </div>
-    <div id="control-panel">
-        <div id="board-dropdown" class="dropdown">
-            <button class="dropbtn">Board Actions</button>
-            <div class="dropdown-content">
-                <a href="#" data-action="create">Create Board</a>
-                <a href="#" data-action="rename">Rename Board</a>
-                <a href="#" data-action="delete">Delete Board</a>
+   <menu>
+        <div id="controls">
+            <!-- Admin Control Group -->
+            <div class="control-group" id="admin-control">
+                <label>
+                    <input type="checkbox" id="sw-toggle">📡
+                </label>
+                <button id="localStorage-edit-button">💾</button>
+            </div>
+
+            <!-- Board Control Group -->
+            <div class="control-group" id="board-control">
+                <select id="board-selector"></select>
+                <div id="board-dropdown" class="dropdown">
+                    <button class="dropbtn">Board Actions</button>
+                    <div class="dropdown-content">
+                        <a href="#" data-action="create">Create Board</a>
+                        <a href="#" data-action="rename">Rename Board</a>
+                        <a href="#" data-action="delete">Delete Board</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- View Control Group -->
+            <div class="control-group" id="view-control">
+                <select id="view-selector"></select>
+                <div id="view-dropdown" class="dropdown">
+                    <button class="dropbtn">View Actions</button>
+                    <div class="dropdown-content">
+                        <a href="#" data-action="create">Create View</a>
+                        <a href="#" data-action="rename">Rename View</a>
+                        <a href="#" data-action="delete">Delete View</a>
+                        <a href="#" data-action="reset">Reset View</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Widget and Service Control Group -->
+            <div class="control-group">
+                <select id="service-selector">
+                    <option value="">Select a Service</option>
+                    <!-- Options will be dynamically populated -->
+                </select>
+                <input type="text" id="widget-url" placeholder="Or enter URL manually">
+                <button id="add-widget-button">Add Widget</button>
+                <button id="toggle-widget-buttons">Widget menu</button>
+                <button id="reset-button">Reset</button>
             </div>
         </div>
-        <div id="view-dropdown" class="dropdown">
-            <button class="dropbtn">View Actions</button>
-            <div class="dropdown-content">
-                <a href="#" data-action="create">Create View</a>
-                <a href="#" data-action="rename">Rename View</a>
-                <a href="#" data-action="delete">Delete View</a>
-                <a href="#" data-action="reset">Reset View</a>
-            </div>
-        </div>
-        <select id="board-selector"></select>
-        <select id="view-selector"></select>
-    </div>
+    </menu>
+
     <main>
         <div class="board">
             <!-- A board will be dynamically loaded here -->

@@ -1,32 +1,50 @@
+menu {
+    padding: 0;
+    margin: 0;
+}
+
+/* Wrapper for all controls */
 #controls {
     display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-    position: sticky;
-    padding: 0.5rem;
+    justify-content: flex-start; /* Align groups to the left like a menu */
+    gap: 1rem; /* Slightly reduce the gap between groups */
+    padding: 0.5rem; /* Reduce padding to save space */
     background-color: #fff;
     z-index: 1001;
     box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
 }
 
+/* Each control group aligned horizontally for buttons */
+.control-group {
+    display: flex;
+    flex-direction: row; /* Horizontal alignment */
+    align-items: center;
+    gap: 0.3rem; /* Minimize spacing between elements */
+    padding: 0.3rem;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    width: auto; /* Auto width for tighter fit */
+}
+
+/* Styles for select, input, and button elements */
 #controls select,
 #controls input {
-    padding: 0.4rem;
-    font-size: 0.9rem;
+    padding: 0.3rem;
+    font-size: 0.8rem;
     border: 1px solid #ccc;
     border-radius: 4px;
 }
 
 #controls button,
 #toggle-widget-buttons {
-    padding: 0.4rem 0.8rem;
-    font-size: 0.9rem;
+    padding: 0.3rem 0.6rem; /* Smaller padding for buttons */
+    font-size: 0.8rem;
     border: none;
     background-color: #4CAF50;
     color: white;
     cursor: pointer;
     border-radius: 4px;
+    width: auto; /* Auto width to fit content */
     transition: background-color 0.3s ease;
 }
 
@@ -34,36 +52,9 @@
 #toggle-widget-buttons:hover {
     background-color: #45a049;
 }
-#toggle-widget-buttons {
-    padding: 0.5rem 1rem;
-    font-size: 1rem;
-    border: none;
-    background-color: #4CAF50;
-    color: white;
-    cursor: pointer;
-    border-radius: 4px;
-    transition: background-color 0.3s ease;
-}
 
-#toggle-widget-buttons:hover {
-    background-color: #45a049;
-}
-
-/* Styles for board management UI elements */
-#control-panel {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 10px;
-}
-
-#board-selector {
-    padding: 5px;
-    font-size: 14px;
-}
-
-#create-board-button {
-    padding: 5px 10px;
-    font-size: 14px;
-    cursor: pointer;
+/* Dropdown styles with smaller buttons */
+.dropdown-content a {
+    font-size: 0.8rem; /* Smaller font size for dropdown */
+    padding: 6px 10px; /* Smaller padding */
 }
