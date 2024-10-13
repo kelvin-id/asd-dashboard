@@ -10,14 +10,8 @@ const newBoardName = "New Board"
 test.describe('Board Dropdown Functionality', () => {
   test.beforeEach(async ({ page }) => {
     await routeServicesConfig(page)
-    // Navigate to the ASD Dashboard
-    await page.goto('http://localhost:8000');
+    await page.goto('/');
     await addServices(page, 2);
-
-    // Mock localStorage if necessary
-    // await page.evaluate(() => {
-    //   localStorage.setItem('boards', JSON.stringify({}));
-    // });
   });
 
   test('should display board dropdown', async ({ page }) => {

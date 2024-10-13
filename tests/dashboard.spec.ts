@@ -9,7 +9,7 @@ test.describe('ASD Dashboard', () => {
 
   test.beforeEach(async ({ page }) => {
     await routeServicesConfig(page)
-    await page.goto('http://localhost:8000');
+    await page.goto('/');
   });
 
   test(`should be able to add 4 services and drag and drop ${emojiList.pinching.unicode}`, async ({ page }) => {
