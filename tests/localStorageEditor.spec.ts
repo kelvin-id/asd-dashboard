@@ -1,15 +1,16 @@
 import { test, expect } from '@playwright/test';
-import { routeServicesConfig } from './shared/mocking.js';
+import emojiList from '../src/ui/unicodeEmoji.js';
 import { ciBoards } from './data/ciConfig.js';
+
 
 test.describe('LocalStorage Editor Functionality', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/');
   });
 
-  test('should update LocalStorage and reflect changes in UI for board, view, and widget', async ({ page }) => {
+  test(`should be able to click ${emojiList.floppyDisk.unicode} to edit UI and content for board, view, and widget`, async ({ page }) => {
     // Open the LocalStorage editor modal by clicking the floppy disk icon
-    await page.click('text=💾');
+    await page.click(`text=${emojiList.floppyDisk.unicode}`);
 
     // Ensure the modal is open
     const modal = page.locator('#localStorage-modal');

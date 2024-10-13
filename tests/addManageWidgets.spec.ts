@@ -1,5 +1,5 @@
 import { test, expect, type Page } from '@playwright/test';
-import emojiList from '../src/ui/unicodeEmoji.js'; // Adjust the path as necessary
+import emojiList from '../src/ui/unicodeEmoji.js';
 import { routeServicesConfig } from './shared/mocking.js';
 import { addServices, selectServiceByName } from './shared/common.js';
 import { widgetUrlOne, widgetUrlTwo, widgetUrlThree, widgetUrlFour } from './shared/constant.js';
