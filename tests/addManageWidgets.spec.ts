@@ -5,7 +5,7 @@ import { addServices, selectServiceByName } from './shared/common.js';
 import { widgetUrlOne, widgetUrlTwo, widgetUrlThree, widgetUrlFour } from './shared/constant.js';
 
 
-test.describe('ASD Dashboard', () => {
+test.describe('Widgets', () => {
 
   test.beforeEach(async ({ page }) => {
     await routeServicesConfig(page)
