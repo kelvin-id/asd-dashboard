@@ -1,7 +1,7 @@
 import { saveBoardState, loadBoardState, loadWidgetState } from '../../storage/localStorage.js'
 import { addWidget } from '../widget/widgetManagement.js'
 
-let boards = []
+export let boards = []
 let isLoading = false
 
 function generateUniqueId (prefix) {

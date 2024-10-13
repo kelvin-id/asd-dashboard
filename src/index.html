@@ -22,15 +22,25 @@
         <button id="reset-button">Reset</button>
     </div>
     <div id="control-panel">
+        <div id="board-dropdown" class="dropdown">
+            <button class="dropbtn">Board Actions</button>
+            <div class="dropdown-content">
+                <a href="#" data-action="create">Create Board</a>
+                <a href="#" data-action="rename">Rename Board</a>
+                <a href="#" data-action="delete">Delete Board</a>
+            </div>
+        </div>
+        <div id="view-dropdown" class="dropdown">
+            <button class="dropbtn">View Actions</button>
+            <div class="dropdown-content">
+                <a href="#" data-action="create">Create View</a>
+                <a href="#" data-action="rename">Rename View</a>
+                <a href="#" data-action="delete">Delete View</a>
+                <a href="#" data-action="reset">Reset View</a>
+            </div>
+        </div>
         <select id="board-selector"></select>
-        <button id="create-board-button">Create Board</button>
-        <button id="rename-board-button">Rename Board</button>
-        <button id="delete-board-button">Delete Board</button>
         <select id="view-selector"></select>
-        <button id="create-view-button">Create View</button>
-        <button id="rename-view-button">Rename View</button>
-        <button id="delete-view-button">Delete View</button>
-        <button id="reset-view-button">Reset View</button>
     </div>
     <main>
         <div class="board">

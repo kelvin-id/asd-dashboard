@@ -1,64 +1,67 @@
+```markdown
 # ASD Dashboard
 
-ASD Dashboard is a VanillaJS Progressive Web App (PWA) designed for Accelerated Software Development and Automated Service Deployment. It allows users to manage remote services through dynamic, resizable widgets within iframes. The app supports multiple boards and views, ensuring flexible configuration, with user settings stored in localStorage for persistence across sessions. Configuration can be fetched via a config.json file, either remotely or locally.
+ASD Dashboard is a VanillaJS Progressive Web App (PWA) designed to streamline Accelerated Software Development and Automated Service Deployment. It enables users to manage remote services through dynamic, resizable widgets within iframes. The app supports multiple boards and views for flexible configuration, with user settings stored in localStorage for persistence across sessions. Configuration can be fetched via a config.json file, either remotely or locally.
 
 ## Overview
 
-The ASD Dashboard is architected as a single-page application (SPA) using VanillaJS, HTML, and CSS. It leverages a grid-based layout to manage widget positioning and resizing. The project is structured into several key components:
+ASD Dashboard is built using VanillaJS with CSS Grid for layout and iframes for embedding widgets. The architecture includes:
 
-- **Frontend**: Built with VanillaJS and CSS Grid for layout, using iframes for embedding widgets.
-- **Storage**: Utilizes localStorage for user preferences, such as widget positions and board/view states, and supports fetching configuration from a config.json file.
-- **Service Worker**: Provides PWA functionality, enabling offline mode and caching of key resources.
-- **Testing**: Playwright is used for automated UI testing, integrated via GitHub Actions. Static files are served by a Python web server during tests.
-- **Continuous Integration**: GitHub Actions automate testing workflows and ensure consistent deployment.
+- **Frontend**: Utilizes VanillaJS for interactive features and CSS Grid for responsive widget layouts.
+- **Storage**: Uses localStorage to save user preferences, such as widget positions and board/view states. Configuration can be fetched from a config.json file.
+- **Service Worker**: Provides PWA capabilities, including offline mode and caching of key resources.
+- **Testing**: Uses Playwright for automated UI testing, integrated with GitHub Actions for continuous integration.
+- **Widgets**: Leverage iframes to load content from URLs or APIs, supporting auto-refresh based on widget type with configurable refresh intervals.
+- **Remote Services**: Allows pulling and merging multiple sources to build customizable widgets and dashboards.
+- **Themes**: Supports configurable light and dark themes.
+
+The project structure includes:
+- **src/component**: Contains components for boards, views, widgets, and menus.
+- **src/storage**: Manages localStorage operations.
+- **src/ui**: Houses CSS files for styling the application.
+- **src/utils**: Includes utility functions for fetching services and configurations.
+- **tests**: Contains Playwright test specifications.
 
 ## Features
 
-The ASD Dashboard offers several key features:
-
-- **Widget Management**: Add, resize, reorder, and remove widgets dynamically from a service list or custom URL. Widgets are customizable with properties like size, metadata, and settings.
-- **Board and View Structure**: Supports multiple boards with child views, allowing users to switch, rename, delete, or reset. The state of each view, including widget layouts and settings, is stored persistently.
-- **Global Configuration**: Supports a central configuration file defining global settings such as theme, widget store URL, and data storage mode.
-- **LocalStorage Integration**: Stores all dashboard preferences and supports loading the initial setup from config.json.
-- **Responsive Grid Layout**: Widgets are arranged in a flexible grid that adapts based on screen size.
-- **Persistent State**: Saves widget properties across sessions, including detailed settings like auto-refresh status.
-- **Theme Support**: Includes both light and dark themes, with easy switching between them.
-- **Service Selection**: Widgets can be added by selecting services from a predefined JSON file, entering a custom URL, or pulling remote services.
-- **Service Worker & PWA**: Enables offline functionality and caching.
-- **LocalStorage Editing Modal**: Provides a simple import/export/edit interface for localStorage data.
+ASD Dashboard offers a range of features for efficient service management:
+- **Widget Management**: Add, resize, reorder, and remove widgets dynamically. Widgets can display content or API call results, with customizable properties like size, metadata, and settings.
+- **Board and View Structure**: Create and manage multiple boards and views, with persistent state saving. Actions include creating, renaming, deleting, and resetting boards and views.
+- **Global Configuration**: Central configuration file supports theme settings, widget store URL, and data storage mode.
+- **LocalStorage Integration**: Stores all dashboard preferences, with features for import/export/editing via a modal interface.
+- **Responsive Grid Layout**: Widgets are arranged in a flexible grid that adapts to screen size.
+- **Persistent State**: Saves widget properties across sessions.
+- **Service Selection**: Add widgets from a predefined JSON file, custom URL, or remote services.
+- **Service Worker & PWA**: Provides offline functionality and caching.
+- **Playwright Integration & Testing**: Automated tests ensure functionality and are run via GitHub Actions.
 
 ## Getting started
 
 ### Requirements
 
-To run the ASD Dashboard, you need to have the following installed on your system:
-
-- Node.js (latest LTS version)
+- **Node.js**: JavaScript runtime required to run the application.
 
 ### Quickstart
 
-Follow these steps to set up and run the ASD Dashboard:
-
-1. **Clone the Repository**:
+1. **Clone the repository**:
    ```bash
    git clone <repository-url>
    cd asd-dashboard
    ```
 
-2. **Install Dependencies**:
+2. **Install dependencies**:
    ```bash
    npm install
    ```
 
-3. **Run the Application**:
+3. **Run the application**:
    ```bash
    npm start
    ```
 
-This will start the application, allowing you to access it via a local server.
+4. **Access the application** in your web browser at `http://localhost:8000`.
 
 ### License
 
-The project is proprietary.  
-Copyright (c) 2024.
+The project is proprietary. Copyright (c) 2024.
 ```

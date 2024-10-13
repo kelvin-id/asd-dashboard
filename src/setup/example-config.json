@@ -5,7 +5,7 @@
         "database": "localStorage",
         "localStorage": {
             "enabled": "true",
-            "loadDashboardFromConfig": "true",
+            "loadDashboardFromConfig": "false",
             "defaultBoard": "board-1728763634657",
             "defaultView": "view-1728763634657"
         }
