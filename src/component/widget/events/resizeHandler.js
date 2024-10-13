@@ -39,8 +39,8 @@ async function handleResizeStart (event, widget) {
   const startWidth = widget.offsetWidth
   const startHeight = widget.offsetHeight
 
-  const gridColumns = window.asd.config.styling.grid.maxColumns
-  const gridRows = window.asd.config.styling.grid.maxRows
+  const gridColumns = window.asd.config.styling.widget.maxColumns
+  const gridRows = window.asd.config.styling.widget.maxRows
 
   const gridColumnSize = widget.parentElement.offsetWidth / gridColumns || 1
   const gridRowSize = widget.parentElement.offsetHeight / gridRows || 1

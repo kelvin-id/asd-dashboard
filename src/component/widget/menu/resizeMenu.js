@@ -11,11 +11,11 @@ async function resizeHorizontally (widget, increase = true) {
     const widgetUrl = widget.dataset.url
     const serviceConfig = services.find(service => service.url === widgetUrl)?.config || {}
 
-    const currentSpan = parseInt(widget.dataset.columns) || config.styling.grid.minColumns
+    const currentSpan = parseInt(widget.dataset.columns) || config.styling.widget.minColumns
     const newSpan = increase ? currentSpan + 1 : currentSpan - 1
 
-    const minColumns = serviceConfig.minColumns || config.styling.grid.minColumns
-    const maxColumns = serviceConfig.maxColumns || config.styling.grid.maxColumns
+    const minColumns = serviceConfig.minColumns || config.styling.widget.minColumns
+    const maxColumns = serviceConfig.maxColumns || config.styling.widget.maxColumns
 
     // Apply constraints and provide visual feedback
     if (newSpan < minColumns) {
@@ -52,11 +52,11 @@ async function resizeVertically (widget, increase = true) {
     const widgetUrl = widget.dataset.url
     const serviceConfig = services.find(service => service.url === widgetUrl)?.config || {}
 
-    const currentSpan = parseInt(widget.dataset.rows) || config.styling.grid.minRows
+    const currentSpan = parseInt(widget.dataset.rows) || config.styling.widget.minRows
     const newSpan = increase ? currentSpan + 1 : currentSpan - 1
 
-    const minRows = serviceConfig.minRows || config.styling.grid.minRows
-    const maxRows = serviceConfig.maxRows || config.styling.grid.maxRows
+    const minRows = serviceConfig.minRows || config.styling.widget.minRows
+    const maxRows = serviceConfig.maxRows || config.styling.widget.maxRows
 
     // Apply constraints and provide visual feedback
     if (newSpan < minRows) {
@@ -260,10 +260,10 @@ async function adjustWidgetSize (widgetWrapper, columns, rows) {
     const widgetUrl = widgetWrapper.dataset.url
     const serviceConfig = services.find(service => service.url === widgetUrl)?.config || {}
 
-    const minColumns = serviceConfig.minColumns || config.styling.grid.minColumns
-    const maxColumns = serviceConfig.maxColumns || config.styling.grid.maxColumns
-    const minRows = serviceConfig.minRows || config.styling.grid.minRows
-    const maxRows = serviceConfig.maxRows || config.styling.grid.maxRows
+    const minColumns = serviceConfig.minColumns || config.styling.widget.minColumns
+    const maxColumns = serviceConfig.maxColumns || config.styling.widget.maxColumns
+    const minRows = serviceConfig.minRows || config.styling.widget.minRows
+    const maxRows = serviceConfig.maxRows || config.styling.widget.maxRows
 
     columns = Math.min(Math.max(columns, minColumns), maxColumns)
     rows = Math.min(Math.max(rows, minRows), maxRows)

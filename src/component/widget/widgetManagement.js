@@ -15,10 +15,10 @@ async function createWidget (service, url, gridColumnSpan = 1, gridRowSpan = 1) 
   const config = await getConfig()
   const services = await fetchServices()
   const serviceConfig = services.find(s => s.name === service)?.config || {}
-  const minColumns = serviceConfig.minColumns || config.styling.grid.minColumns
-  const maxColumns = serviceConfig.maxColumns || config.styling.grid.maxColumns
-  const minRows = serviceConfig.minRows || config.styling.grid.minRows
-  const maxRows = serviceConfig.maxRows || config.styling.grid.maxRows
+  const minColumns = serviceConfig.minColumns || config.styling.widget.minColumns
+  const maxColumns = serviceConfig.maxColumns || config.styling.widget.maxColumns
+  const minRows = serviceConfig.minRows || config.styling.widget.minRows
+  const maxRows = serviceConfig.maxRows || config.styling.widget.maxRows
 
   const widgetWrapper = document.createElement('div')
   widgetWrapper.className = 'widget-wrapper widget' // Ensure 'widget' class is added

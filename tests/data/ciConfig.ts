@@ -12,7 +12,7 @@ export const ciConfig = {
     },
     "boards": [],
     "styling": {
-        "grid": {
+        "widget": {
             "minColumns": 1,
             "maxColumns": 6,
             "minRows": 1,

@@ -1,5 +1,5 @@
 async function getConfig () {
-  if (window.asd.config && Object.keys(window.asd.config).length > 0) {
+  if (window.asd && window.asd.config && Object.keys(window.asd.config).length > 0) {
     console.log('Using cached configuration')
     return window.asd.config
   }
