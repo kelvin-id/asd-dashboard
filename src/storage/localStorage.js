@@ -13,14 +13,34 @@ async function saveWidgetState (boardId, viewId) {
     const widgetContainer = document.getElementById('widget-container')
     const widgets = Array.from(widgetContainer.children)
     const widgetState = widgets.map(widget => {
+      let metadata = {}
+      if (widget.dataset.metadata) {
+        try {
+          metadata = JSON.parse(widget.dataset.metadata)
+        } catch (error) {
+          console.error('Error parsing metadata:', error)
+          metadata = {} // Default to an empty object if parsing fails
+        }
+      }
+
+      let settings = {}
+      if (widget.dataset.settings) {
+        try {
+          settings = JSON.parse(widget.dataset.settings)
+        } catch (error) {
+          console.error('Error parsing settings:', error)
+          settings = {} // Default to an empty object if parsing fails
+        }
+      }
+
       const state = {
         order: widget.getAttribute('data-order'),
         url: widget.querySelector('iframe').src,
         columns: widget.dataset.columns || 1,
         rows: widget.dataset.rows || 1,
         type: widget.dataset.type || 'iframe',
-        metadata: widget.dataset.metadata ? JSON.parse(widget.dataset.metadata) : {},
-        settings: widget.dataset.settings ? JSON.parse(widget.dataset.settings) : {}
+        metadata,
+        settings
       }
       console.log('Saving widget state:', state)
       return state
