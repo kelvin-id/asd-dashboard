@@ -69,6 +69,18 @@ async function routeServices(page: Page) {
 
     await page.route('**/config.json', async route => {
       const json = {
+        "globalSettings": {
+          "theme": "light",
+          "widgetStoreUrl": ["*/services.json"],
+          "database": "localStorage",
+          "localStorage": {
+              "enabled": "true",
+              "loadDashboardFromConfig": "true",
+              "defaultBoard": "board-1728763634657",
+              "defaultView": "view-1728763634657"
+          }
+        },
+        "boards": [],
         "styling": {
             "grid": {
                 "minColumns": 1,
