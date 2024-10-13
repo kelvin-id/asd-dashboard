@@ -1,11 +1,9 @@
 import { test, expect, type Page } from '@playwright/test';
-import emojiList from '../src/ui/unicodeEmoji'; // Adjust the path as necessary
-import { routeServicesConfig } from './shared/mocking';
-import { addServices, selectServiceByName } from './shared/common';
-import { widgetUrlOne, widgetUrlTwo, widgetUrlThree, widgetUrlFour } from './shared/constant';
-import { Logger } from '../src/utils/Logger.js';
+import emojiList from '../src/ui/unicodeEmoji.js'; // Adjust the path as necessary
+import { routeServicesConfig } from './shared/mocking.js';
+import { addServices, selectServiceByName } from './shared/common.js';
+import { widgetUrlOne, widgetUrlTwo, widgetUrlThree, widgetUrlFour } from './shared/constant.js';
 
-const logger = new Logger('addManageWidgets.ts');
 
 test.describe('ASD Dashboard', () => {
 
@@ -30,7 +28,7 @@ test.describe('ASD Dashboard', () => {
 
     // Store data-order and url attributes in a dictionary
     const orderBeforeDragDrop = {};
-    logger.log('Before Drag-and-Drop:');
+    console.log('Before Drag-and-Drop:');
     for (let i = 0; i < widgetCount; i++) {
       const widget = widgets.nth(i);
       const order = await widget.getAttribute('data-order');
@@ -39,10 +37,10 @@ test.describe('ASD Dashboard', () => {
       if (url !== null) {
         orderBeforeDragDrop[url] = order; // Use url as the key
       } else {
-        logger.error(`Widget ${i} has a null url attribute`);
+        console.error(`Widget ${i} has a null url attribute`);
       }
 
-      logger.log(`Widget ${i} data-order: ${order}, url: ${url}`);
+      console.log(`Widget ${i} data-order: ${order}, url: ${url}`);
     }
 
     // Test drag and drop
@@ -58,7 +56,7 @@ test.describe('ASD Dashboard', () => {
 
     // Log data-order attributes after drag and drop
     const orderAfterDragDrop = {};
-    logger.log('After Drag-and-Drop:');
+    console.log('After Drag-and-Drop:');
     for (let i = 0; i < widgetCount; i++) {
       const widget = widgets.nth(i);
       const order = await widget.getAttribute('data-order');
@@ -67,17 +65,17 @@ test.describe('ASD Dashboard', () => {
       if (url !== null) {
         orderAfterDragDrop[url] = order; // Use url as the key
       } else {
-        logger.error(`Widget ${i} has a null url attribute`);
+        console.error(`Widget ${i} has a null url attribute`);
       }
 
-      logger.log(`Widget ${i} data-order: ${order}, url: ${url}`);
+      console.log(`Widget ${i} data-order: ${order}, url: ${url}`);
     }
 
     // Compare initial and final order by url
     // ToDo: In the future when adding more widgets with the same url, we need UUID's to start identifying them
-    logger.log('Order comparison:');
+    console.log('Order comparison:');
     for (const url in orderBeforeDragDrop) {
-      logger.log(`Widget url: ${url}, initial: ${orderBeforeDragDrop[url]}, final: ${orderAfterDragDrop[url]}`);
+      console.log(`Widget url: ${url}, initial: ${orderBeforeDragDrop[url]}, final: ${orderAfterDragDrop[url]}`);
       expect(orderBeforeDragDrop[url]).not.toBe(orderAfterDragDrop[url]);
     }
 
@@ -100,7 +98,7 @@ test.describe('ASD Dashboard', () => {
 
     // Verify the order of widgets after reload
     const orderAfterReload = {};
-    logger.log('After Reload:');
+    console.log('After Reload:');
     for (let i = 0; i < widgetCount; i++) {
       const widget = widgets.nth(i);
       const order = await widget.getAttribute('data-order');
@@ -109,16 +107,16 @@ test.describe('ASD Dashboard', () => {
       if (url !== null) {
         orderAfterReload[url] = order; // Use url as the key
       } else {
-        logger.error(`Widget ${i} has a null url attribute`);
+        console.error(`Widget ${i} has a null url attribute`);
       }
 
-      logger.log(`Widget ${i} data-order: ${order}, url: ${url}`);
+      console.log(`Widget ${i} data-order: ${order}, url: ${url}`);
     }
 
     // Compare initial and restored order by url
-    logger.log('Order comparison after reload:');
+    console.log('Order comparison after reload:');
     for (const url in orderBeforeDragDrop) {
-      logger.log(`Widget url: ${url}, initial: ${orderBeforeDragDrop[url]}, restored: ${orderAfterReload[url]}`);
+      console.log(`Widget url: ${url}, initial: ${orderBeforeDragDrop[url]}, restored: ${orderAfterReload[url]}`);
     }
 
     // firstWidget
@@ -142,7 +140,7 @@ test.describe('ASD Dashboard', () => {
 
     // Listen for the dialog event
     page.on('dialog', async dialog => {
-      logger.log(dialog.message());
+      console.log(dialog.message());
       await dialog.accept('https://new.url'); // Provide the URL directly in the dialog
     });
 
@@ -192,6 +190,13 @@ test.describe('ASD Dashboard', () => {
     await page.click('text=⬅');
     await expect(firstWidget).toHaveAttribute('data-columns', '1');
     await expect(firstWidget).toHaveAttribute('data-rows', '1');
+
+    // Reload the page
+    await page.reload();
+
+    // Verify the widget retains its size
+    await expect(firstWidget).toHaveAttribute('data-columns', '1');
+    await expect(firstWidget).toHaveAttribute('data-rows', '1');
   });
 
 
@@ -204,6 +209,13 @@ test.describe('ASD Dashboard', () => {
     // Test resize-block
     await firstWidget.locator('.widget-icon-resize-block').hover();
     await page.click('text=3 columns, 3 rows');
+    await expect(firstWidget).toHaveAttribute('data-columns', '3');
+    await expect(firstWidget).toHaveAttribute('data-rows', '3');
+
+    // Reload the page
+    await page.reload();
+
+    // Verify the widget retains its size
     await expect(firstWidget).toHaveAttribute('data-columns', '3');
     await expect(firstWidget).toHaveAttribute('data-rows', '3');
   });

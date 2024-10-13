@@ -177,16 +177,9 @@ async function hideResizeMenu (icon) {
 async function showResizeMenuBlock (icon, widgetWrapper) {
   try {
     const config = await getConfig()
-    logger.log('Loaded config:', config)
-
     const widgetUrl = widgetWrapper.dataset.url
-    logger.log('Widget URL:', widgetUrl)
-
     const services = await fetchServices()
-    logger.log('Fetched services:', services)
-
     const widgetService = services.find(service => service.url === widgetUrl)
-    logger.log('Found widget service:', widgetService)
 
     if (!widgetService || !widgetService.config) {
       logger.error(`No constraints found for URL: ${widgetUrl}`)
@@ -215,10 +208,10 @@ async function showResizeMenuBlock (icon, widgetWrapper) {
     gridOptions.forEach(option => {
       const button = document.createElement('button')
       button.textContent = `${option.cols} columns, ${option.rows} rows`
-      button.addEventListener('click', () => {
-        adjustWidgetSize(widgetWrapper, option.cols, option.rows)
+      button.addEventListener('click', async () => {
+        await adjustWidgetSize(widgetWrapper, option.cols, option.rows)
         menu.remove()
-        saveWidgetState()
+        await saveWidgetState()
       })
       menu.appendChild(button)
     })
