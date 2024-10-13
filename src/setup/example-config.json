@@ -12,12 +12,12 @@
     },
     "boards": [ 
         {
-            "name": "Default Board",
+            "name": "Imported Board",
             "id": "board-1728763634657",
             "boardOrder": 0,
             "views": [
                 {
-                    "name": "View 1",
+                    "name": "Imported View",
                     "id": "view-1728763634657",
                     "widgetState": [
                                 {

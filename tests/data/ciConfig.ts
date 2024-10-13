@@ -20,3 +20,35 @@ export const ciConfig = {
         }
     }
 }
+
+export const ciBoards = {
+  "boards": [
+    {
+      "id": "board-1728854315081",
+      "name": "Modified Board",
+      "order": 0,
+      "views": [
+        {
+          "id": "view-1728854315081",
+          "name": "Modified View",
+          "widgetState": [
+            {
+              "order": "0",
+              "url": "http://localhost:8000/asd/toolbox",
+              "columns": "1",
+              "rows": "1",
+              "type": "iframe",
+              "settings": {
+                "autoRefresh": false,
+                "refreshInterval": 0
+              },
+              "metadata": {
+                  "title": "toolbox"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
