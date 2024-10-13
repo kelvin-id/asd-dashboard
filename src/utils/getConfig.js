@@ -1,6 +1,10 @@
+import { Logger } from './Logger.js'
+
+const logger = new Logger('getConfig.js')
+
 async function getConfig () {
   if (window.asd && window.asd.config && Object.keys(window.asd.config).length > 0) {
-    console.log('Using cached configuration')
+    logger.log('Using cached configuration')
     return window.asd.config
   }
 
@@ -11,9 +15,10 @@ async function getConfig () {
     }
     const config = await response.json()
     window.asd.config = config // Cache the configuration
+    logger.log('Config loaded successfully')
     return config
   } catch (error) {
-    console.error('Error fetching config.json:', error)
+    logger.error('Error fetching config.json:', error)
     throw new Error('Failed to load configuration')
   }
 }

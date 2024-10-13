@@ -1,14 +1,18 @@
+import { Logger } from '../../../utils/Logger.js'
+
+const logger = new Logger('fullscreenToggle.js')
+
 function toggleFullScreen (widget) {
   const isFullScreen = widget.classList.contains('fullscreen')
 
   if (isFullScreen) {
     widget.classList.remove('fullscreen')
     document.removeEventListener('keydown', handleEscapeKey)
-    console.log('Exited full-screen mode')
+    logger.log('Exited full-screen mode')
   } else {
     widget.classList.add('fullscreen')
     document.addEventListener('keydown', handleEscapeKey)
-    console.log('Entered full-screen mode')
+    logger.log('Entered full-screen mode')
   }
 }
 
@@ -20,17 +24,5 @@ function handleEscapeKey (event) {
     }
   }
 }
-
-// function initializeFullScreenToggle(widgetWrapper) {
-//     const fullScreenButtons = document.querySelectorAll('.widget-icon-fullscreen');
-//     fullScreenButtons.forEach(button => {
-//         button.addEventListener('click', event => {
-//             event.preventDefault();
-//             const widget = event.target.closest('.widget-wrapper');
-//             toggleFullScreen(widget);
-//         });
-//     });
-//     console.log('Full-screen toggle initialized');
-// }
 
 export { toggleFullScreen }

@@ -1,6 +1,9 @@
 import { createWidget } from '../component/widget/widgetManagement.js'
 import { getServiceFromUrl } from '../component/widget/utils/widgetUtils.js'
 import { initializeResizeHandles } from '../component/widget/events/resizeHandler.js'
+import { Logger } from '../utils/Logger.js'
+
+const logger = new Logger('localStorage.js')
 
 async function saveWidgetState (boardId, viewId) {
   if (!boardId) {
@@ -10,7 +13,7 @@ async function saveWidgetState (boardId, viewId) {
     viewId = document.querySelector('.board-view').id
   }
   try {
-    console.log(`saveWidgetState function called for board: ${boardId}, view: ${viewId}`)
+    logger.info(`saveWidgetState function called for board: ${boardId}, view: ${viewId}`)
     const widgetContainer = document.getElementById('widget-container')
     const widgets = Array.from(widgetContainer.children)
     const widgetState = widgets.map(widget => {
@@ -19,7 +22,7 @@ async function saveWidgetState (boardId, viewId) {
         try {
           metadata = JSON.parse(widget.dataset.metadata)
         } catch (error) {
-          console.error('Error parsing metadata:', error)
+          logger.error('Error parsing metadata:', error)
           metadata = {} // Default to an empty object if parsing fails
         }
       }
@@ -29,7 +32,7 @@ async function saveWidgetState (boardId, viewId) {
         try {
           settings = JSON.parse(widget.dataset.settings)
         } catch (error) {
-          console.error('Error parsing settings:', error)
+          logger.error('Error parsing settings:', error)
           settings = {} // Default to an empty object if parsing fails
         }
       }
@@ -43,53 +46,53 @@ async function saveWidgetState (boardId, viewId) {
         metadata,
         settings
       }
-      console.log('Saving widget state:', state)
+      logger.info('Saving widget state:', state)
       return state
     })
     const boards = await loadBoardState()
-    console.log(`Loaded board state from localStorage: ${boards}`)
+    logger.info(`Loaded board state from localStorage: ${boards}`)
     const board = boards.find(b => b.id === boardId)
     if (board) {
-      console.log(`Found board: ${board}`)
+      logger.info(`Found board: ${board}`)
       const view = board.views.find(v => v.id === viewId)
       if (view) {
-        console.log(`Found view: ${view}`)
+        logger.info(`Found view: ${view}`)
         view.widgetState = widgetState
         await saveBoardState(boards)
-        console.log(`Saved widget state to view: ${viewId} in board: ${boardId}`)
+        logger.info(`Saved widget state to view: ${viewId} in board: ${boardId}`)
       } else {
-        console.error(`View not found: ${viewId}`)
+        logger.error(`View not found: ${viewId}`)
       }
     } else {
-      console.error(`Board not found: ${boardId}`)
+      logger.error(`Board not found: ${boardId}`)
     }
   } catch (error) {
-    console.error('Error saving widget state:', error)
+    logger.error('Error saving widget state:', error)
   }
 }
 
 async function loadWidgetState (boardId, viewId) {
   try {
-    console.log('loadWidgetState function called for board:', boardId, 'and view:', viewId)
+    logger.info('loadWidgetState function called for board:', boardId, 'and view:', viewId)
 
     setBoardAndViewIds(boardId, viewId)
 
     const boards = await loadBoardState()
-    console.log('Loaded board state from localStorage:', boards)
+    logger.info('Loaded board state from localStorage:', boards)
     const board = boards.find(b => b.id === boardId)
 
     if (board) {
-      console.log('Found board:', board)
+      logger.info('Found board:', board)
       const view = board.views.find(v => v.id === viewId)
 
       if (view && view.widgetState.length > 0) {
-        console.log('Found widget state in view:', view.widgetState)
+        logger.info('Found widget state in view:', view.widgetState)
         const savedState = view.widgetState
         const widgetContainer = document.getElementById('widget-container')
         widgetContainer.innerHTML = ''
 
         for (const widgetData of savedState) {
-          console.log('Loading widget data:', widgetData)
+          logger.info('Loading widget data:', widgetData)
           const service = await getServiceFromUrl(widgetData.url)
           const widgetWrapper = await createWidget(
             service,
@@ -108,13 +111,13 @@ async function loadWidgetState (boardId, viewId) {
         // Initialize resize handles after all widgets are loaded
         initializeResizeHandles()
       } else {
-        console.log('No widget state found in view:', viewId)
+        logger.info('No widget state found in view:', viewId)
       }
     } else {
-      console.error('Board not found:', boardId)
+      logger.error('Board not found:', boardId)
     }
   } catch (error) {
-    console.error('Error loading widget state:', error)
+    logger.error('Error loading widget state:', error)
   }
 }
 
@@ -125,7 +128,7 @@ async function loadInitialConfig () {
       await saveBoardState(boards)
     }
   } catch (error) {
-    console.error('Error loading initial configuration:', error)
+    logger.error('Error loading initial configuration:', error)
   }
 }
 
@@ -140,7 +143,7 @@ export async function saveBoardState (boards) {
   try {
     localStorage.setItem('boards', JSON.stringify(boards))
   } catch (error) {
-    console.error('Error saving board state:', error)
+    logger.error('Error saving board state:', error)
   }
 }
 
@@ -154,7 +157,7 @@ export async function loadBoardState () {
     }
     return parsedBoards
   } catch (error) {
-    console.error('Error loading board state:', error)
+    logger.error('Error loading board state:', error)
     return []
   }
 }

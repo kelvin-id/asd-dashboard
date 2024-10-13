@@ -7,12 +7,17 @@ import {
 import { saveWidgetState } from '../../storage/localStorage.js'
 import { getCurrentBoardId } from '../../utils/elements.js'
 import { showNotification } from '../dialog/notification.js'
+import { Logger } from '../../utils/Logger.js'
+
+const logger = new Logger('dashboardMenu.js')
 
 let uiInitialized = false // Guard variable
 
 function initializeDashboardMenu () {
   if (uiInitialized) return // Guard clause
   uiInitialized = true
+
+  logger.log('Dashboard menu initialized')
 
   document.getElementById('add-widget-button').addEventListener('click', () => {
     const serviceSelector = document.getElementById('service-selector')
@@ -49,7 +54,7 @@ function initializeDashboardMenu () {
   document.getElementById('view-selector').addEventListener('change', (event) => {
     const selectedBoardId = getCurrentBoardId()
     const selectedViewId = event.target.value
-    console.debug(`Switching to selected view ${selectedViewId} in board ${selectedBoardId}`) // Add this log
+    logger.log(`Switching to selected view ${selectedViewId} in board ${selectedBoardId}`)
     switchView(selectedBoardId, selectedViewId)
   })
 }

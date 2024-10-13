@@ -1,10 +1,13 @@
 import { createView, renameView, deleteView, resetView, updateViewSelector } from '../board/boardManagement.js'
 import { getCurrentBoardId, getCurrentViewId } from '../../utils/elements.js'
 import { initializeDropdown } from '../utils/dropDownUtils.js'
+import { Logger } from '../../utils/Logger.js'
+
+const logger = new Logger('viewDropdown.js')
 
 export function initializeViewDropdown () {
   const viewDropdown = document.getElementById('view-dropdown')
-  console.log('View dropdown initialized:', viewDropdown)
+  logger.log('View dropdown initialized:', viewDropdown)
 
   initializeDropdown(viewDropdown, {
     create: handleCreateView,
@@ -20,10 +23,10 @@ function handleCreateView () {
   if (viewName) {
     try {
       const newView = createView(boardId, viewName)
-      console.log('View created:', newView)
+      logger.log('View created:', newView)
       updateViewSelector(boardId)
     } catch (error) {
-      console.error('Error creating view:', error)
+      logger.error('Error creating view:', error)
     }
   }
 }
@@ -35,9 +38,9 @@ function handleRenameView () {
   if (newViewName) {
     try {
       renameView(boardId, viewId, newViewName)
-      console.log('View renamed to:', newViewName)
+      logger.log('View renamed to:', newViewName)
     } catch (error) {
-      console.error('Error renaming view:', error)
+      logger.error('Error renaming view:', error)
     }
   }
 }
@@ -48,10 +51,10 @@ function handleDeleteView () {
   if (confirm('Are you sure you want to delete this view?')) {
     try {
       deleteView(boardId, viewId)
-      console.log('View deleted:', viewId)
+      logger.log('View deleted:', viewId)
       updateViewSelector(boardId)
     } catch (error) {
-      console.error('Error deleting view:', error)
+      logger.error('Error deleting view:', error)
     }
   }
 }
@@ -62,9 +65,9 @@ function handleResetView () {
   if (confirm('Are you sure you want to reset this view?')) {
     try {
       resetView(boardId, viewId)
-      console.log('View reset:', viewId)
+      logger.log('View reset:', viewId)
     } catch (error) {
-      console.error('Error resetting view:', error)
+      logger.error('Error resetting view:', error)
     }
   }
 }

@@ -1,18 +1,21 @@
 import { saveWidgetState } from '../../../storage/localStorage.js'
 import { getCurrentBoardId, getCurrentViewId } from '../../../utils/elements.js'
 import { debounce } from '../../../utils/utils.js'
+import { Logger } from '../../../utils/Logger.js'
+
+const logger = new Logger('resizeHandler.js')
 
 export function initializeResizeHandles () {
   const widgets = document.querySelectorAll('.widget')
-  console.log(`Found ${widgets.length} widgets to initialize resize handles.`)
+  logger.info(`Found ${widgets.length} widgets to initialize resize handles.`)
 
   widgets.forEach((widget, index) => {
-    console.log(`Initializing resize handle for widget index: ${index}`)
+    logger.info(`Initializing resize handle for widget index: ${index}`)
     const resizeHandle = document.createElement('div')
     resizeHandle.className = 'resize-handle'
     widget.appendChild(resizeHandle)
 
-    console.log('Appended resize handle:', resizeHandle)
+    logger.info('Appended resize handle:', resizeHandle)
 
     resizeHandle.addEventListener('mousedown', (event) => {
       event.preventDefault()
@@ -78,9 +81,9 @@ async function handleResizeStart (event, widget) {
       widget.dataset.rows = snappedHeight
 
       debouncedSaveState()
-      console.log(`Widget resized to columns: ${snappedWidth}, rows: ${snappedHeight}`)
+      logger.info(`Widget resized to columns: ${snappedWidth}, rows: ${snappedHeight}`)
     } catch (error) {
-      console.error('Error during widget resize:', error)
+      logger.error('Error during widget resize:', error)
     }
   }
 
@@ -95,9 +98,9 @@ async function handleResizeStart (event, widget) {
       // Remove the overlay
       document.body.removeChild(overlay)
 
-      console.log('Resize stopped and widget state saved.')
+      logger.info('Resize stopped and widget state saved.')
     } catch (error) {
-      console.error('Error stopping resize:', error)
+      logger.error('Error stopping resize:', error)
     }
   }
 

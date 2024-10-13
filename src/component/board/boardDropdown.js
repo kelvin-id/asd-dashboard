@@ -1,10 +1,13 @@
 import { saveBoardState } from '../../storage/localStorage.js'
 import { createBoard, renameBoard, deleteBoard, updateViewSelector, addBoardToUI, boards } from './boardManagement.js'
 import { initializeDropdown } from '../utils/dropDownUtils.js'
+import { Logger } from '../../utils/Logger.js'
+
+const logger = new Logger('boardDropdown.js')
 
 export function initializeBoardDropdown () {
   const boardDropdown = document.getElementById('board-dropdown')
-  console.log('Board dropdown initialized:', boardDropdown)
+  logger.log('Board dropdown initialized:', boardDropdown)
 
   initializeDropdown(boardDropdown, {
     create: handleCreateBoard,
@@ -18,11 +21,11 @@ function handleCreateBoard () {
   if (boardName) {
     try {
       const newBoard = createBoard(boardName)
-      console.log('Board created:', newBoard)
+      logger.log('Board created:', newBoard)
       saveBoardState(boards)
       addBoardToUI(newBoard)
     } catch (error) {
-      console.error('Error creating board:', error)
+      logger.error('Error creating board:', error)
     }
   }
 }
@@ -33,10 +36,10 @@ function handleRenameBoard () {
   if (newBoardName) {
     try {
       renameBoard(boardId, newBoardName)
-      console.log('Board renamed to:', newBoardName)
+      logger.log('Board renamed to:', newBoardName)
       saveBoardState(boards)
     } catch (error) {
-      console.error('Error renaming board:', error)
+      logger.error('Error renaming board:', error)
     }
   }
 }
@@ -46,13 +49,13 @@ function handleDeleteBoard () {
   if (confirm('Are you sure you want to delete this board?')) {
     try {
       deleteBoard(boardId)
-      console.log('Board deleted:', boardId)
+      logger.log('Board deleted:', boardId)
       saveBoardState(boards)
       if (boards.length > 0) {
         updateViewSelector(boards[0].id)
       }
     } catch (error) {
-      console.error('Error deleting board:', error)
+      logger.error('Error deleting board:', error)
     }
   }
 }

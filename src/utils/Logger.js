@@ -1,6 +1,7 @@
 export class Logger {
   constructor (fileName) {
-    this.fileName = fileName
+    // Remove the .js extension if it exists
+    this.fileName = fileName.replace(/\.js$/, '')
     this.isEnabled = this.checkLogStatus()
   }
 
@@ -17,13 +18,15 @@ export class Logger {
 
   getCallingFunctionName () {
     try {
-      // Capture the stack trace and extract the second frame, which is the caller
       const err = new Error()
       const stack = err.stack.split('\n')
-      // Extract and return the calling function name (if available)
-      const caller = stack[3] || '' // Adjust stack level based on environment (3rd line in Chrome, might be 4th in others)
-      const match = caller.match(/at (\w+)/)
-      return match ? match[1] : 'anonymous' // Return 'anonymous' if no match is found
+
+      // Filter out Logger-related lines and non-relevant frames
+      const caller = stack.find(line => !line.includes('Logger') && line.includes('at')) || ''
+
+      // Extract the function name and remove the "at" prefix
+      const match = caller.match(/at (.+) \(/)
+      return match ? match[1].trim() : 'anonymous'
     } catch (e) {
       return 'anonymous'
     }
@@ -59,5 +62,17 @@ export class Logger {
 
   static disableLogs () {
     localStorage.removeItem('log')
+  }
+
+  static listLoggedFiles () {
+    const logSetting = localStorage.getItem('log')
+    if (logSetting === 'all') {
+      console.log('Logging is enabled for all files')
+    } else if (logSetting) {
+      const enabledFiles = logSetting.split(',')
+      console.log('Logging enabled for files:', enabledFiles)
+    } else {
+      console.log('Logging is disabled')
+    }
   }
 }

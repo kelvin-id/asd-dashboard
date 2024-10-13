@@ -1,13 +1,16 @@
 import { showNotification } from '../dialog/notification.js'
+import { Logger } from '../../utils/Logger.js'
+
+const logger = new Logger('localStorageModal.js')
 
 export function openLocalStorageModal () {
   // Check if the modal already exists
   if (document.getElementById('localStorage-modal')) {
-    console.log('LocalStorage modal is already open')
+    logger.log('LocalStorage modal is already open')
     return
   }
 
-  console.log('Opening LocalStorage modal')
+  logger.log('Opening LocalStorage modal')
   const modal = document.createElement('div')
   modal.id = 'localStorage-modal'
   modal.innerHTML = `
@@ -27,18 +30,18 @@ export function openLocalStorageModal () {
       saveLocalStorageChanges()
       closeLocalStorageModal()
     } catch (error) {
-      console.error('Error saving LocalStorage changes:', error)
+      logger.error('Error saving LocalStorage changes:', error)
     }
   })
 
   document.getElementById('cancel-localStorage').addEventListener('click', () => {
-    console.log('Cancel button clicked, closing modal without saving changes')
+    logger.log('Cancel button clicked, closing modal without saving changes')
     closeLocalStorageModal()
   })
 }
 
 function closeLocalStorageModal () {
-  console.log('Closing LocalStorage modal')
+  logger.log('Closing LocalStorage modal')
   const modal = document.getElementById('localStorage-modal')
   if (modal) {
     document.body.removeChild(modal)
@@ -52,7 +55,7 @@ function saveLocalStorageChanges () {
     for (const key in parsedContent) {
       localStorage.setItem(key, JSON.stringify(parsedContent[key]))
     }
-    console.log('LocalStorage updated successfully')
+    logger.log('LocalStorage updated successfully')
     alert('LocalStorage updated successfully!')
 
     // Reload the page to reflect changes
@@ -69,7 +72,7 @@ function getLocalStorageData () {
     try {
       data[key] = JSON.parse(localStorage.getItem(key))
     } catch (error) {
-      console.error(`Error parsing localStorage item with key "${key}":`, error)
+      logger.error(`Error parsing localStorage item with key "${key}":`, error)
       data[key] = localStorage.getItem(key)
     }
   }

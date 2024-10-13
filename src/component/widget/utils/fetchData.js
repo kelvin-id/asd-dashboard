@@ -1,5 +1,9 @@
+import { Logger } from '../../../utils/Logger.js'
+
+const logger = new Logger('fetchData.js')
+
 function fetchData (url, callback) {
-  console.log('Fetching data from:', url)
+  logger.log('Fetching data from URL:', url)
   fetch(url, {
     headers: {
       Authorization: `Bearer ${getAuthToken()}`
@@ -15,7 +19,7 @@ function fetchData (url, callback) {
       callback(data)
     })
     .catch(error => {
-      console.error('Fetching data failed:', error)
+      logger.error('Error fetching data:', error)
     })
 }
 

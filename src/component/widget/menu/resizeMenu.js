@@ -2,6 +2,9 @@ import emojiList from '../../../ui/unicodeEmoji.js'
 import { saveWidgetState } from '../../../storage/localStorage.js'
 import { fetchServices } from '../utils/fetchServices.js'
 import { getConfig } from '../../../utils/getConfig.js'
+import { Logger } from '../../../utils/Logger.js'
+
+const logger = new Logger('resizeMenu.js')
 
 // Function to resize widget horizontally
 async function resizeHorizontally (widget, increase = true) {
@@ -20,11 +23,11 @@ async function resizeHorizontally (widget, increase = true) {
     // Apply constraints and provide visual feedback
     if (newSpan < minColumns) {
       widget.classList.add('below-min')
-      console.log('Cannot resize below minimum columns')
+      logger.log('Cannot resize below minimum columns')
       return
     } else if (newSpan > maxColumns) {
       widget.classList.add('exceeding-max')
-      console.log('Cannot resize beyond maximum columns')
+      logger.log('Cannot resize beyond maximum columns')
       return
     } else {
       widget.classList.remove('below-min', 'exceeding-max')
@@ -32,15 +35,15 @@ async function resizeHorizontally (widget, increase = true) {
 
     widget.dataset.columns = newSpan
     widget.style.gridColumn = `span ${newSpan}`
-    console.log(`Widget resized horizontally to span ${newSpan} columns`)
+    logger.log(`Widget resized horizontally to span ${newSpan} columns`)
     saveWidgetState()
 
     // Log dimensions and overflow state of widget container
     const widgetContainer = document.getElementById('widget-container')
-    console.log('Widget Container Dimensions:', widgetContainer.getBoundingClientRect())
-    console.log('Widget Container Overflow:', window.getComputedStyle(widgetContainer).overflow)
+    logger.log('Widget Container Dimensions:', widgetContainer.getBoundingClientRect())
+    logger.log('Widget Container Overflow:', window.getComputedStyle(widgetContainer).overflow)
   } catch (error) {
-    console.error('Error resizing widget horizontally:', error)
+    logger.error('Error resizing widget horizontally:', error)
   }
 }
 
@@ -61,11 +64,11 @@ async function resizeVertically (widget, increase = true) {
     // Apply constraints and provide visual feedback
     if (newSpan < minRows) {
       widget.classList.add('below-min')
-      console.log('Cannot resize below minimum rows')
+      logger.log('Cannot resize below minimum rows')
       return
     } else if (newSpan > maxRows) {
       widget.classList.add('exceeding-max')
-      console.log('Cannot resize beyond maximum rows')
+      logger.log('Cannot resize beyond maximum rows')
       return
     } else {
       widget.classList.remove('below-min', 'exceeding-max')
@@ -73,15 +76,15 @@ async function resizeVertically (widget, increase = true) {
 
     widget.dataset.rows = newSpan
     widget.style.gridRow = `span ${newSpan}`
-    console.log(`Widget resized vertically to span ${newSpan} rows`)
+    logger.log(`Widget resized vertically to span ${newSpan} rows`)
     saveWidgetState()
 
     // Log dimensions and overflow state of widget container
     const widgetContainer = document.getElementById('widget-container')
-    console.log('Widget Container Dimensions:', widgetContainer.getBoundingClientRect())
-    console.log('Widget Container Overflow:', window.getComputedStyle(widgetContainer).overflow)
+    logger.log('Widget Container Dimensions:', widgetContainer.getBoundingClientRect())
+    logger.log('Widget Container Overflow:', window.getComputedStyle(widgetContainer).overflow)
   } catch (error) {
-    console.error('Error resizing widget vertically:', error)
+    logger.error('Error resizing widget vertically:', error)
   }
 }
 
@@ -89,9 +92,9 @@ async function enlarge (widget) {
   try {
     await resizeHorizontally(widget, true)
     await resizeVertically(widget, true)
-    console.log('Widget enlarged')
+    logger.log('Widget enlarged')
   } catch (error) {
-    console.error('Error enlarging widget:', error)
+    logger.error('Error enlarging widget:', error)
   }
 }
 
@@ -99,9 +102,9 @@ async function shrink (widget) {
   try {
     await resizeHorizontally(widget, false)
     await resizeVertically(widget, false)
-    console.log('Widget shrunk')
+    logger.log('Widget shrunk')
   } catch (error) {
-    console.error('Error shrinking widget:', error)
+    logger.error('Error shrinking widget:', error)
   }
 }
 
@@ -139,20 +142,20 @@ async function showResizeMenu (icon) {
       widget.appendChild(menu)
 
       menu.addEventListener('mouseover', () => {
-        console.log('Mouse over resize menu')
+        logger.log('Mouse over resize menu')
         menu.style.display = 'block'
       })
       menu.addEventListener('mouseout', (event) => {
-        console.log('Mouse out resize menu')
+        logger.log('Mouse out resize menu')
         if (!event.relatedTarget || !event.relatedTarget.classList.contains('widget-icon-resize')) {
           menu.style.display = 'none'
         }
       })
     }
     menu.style.display = 'block'
-    console.log('Resize menu shown')
+    logger.log('Resize menu shown')
   } catch (error) {
-    console.error('Error showing resize menu:', error)
+    logger.error('Error showing resize menu:', error)
   }
 }
 
@@ -163,10 +166,10 @@ async function hideResizeMenu (icon) {
     const menu = widget.querySelector('.resize-menu')
     if (menu) {
       menu.style.display = 'none'
-      console.log('Resize menu hidden')
+      logger.log('Resize menu hidden')
     }
   } catch (error) {
-    console.error('Error hiding resize menu:', error)
+    logger.error('Error hiding resize menu:', error)
   }
 }
 
@@ -174,19 +177,19 @@ async function hideResizeMenu (icon) {
 async function showResizeMenuBlock (icon, widgetWrapper) {
   try {
     const config = await getConfig()
-    console.log('Loaded config:', config)
+    logger.log('Loaded config:', config)
 
     const widgetUrl = widgetWrapper.dataset.url
-    console.log('Widget URL:', widgetUrl)
+    logger.log('Widget URL:', widgetUrl)
 
     const services = await fetchServices()
-    console.log('Fetched services:', services)
+    logger.log('Fetched services:', services)
 
     const widgetService = services.find(service => service.url === widgetUrl)
-    console.log('Found widget service:', widgetService)
+    logger.log('Found widget service:', widgetService)
 
     if (!widgetService || !widgetService.config) {
-      console.error(`No constraints found for URL: ${widgetUrl}`)
+      logger.error(`No constraints found for URL: ${widgetUrl}`)
       return
     }
 
@@ -207,7 +210,7 @@ async function showResizeMenuBlock (icon, widgetWrapper) {
       }
     }
 
-    console.log('Grid options:', gridOptions)
+    logger.log('Grid options:', gridOptions)
 
     gridOptions.forEach(option => {
       const button = document.createElement('button')
@@ -226,29 +229,29 @@ async function showResizeMenuBlock (icon, widgetWrapper) {
     menu.style.zIndex = '20'
 
     menu.addEventListener('mouseleave', (event) => {
-      console.log('Mouse left resize-menu-block')
+      logger.log('Mouse left resize-menu-block')
       hideResizeMenuBlock(widgetWrapper)
     })
 
     widgetWrapper.appendChild(menu)
   } catch (error) {
-    console.error('Error showing resize menu block:', error)
+    logger.error('Error showing resize menu block:', error)
   }
 }
 
 // Function to hide resize menu block
 async function hideResizeMenuBlock (widgetWrapper) {
-  console.log('Removing resize menu block')
+  logger.log('Removing resize menu block')
   try {
     const menu = widgetWrapper.querySelector('.resize-menu-block')
     if (menu) {
       menu.remove()
-      console.log('Resize menu block hidden')
+      logger.log('Resize menu block hidden')
     } else {
-      console.log('No resize menu block to hide')
+      logger.log('No resize menu block to hide')
     }
   } catch (error) {
-    console.error('Error hiding resize menu block:', error)
+    logger.error('Error hiding resize menu block:', error)
   }
 }
 
@@ -272,9 +275,9 @@ async function adjustWidgetSize (widgetWrapper, columns, rows) {
     widgetWrapper.dataset.rows = rows
     widgetWrapper.style.gridColumn = `span ${columns}`
     widgetWrapper.style.gridRow = `span ${rows}`
-    console.log(`Widget resized to ${columns} columns and ${rows} rows`)
+    logger.log(`Widget resized to ${columns} columns and ${rows} rows`)
   } catch (error) {
-    console.error('Error adjusting widget size:', error)
+    logger.error('Error adjusting widget size:', error)
   }
 }
 

@@ -9,9 +9,12 @@ import { getConfig } from '../../utils/getConfig.js'
 import { handleDragStart, handleDragEnd } from './events/dragDrop.js'
 import { toggleFullScreen } from './events/fullscreenToggle.js'
 import { initializeResizeHandles } from './events/resizeHandler.js'
+import { Logger } from '../../utils/Logger.js'
+
+const logger = new Logger('widgetManagement.js')
 
 async function createWidget (service, url, gridColumnSpan = 1, gridRowSpan = 1) {
-  console.log('Creating widget with URL:', url)
+  logger.log('Creating widget with URL:', url)
   const config = await getConfig()
   const services = await fetchServices()
   const serviceConfig = services.find(s => s.name === service)?.config || {}
@@ -21,11 +24,11 @@ async function createWidget (service, url, gridColumnSpan = 1, gridRowSpan = 1) 
   const maxRows = serviceConfig.maxRows || config.styling.widget.maxRows
 
   const widgetWrapper = document.createElement('div')
-  widgetWrapper.className = 'widget-wrapper widget' // Ensure 'widget' class is added
+  widgetWrapper.className = 'widget-wrapper widget'
   widgetWrapper.style.position = 'relative'
   widgetWrapper.dataset.service = service
   widgetWrapper.dataset.url = url
-  console.log(`Creating widget for service: ${service}`)
+  logger.log(`Creating widget for service: ${service}`)
 
   gridColumnSpan = Math.min(Math.max(gridColumnSpan, minColumns), maxColumns)
   gridRowSpan = Math.min(Math.max(gridRowSpan, minRows), maxRows)
@@ -42,11 +45,11 @@ async function createWidget (service, url, gridColumnSpan = 1, gridRowSpan = 1) 
   iframe.style.height = '100%'
 
   iframe.onload = () => {
-    console.log('Iframe loaded successfully:', url)
+    logger.log('Iframe loaded successfully:', url)
   }
 
   iframe.onerror = () => {
-    console.error('Error loading iframe:', url)
+    logger.error('Error loading iframe:', url)
   }
 
   const widgetMenu = document.createElement('div')
@@ -80,12 +83,12 @@ async function createWidget (service, url, gridColumnSpan = 1, gridRowSpan = 1) 
   resizeMenuIcon.innerHTML = emojiList.triangularRuler.unicode
   resizeMenuIcon.classList.add('widget-button', 'widget-icon-resize')
   resizeMenuIcon.addEventListener('mouseenter', () => {
-    console.log('Mouse enter resize menu icon')
+    logger.log('Mouse enter resize menu icon')
     showResizeMenu(resizeMenuIcon)
   })
 
   resizeMenuIcon.addEventListener('mouseleave', (event) => {
-    console.log('Mouse left resize menu icon')
+    logger.log('Mouse left resize menu icon')
     const related = event.relatedTarget
     if (!related || !related.closest('.resize-menu')) {
       debouncedHideResizeMenu(resizeMenuIcon)
@@ -100,7 +103,7 @@ async function createWidget (service, url, gridColumnSpan = 1, gridRowSpan = 1) 
   })
 
   resizeMenuBlockIcon.addEventListener('mouseleave', (event) => {
-    console.log('Mouse left resize menu block icon')
+    logger.log('Mouse left resize menu block icon')
     const related = event.relatedTarget
     if (!related || !related.closest('.resize-menu-block')) {
       debouncedHideResizeMenuBlock(widgetWrapper)
@@ -132,7 +135,7 @@ async function createWidget (service, url, gridColumnSpan = 1, gridRowSpan = 1) 
   widgetWrapper.appendChild(widgetMenu)
 
   dragHandle.addEventListener('dragstart', (e) => {
-    console.log('Drag start event triggered')
+    logger.log('Drag start event triggered')
     e.dataTransfer.setData('text/plain', widgetWrapper.getAttribute('data-order'))
     e.dataTransfer.effectAllowed = 'move'
     e.dataTransfer.setDragImage(widgetWrapper, 0, 0)
@@ -141,13 +144,13 @@ async function createWidget (service, url, gridColumnSpan = 1, gridRowSpan = 1) 
   })
 
   dragHandle.addEventListener('dragend', (e) => {
-    console.log('Drag end event triggered')
+    logger.log('Drag end event triggered')
     widgetWrapper.classList.remove('dragging')
     handleDragEnd(e)
   })
 
-  console.log('Drag start event listener attached to drag handle')
-  console.log('Widget created with grid spans:', {
+  logger.log('Drag start event listener attached to drag handle')
+  logger.log('Widget created with grid spans:', {
     columns: gridColumnSpan,
     rows: gridRowSpan
   })
@@ -156,32 +159,32 @@ async function createWidget (service, url, gridColumnSpan = 1, gridRowSpan = 1) 
 }
 
 async function addWidget (url, columns = 1, rows = 1, type = 'iframe', boardId, viewId) {
-  console.log('Adding widget with URL:', url)
+  logger.log('Adding widget with URL:', url)
 
   const widgetContainer = document.getElementById('widget-container')
   if (!widgetContainer) {
-    console.error('Widget container not found')
+    logger.error('Widget container not found')
     return
   }
 
   // Default to current board and view if not provided
   if (!boardId) {
     boardId = document.querySelector('.board').id
-    console.log('Defaulting boardId to current board:', boardId)
+    logger.log('Defaulting boardId to current board:', boardId)
   }
   if (!viewId) {
     viewId = document.querySelector('.board-view').id
-    console.log('Defaulting viewId to current view:', viewId)
+    logger.log('Defaulting viewId to current view:', viewId)
   }
 
   const service = await getServiceFromUrl(url)
-  console.log('Extracted service:', service)
+  logger.log('Extracted service:', service)
 
   const widgetWrapper = await createWidget(service, url, columns, rows)
   widgetWrapper.setAttribute('data-order', widgetContainer.children.length)
   widgetContainer.appendChild(widgetWrapper)
 
-  console.log('Widget appended to container:', widgetWrapper)
+  logger.log('Widget appended to container:', widgetWrapper)
 
   const services = await fetchServices()
   const serviceObj = services.find(s => s.name === service)
@@ -189,11 +192,11 @@ async function addWidget (url, columns = 1, rows = 1, type = 'iframe', boardId, 
     fetchData(url, data => {
       const iframe = widgetWrapper.querySelector('iframe')
       iframe.contentWindow.postMessage(data, '*')
-      console.log('Data posted to iframe for API service:', data)
+      logger.log('Data posted to iframe for API service:', data)
     })
   }
 
-  console.log(`Saving widget state for board ${boardId} and view ${viewId}`)
+  logger.log(`Saving widget state for board ${boardId} and view ${viewId}`)
   saveWidgetState(boardId, viewId)
 
   // Initialize resize handles for the newly added widget
@@ -205,7 +208,7 @@ function removeWidget (widgetElement) {
   updateWidgetOrders()
   const boardId = document.querySelector('.board').id
   const viewId = document.querySelector('.board-view').id
-  console.log(`Saving widget state after removal for board ${boardId} and view ${viewId}`)
+  logger.log(`Saving widget state after removal for board ${boardId} and view ${viewId}`)
   saveWidgetState(boardId, viewId)
 }
 
@@ -219,12 +222,12 @@ async function configureWidget (iframeElement) {
     if (serviceObj && serviceObj.type === 'api') {
       fetchData(newUrl, data => {
         iframeElement.contentWindow.postMessage(data, '*')
-        console.log('Data posted to iframe for API service:', data)
+        logger.log('Data posted to iframe for API service:', data)
       })
     }
     const boardId = document.querySelector('.board').id
     const viewId = document.querySelector('.board-view').id
-    console.log(`Saving widget state after configuration for board ${boardId} and view ${viewId}`)
+    logger.log(`Saving widget state after configuration for board ${boardId} and view ${viewId}`)
     saveWidgetState(boardId, viewId)
   }
 }
@@ -236,7 +239,7 @@ function updateWidgetOrders () {
   widgets.forEach((widget, index) => {
     widget.setAttribute('data-order', index)
     widget.style.order = index
-    console.log('Updated widget order:', {
+    logger.log('Updated widget order:', {
       widget,
       order: index
     })
@@ -244,7 +247,7 @@ function updateWidgetOrders () {
 
   const boardId = document.querySelector('.board').id
   const viewId = document.querySelector('.board-view').id
-  console.log(`Saving widget state after updating orders for board ${boardId} and view ${viewId}`)
+  logger.log(`Saving widget state after updating orders for board ${boardId} and view ${viewId}`)
   saveWidgetState(boardId, viewId)
 }
 

@@ -1,3 +1,7 @@
+import { Logger } from '../../utils/Logger.js'
+
+const logger = new Logger('notification.js')
+
 // Function to generate a UUID (simple version)
 function generateUUID () {
   return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
@@ -33,6 +37,7 @@ export function showNotification (message, duration = 3000) {
 
   // Show the dialog
   dialog.show()
+  logger.log('Notification displayed with message:', message)
 
   // Add the "show" class for animation
   setTimeout(() => {

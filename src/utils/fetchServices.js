@@ -1,3 +1,7 @@
+import { Logger } from './Logger.js'
+
+const logger = new Logger('fetchServices.js')
+
 export const fetchServices = () =>
   fetch('services.json')
     .then(response => {
@@ -7,7 +11,7 @@ export const fetchServices = () =>
       return response.json()
     })
     .then(fetchedServices => {
-      console.log('Fetched services:', fetchedServices)
+      logger.log('Fetched services:', fetchedServices)
       window.asd.services = fetchedServices
 
       const serviceSelector = document.getElementById('service-selector')
@@ -19,5 +23,5 @@ export const fetchServices = () =>
       })
     })
     .catch(error => {
-      console.error('Error fetching services:', error)
+      logger.error('Error fetching services:', error)
     })

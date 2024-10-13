@@ -1,12 +1,15 @@
 import { updateWidgetOrders } from '../widgetManagement.js'
 import { saveWidgetState } from '../../../storage/localStorage.js'
+import { Logger } from '../../../utils/Logger.js'
+
+const logger = new Logger('dragDrop.js')
 
 function handleDragStart (e, draggedWidgetWrapper) {
   const widgetOrder = draggedWidgetWrapper.getAttribute('data-order')
-  console.log('Drag started for widget with order:', widgetOrder)
+  logger.log('Drag started for widget with order:', widgetOrder)
   e.dataTransfer.setData('text/plain', widgetOrder)
   e.dataTransfer.effectAllowed = 'move'
-  console.log('Data transfer set with widget order:', widgetOrder)
+  logger.log('Data transfer set with widget order:', widgetOrder)
 
   const widgetContainer = document.getElementById('widget-container')
   const widgets = Array.from(widgetContainer.children)
@@ -63,15 +66,15 @@ function removeDragOverlay (widgetWrapper) {
 
 function handleDrop (e, targetWidgetWrapper) {
   e.preventDefault()
-  console.log('Drop event on overlay for widget:', targetWidgetWrapper)
+  logger.log('Drop event on overlay for widget:', targetWidgetWrapper)
 
   const draggedOrder = e.dataTransfer.getData('text/plain')
   const targetOrder = targetWidgetWrapper.getAttribute('data-order')
 
-  console.log(`Drop event: draggedOrder=${draggedOrder}, targetOrder=${targetOrder}`)
+  logger.log(`Drop event: draggedOrder=${draggedOrder}, targetOrder=${targetOrder}`)
 
   if (draggedOrder === null || targetOrder === null) {
-    console.error('Invalid drag or drop target')
+    logger.error('Invalid drag or drop target')
     return
   }
 
@@ -81,11 +84,11 @@ function handleDrop (e, targetWidgetWrapper) {
   const targetWidget = widgetContainer.querySelector(`[data-order='${targetOrder}']`)
 
   if (!draggedWidget || !targetWidget) {
-    console.error('Invalid widget elements for dragging or dropping')
+    logger.error('Invalid widget elements for dragging or dropping')
     return
   }
 
-  console.log('Before rearrangement:', {
+  logger.log('Before rearrangement:', {
     draggedWidgetOrder: draggedWidget.getAttribute('data-order'),
     targetWidgetOrder: targetWidget.getAttribute('data-order')
   })
@@ -110,12 +113,12 @@ function handleDrop (e, targetWidgetWrapper) {
 
 function handleDragOver (e, widgetWrapper) {
   e.preventDefault()
-  console.log('Drag over event on overlay for widget:', widgetWrapper)
+  logger.log('Drag over event on overlay for widget:', widgetWrapper)
   widgetWrapper.classList.add('drag-over')
 }
 
 function handleDragLeave (e, widgetWrapper) {
-  console.log('Drag leave event on overlay for widget:', widgetWrapper)
+  logger.log('Drag leave event on overlay for widget:', widgetWrapper)
   widgetWrapper.classList.remove('drag-over')
 }
 
@@ -162,7 +165,7 @@ function initializeDragAndDrop () {
     }
   })
 
-  console.log('Drag and drop functionality initialized')
+  logger.log('Drag and drop functionality initialized')
 }
 
 export { handleDragStart, handleDragEnd, handleDrop, handleDragOver, handleDragLeave, initializeDragAndDrop }

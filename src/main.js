@@ -7,6 +7,9 @@ import { getConfig } from './utils/getConfig.js'
 import { openLocalStorageModal } from './component/modal/localStorageModal.js'
 import { initializeBoardDropdown } from './component/board/boardDropdown.js'
 import { initializeViewDropdown } from './component/view/viewDropdown.js'
+import { Logger } from './utils/Logger.js'
+
+const logger = new Logger('main.js')
 
 window.asd = {
   services: [],
@@ -15,7 +18,7 @@ window.asd = {
 }
 
 document.addEventListener('DOMContentLoaded', async () => {
-  console.log('DOMContentLoaded event fired')
+  logger.log('DOMContentLoaded event fired')
   fetchServices()
   await getConfig()
 
@@ -32,7 +35,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       updateViewSelector(initialBoardView.boardId)
     }
   }).catch(error => {
-    console.error('Failed to initialize boards:', error)
+    logger.error('Failed to initialize boards:', error)
   })
 
   initializeDragAndDrop()
@@ -46,7 +49,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     try {
       openLocalStorageModal()
     } catch (error) {
-      console.error('Error opening LocalStorage modal:', error)
+      logger.error('Error opening LocalStorage modal:', error)
     }
   })
 })
