@@ -145,3 +145,24 @@
 .resize-menu-block button:hover {
     background-color: #f0f0f0;
 }
+
+.widget {
+    position: relative;
+    /* Other existing styles */
+}
+
+.resize-handle {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 15px;
+    height: 15px;
+    cursor: se-resize;
+    background-color: rgba(255, 0, 0, 0.5); /* Changed to red for visibility */
+    border: 1px solid black; /* Added border for visibility */
+    z-index: 99; /* Ensure it appears above other elements */
+}
+
+.resizing {
+    border: 2px dotted green;
+}

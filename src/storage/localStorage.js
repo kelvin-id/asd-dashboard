@@ -1,5 +1,6 @@
 import { createWidget } from '../component/widget/widgetManagement.js'
 import { getServiceFromUrl } from '../component/widget/utils/widgetUtils.js'
+import { initializeResizeHandles } from '../component/widget/events/resizeHandler.js'
 
 async function saveWidgetState (boardId, viewId) {
   if (!boardId) {
@@ -103,6 +104,9 @@ async function loadWidgetState (boardId, viewId) {
           widgetWrapper.dataset.settings = JSON.stringify(widgetData.settings)
           widgetContainer.appendChild(widgetWrapper)
         }
+
+        // Initialize resize handles after all widgets are loaded
+        initializeResizeHandles()
       } else {
         console.log('No widget state found in view:', viewId)
       }

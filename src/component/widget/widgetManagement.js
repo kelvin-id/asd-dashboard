@@ -8,6 +8,7 @@ import { getServiceFromUrl } from './utils/widgetUtils.js'
 import { getConfig } from '../../utils/getConfig.js'
 import { handleDragStart, handleDragEnd } from './events/dragDrop.js'
 import { toggleFullScreen } from './events/fullscreenToggle.js'
+import { initializeResizeHandles } from './events/resizeHandler.js'
 
 async function createWidget (service, url, gridColumnSpan = 1, gridRowSpan = 1) {
   console.log('Creating widget with URL:', url)
@@ -20,7 +21,7 @@ async function createWidget (service, url, gridColumnSpan = 1, gridRowSpan = 1) 
   const maxRows = serviceConfig.maxRows || config.styling.grid.maxRows
 
   const widgetWrapper = document.createElement('div')
-  widgetWrapper.className = 'widget-wrapper'
+  widgetWrapper.className = 'widget-wrapper widget' // Ensure 'widget' class is added
   widgetWrapper.style.position = 'relative'
   widgetWrapper.dataset.service = service
   widgetWrapper.dataset.url = url
@@ -194,6 +195,9 @@ async function addWidget (url, columns = 1, rows = 1, type = 'iframe', boardId, 
 
   console.log(`Saving widget state for board ${boardId} and view ${viewId}`)
   saveWidgetState(boardId, viewId)
+
+  // Initialize resize handles for the newly added widget
+  initializeResizeHandles()
 }
 
 function removeWidget (widgetElement) {
