@@ -13,6 +13,7 @@ body {
     margin: 0;
     padding: 0;
     height: 100vh;
+    overflow: auto;
 }
 
 header {
@@ -20,6 +21,10 @@ header {
     color: white;
     padding: 0.5rem;
     text-align: center;
+}
+
+main {
+    margin-right: 15px;
 }
 
 .widget-wrapper {
