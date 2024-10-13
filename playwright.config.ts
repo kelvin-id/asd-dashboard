@@ -28,6 +28,10 @@ export default defineConfig({
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: 'on-first-retry',
     baseURL: process.env.STAGING === '1' ? 'http://localhost:8000' : 'http://localhost:8000',
+    video: {
+        mode: 'on',
+        size: { width: 640, height: 480 }
+    }
   },
 
   /* Configure projects for major browsers */
