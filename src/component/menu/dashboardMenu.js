@@ -6,6 +6,7 @@ import {
 } from '../../component/board/boardManagement.js'
 import { saveWidgetState } from '../../storage/localStorage.js'
 import { getCurrentBoardId } from '../../utils/elements.js'
+import { showNotification } from '../dialog/notification.js'
 
 let uiInitialized = false // Guard variable
 
@@ -23,7 +24,7 @@ function initializeDashboardMenu () {
     if (url) {
       addWidget(url, 1, 1, 'iframe', boardElement.id, viewElement.id)
     } else {
-      alert('Please select a service or enter a URL.')
+      showNotification('Please select a service or enter a URL.')
     }
   })
 

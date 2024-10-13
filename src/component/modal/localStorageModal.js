@@ -1,7 +1,5 @@
 import { showNotification } from '../dialog/notification.js'
 
-window.s = () => showNotification('<textarea id= <textarea id= <textarea id= <textarea id=', 10000)
-
 export function openLocalStorageModal () {
   // Check if the modal already exists
   if (document.getElementById('localStorage-modal')) {
@@ -60,8 +58,7 @@ function saveLocalStorageChanges () {
     // Reload the page to reflect changes
     location.reload()
   } catch (error) {
-    console.error('Invalid JSON format:', error)
-    alert('Invalid JSON format!')
+    showNotification(`Invalid JSON format:${error}`)
   }
 }
 
