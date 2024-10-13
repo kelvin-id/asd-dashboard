@@ -30,7 +30,7 @@ export default defineConfig({
     baseURL: process.env.STAGING === '1' ? 'http://localhost:8000' : 'http://localhost:8000',
     video: {
         mode: 'on',
-        size: { width: 640, height: 480 }
+        size: { width: 1280, height: 720 } // Updated to HD resolution
     }
   },
 
@@ -41,10 +41,10 @@ export default defineConfig({
       use: { ...devices['Desktop Chrome'] },
     },
 
-    {
-      name: 'firefox',
-      use: { ...devices['Desktop Firefox'] },
-    },
+    // {
+    //   name: 'firefox',
+    //   use: { ...devices['Desktop Firefox'] },
+    // },
   ],
   /* Run local dev server before starting the tests */
   webServer: {
