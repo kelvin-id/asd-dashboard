@@ -1,27 +1,15 @@
 import { saveBoardState } from '../../storage/localStorage.js'
 import { createBoard, renameBoard, deleteBoard, updateViewSelector, addBoardToUI, boards } from './boardManagement.js'
+import { initializeDropdown } from '../utils/dropDownUtils.js'
 
 export function initializeBoardDropdown () {
   const boardDropdown = document.getElementById('board-dropdown')
   console.log('Board dropdown initialized:', boardDropdown)
 
-  boardDropdown.addEventListener('click', (event) => {
-    const action = event.target.dataset.action
-    console.log('Board dropdown clicked:', action)
-
-    switch (action) {
-      case 'create':
-        handleCreateBoard()
-        break
-      case 'rename':
-        handleRenameBoard()
-        break
-      case 'delete':
-        handleDeleteBoard()
-        break
-      default:
-        console.warn('Unknown action:', action)
-    }
+  initializeDropdown(boardDropdown, {
+    create: handleCreateBoard,
+    rename: handleRenameBoard,
+    delete: handleDeleteBoard
   })
 }
 

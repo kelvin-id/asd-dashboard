@@ -1,30 +1,16 @@
 import { createView, renameView, deleteView, resetView, updateViewSelector } from '../board/boardManagement.js'
 import { getCurrentBoardId, getCurrentViewId } from '../../utils/elements.js'
+import { initializeDropdown } from '../utils/dropDownUtils.js'
 
 export function initializeViewDropdown () {
   const viewDropdown = document.getElementById('view-dropdown')
   console.log('View dropdown initialized:', viewDropdown)
 
-  viewDropdown.addEventListener('click', (event) => {
-    const action = event.target.dataset.action
-    console.log('View dropdown clicked:', action)
-
-    switch (action) {
-      case 'create':
-        handleCreateView()
-        break
-      case 'rename':
-        handleRenameView()
-        break
-      case 'delete':
-        handleDeleteView()
-        break
-      case 'reset':
-        handleResetView()
-        break
-      default:
-        console.warn('Unknown action:', action)
-    }
+  initializeDropdown(viewDropdown, {
+    create: handleCreateView,
+    rename: handleRenameView,
+    delete: handleDeleteView,
+    reset: handleResetView
   })
 }
 
