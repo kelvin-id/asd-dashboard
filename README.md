@@ -1,6 +1,6 @@
 # ASD Dashboard
 
-ASD Dashboard is a VanillaJS Progressive Web App (PWA) designed to streamline Accelerated Software Development and Automated Service Deployment. This application empowers users to manage remote services through dynamic, resizable widgets encapsulated within iframes. It supports multiple boards and views for flexible configurations, with user preferences stored in localStorage for persistent sessions. Configuration can be loaded via a local or remote `config.json` file.
+ASD Dashboard is a VanillaJS Progressive Web App (PWA) designed to streamline Accelerated Software Development and Automated Service Deployment. This application empowers users to manage remote services through dynamic, resizable widgets encapsulated within iframes. It supports multiple boards and views for flexible configurations, with user preferences stored in localStorage for persistent sessions. Services are configured in `services.json` and the configuration can be loaded via a `config.json` file. Both files can be loaded local or remote due to the way the project has been designed as a PWA.
 
 ## Overview
 
@@ -21,7 +21,6 @@ ASD Dashboard is architected with a focus on simplicity and adaptability:
 - **Global Configuration**: Centralized configuration through `config.json` for global settings like themes and widget store URLs.
 - **LocalStorage Integration**: Persistent storage of dashboard preferences, with a modal for editing localStorage, enabling import/export and modification of JSON data.
 - **Responsive Grid Layout**: Widgets are arranged in a grid that adapts to screen size, with default configurations and options for customization.
-- **Theme Support**: Easily switch between light and dark themes via global settings.
 - **Service Selection**: Widgets can be added from a predefined JSON file, custom URL, or remote services, with support for merging multiple sources.
 - **Service Worker & PWA**: Offline capabilities and caching through a service worker enhance usability and performance.
 - **Playwright Integration & Testing**: Comprehensive testing using Playwright, with automated tests running via GitHub Actions.
