@@ -14,6 +14,10 @@ async function saveWidgetState (boardId, viewId) {
   }
   try {
     logger.info(`saveWidgetState function called for board: ${boardId}, view: ${viewId}`)
+    if (!viewId) {
+      logger.error('View ID is missing. Cannot save widget state.')
+      return
+    }
     const widgetContainer = document.getElementById('widget-container')
     const widgets = Array.from(widgetContainer.children)
     const widgetState = widgets.map(widget => {
@@ -38,6 +42,7 @@ async function saveWidgetState (boardId, viewId) {
       }
 
       const state = {
+        dataid: widget.dataset.dataid, // Include dataid in the state
         order: widget.getAttribute('data-order'),
         url: widget.querySelector('iframe').src,
         columns: widget.dataset.columns || 1,
@@ -89,23 +94,26 @@ async function loadWidgetState (boardId, viewId) {
         logger.info('Found widget state in view:', view.widgetState)
         const savedState = view.widgetState
         const widgetContainer = document.getElementById('widget-container')
-        widgetContainer.innerHTML = ''
+        const existingWidgetIds = Array.from(widgetContainer.children).map(w => w.dataset.dataid)
 
         for (const widgetData of savedState) {
-          logger.info('Loading widget data:', widgetData)
-          const service = await getServiceFromUrl(widgetData.url)
-          const widgetWrapper = await createWidget(
-            service,
-            widgetData.url,
-            widgetData.columns,
-            widgetData.rows
-          )
-          widgetWrapper.dataset.order = widgetData.order
-          widgetWrapper.style.order = widgetData.order
-          widgetWrapper.dataset.type = widgetData.type
-          widgetWrapper.dataset.metadata = JSON.stringify(widgetData.metadata)
-          widgetWrapper.dataset.settings = JSON.stringify(widgetData.settings)
-          widgetContainer.appendChild(widgetWrapper)
+          if (!existingWidgetIds.includes(widgetData.dataid)) {
+            logger.info('Loading widget data:', widgetData)
+            const service = await getServiceFromUrl(widgetData.url)
+            const widgetWrapper = await createWidget(
+              service,
+              widgetData.url,
+              widgetData.columns,
+              widgetData.rows,
+              widgetData.dataid // Ensure dataid is passed to maintain widget identity
+            )
+            widgetWrapper.dataset.order = widgetData.order
+            widgetWrapper.style.order = widgetData.order
+            widgetWrapper.dataset.type = widgetData.type
+            widgetWrapper.dataset.metadata = JSON.stringify(widgetData.metadata)
+            widgetWrapper.dataset.settings = JSON.stringify(widgetData.settings)
+            widgetContainer.appendChild(widgetWrapper)
+          }
         }
 
         // Initialize resize handles after all widgets are loaded

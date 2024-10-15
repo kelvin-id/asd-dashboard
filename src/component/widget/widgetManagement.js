@@ -13,7 +13,7 @@ import { Logger } from '../../utils/Logger.js'
 
 const logger = new Logger('widgetManagement.js')
 
-async function createWidget (service, url, gridColumnSpan = 1, gridRowSpan = 1) {
+async function createWidget (service, url, gridColumnSpan = 1, gridRowSpan = 1, dataid = null) {
   logger.log('Creating widget with URL:', url)
   const config = await getConfig()
   const services = await fetchServices()
@@ -28,6 +28,7 @@ async function createWidget (service, url, gridColumnSpan = 1, gridRowSpan = 1) 
   widgetWrapper.style.position = 'relative'
   widgetWrapper.dataset.service = service
   widgetWrapper.dataset.url = url
+  widgetWrapper.dataset.dataid = dataid || crypto.randomUUID() // Use existing dataid or generate a new one
   logger.log(`Creating widget for service: ${service}`)
 
   gridColumnSpan = Math.min(Math.max(gridColumnSpan, minColumns), maxColumns)
@@ -136,7 +137,7 @@ async function createWidget (service, url, gridColumnSpan = 1, gridRowSpan = 1) 
 
   dragHandle.addEventListener('dragstart', (e) => {
     logger.log('Drag start event triggered')
-    e.dataTransfer.setData('text/plain', widgetWrapper.getAttribute('data-order'))
+    e.dataTransfer.setData('text/plain', widgetWrapper.dataset.dataid)
     e.dataTransfer.effectAllowed = 'move'
     e.dataTransfer.setDragImage(widgetWrapper, 0, 0)
     widgetWrapper.classList.add('dragging')
@@ -158,7 +159,7 @@ async function createWidget (service, url, gridColumnSpan = 1, gridRowSpan = 1) 
   return widgetWrapper
 }
 
-async function addWidget (url, columns = 1, rows = 1, type = 'iframe', boardId, viewId) {
+async function addWidget (url, columns = 1, rows = 1, type = 'iframe', boardId, viewId, dataid = null) {
   logger.log('Adding widget with URL:', url)
 
   const widgetContainer = document.getElementById('widget-container')
@@ -180,7 +181,7 @@ async function addWidget (url, columns = 1, rows = 1, type = 'iframe', boardId, 
   const service = await getServiceFromUrl(url)
   logger.log('Extracted service:', service)
 
-  const widgetWrapper = await createWidget(service, url, columns, rows)
+  const widgetWrapper = await createWidget(service, url, columns, rows, dataid)
   widgetWrapper.setAttribute('data-order', widgetContainer.children.length)
   widgetContainer.appendChild(widgetWrapper)
 
@@ -204,7 +205,9 @@ async function addWidget (url, columns = 1, rows = 1, type = 'iframe', boardId, 
 }
 
 function removeWidget (widgetElement) {
+  const dataid = widgetElement.dataset.dataid
   widgetElement.remove()
+  logger.log('Widget removed with dataid:', dataid)
   updateWidgetOrders()
   const boardId = document.querySelector('.board').id
   const viewId = document.querySelector('.board-view').id
@@ -240,7 +243,7 @@ function updateWidgetOrders () {
     widget.setAttribute('data-order', index)
     widget.style.order = index
     logger.log('Updated widget order:', {
-      widget,
+      dataid: widget.dataset.dataid,
       order: index
     })
   })

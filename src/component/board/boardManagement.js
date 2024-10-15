@@ -85,21 +85,30 @@ export async function switchView (boardId, viewId) {
     logger.log(`Switching to view ${viewId} in board ${boardId}`)
     const view = board.views.find(v => v.id === viewId)
     if (view) {
-      document.querySelector('.board-view').id = viewId
-      clearWidgetContainer()
-      logger.log(`Loading widgets for view ${viewId}:`, view.widgetState)
-      for (const widget of view.widgetState) {
-        logger.log(`Adding widget from state: ${JSON.stringify(widget)}`)
-        await addWidget(widget.url, widget.columns, widget.rows, widget.type, boardId, viewId)
+      // Check if the board is already the current one to avoid unnecessary switching
+      const currentBoardId = document.querySelector('.board').id
+      if (currentBoardId !== boardId) {
+        logger.log(`Switching board from ${currentBoardId} to ${boardId}`)
+        await switchBoard(boardId) // Switch board only if necessary
       }
 
-      // Update localStorage with the current view ID
-      localStorage.setItem('lastUsedViewId', viewId)
-      logger.log(`Updated localStorage with viewId: ${viewId}`)
+      const lastUsedViewId = localStorage.getItem('lastUsedViewId')
+      const lastUsedWidgetState = view.widgetState
+      const currentWidgetState = JSON.parse(localStorage.getItem('boards'))
+        .find(b => b.id === boardId).views.find(v => v.id === viewId).widgetState
 
-      // Update the view selector
+      if (lastUsedViewId === viewId && JSON.stringify(lastUsedWidgetState) === JSON.stringify(currentWidgetState)) {
+        logger.log('View and widget state match the last used state, skipping re-rendering')
+        return
+      }
+
+      clearWidgetContainer()
+      logger.log(`Rendering widgets for view ${viewId}:`, view.widgetState)
+      for (const widget of view.widgetState) {
+        await addWidget(widget.url, widget.columns, widget.rows, widget.type, boardId, viewId, widget.dataid)
+      }
+      localStorage.setItem('lastUsedViewId', viewId)
       updateViewSelector(boardId)
-      logger.log(`Updated view selector for boardId: ${boardId}`)
     } else {
       logger.error(`View with ID ${viewId} not found in board ${boardId}`)
     }
@@ -145,25 +154,15 @@ export async function switchBoard (boardId, viewId = null) {
   logger.log(`Attempting to switch to board: ${boardId}`)
   const board = boards.find(b => b.id === boardId)
   if (board) {
-    logger.log(`Switching to board ${boardId}`)
     document.querySelector('.board').id = boardId
-    clearWidgetContainer()
-    if (board.views.length > 0) {
-      const targetViewId = viewId || board.views[0].id
-      logger.log(`Switching to view ${targetViewId} in board ${boardId}`)
-      document.querySelector('.board-view').id = targetViewId
-      await switchView(boardId, targetViewId)
-      await loadWidgetState(boardId, targetViewId) // Ensure widgets are loaded
+    const targetViewId = viewId || board.views[0].id
 
-      // Update localStorage with the current board and view IDs
-      localStorage.setItem('lastUsedBoardId', boardId)
-      localStorage.setItem('lastUsedViewId', targetViewId)
-      logger.log(`Updated localStorage with boardId: ${boardId} and viewId: ${targetViewId}`)
+    await switchView(boardId, targetViewId)
+    await loadWidgetState(boardId, targetViewId)
 
-      // Call updateViewSelector to update the view-selector
-      updateViewSelector(boardId)
-      logger.log(`Updated view selector for boardId: ${boardId}`)
-    }
+    localStorage.setItem('lastUsedBoardId', boardId)
+    localStorage.setItem('lastUsedViewId', targetViewId)
+    updateViewSelector(boardId)
   } else {
     logger.error(`Board with ID ${boardId} not found`)
   }

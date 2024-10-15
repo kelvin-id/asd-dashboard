@@ -1,6 +1,6 @@
-import { initializeBoards, updateViewSelector, switchBoard, switchView } from './component/board/boardManagement.js'
+import { initializeBoards, switchBoard } from './component/board/boardManagement.js'
 import { initializeDashboardMenu } from './component/menu/dashboardMenu.js'
-import { loadWidgetState, loadInitialConfig, loadBoardState } from './storage/localStorage.js'
+import { loadInitialConfig, loadBoardState } from './storage/localStorage.js'
 import { initializeDragAndDrop } from './component/widget/events/dragDrop.js'
 import { fetchServices } from './utils/fetchServices.js'
 import { getConfig } from './utils/getConfig.js'
@@ -38,13 +38,10 @@ document.addEventListener('DOMContentLoaded', async () => {
   logger.log(`Last used boardId: ${lastUsedBoardId}, viewId: ${lastUsedViewId}`)
 
   initializeBoards().then(async initialBoardView => {
-    if (lastUsedBoardId && lastUsedViewId) {
-      logger.log(`Switching to last used boardId: ${lastUsedBoardId}, viewId: ${lastUsedViewId}`)
-      await switchBoard(lastUsedBoardId, lastUsedViewId)
-    } else if (initialBoardView) {
-      loadWidgetState(initialBoardView.boardId, initialBoardView.viewId)
-      updateViewSelector(initialBoardView.boardId)
-    }
+    const boardIdToLoad = lastUsedBoardId || initialBoardView.boardId
+    const viewIdToLoad = lastUsedViewId || initialBoardView.viewId
+    logger.log(`Switching to boardId: ${boardIdToLoad}, viewId: ${viewIdToLoad}`)
+    await switchBoard(boardIdToLoad, viewIdToLoad)
   }).catch(error => {
     logger.error('Failed to initialize boards:', error)
   })

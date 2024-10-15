@@ -2,18 +2,28 @@ import { Logger } from '../../../utils/Logger.js'
 
 const logger = new Logger('fetchServices.js')
 
-async function fetchServices () {
-  try {
-    const response = await fetch('services.json')
-    if (!response.ok) {
-      throw new Error('Network response was not ok')
-    }
-    logger.log('Fetching services')
-    return await response.json()
-  } catch (error) {
-    logger.error('Error fetching services.json:', error)
-    throw new Error('Failed to load services')
-  }
-}
+let serviceCache = null
+let lastFetchTime = 0
 
-export { fetchServices }
+export async function fetchServices () {
+  const currentTime = Date.now()
+  const cacheDuration = 60000 // 1 minute
+
+  if (serviceCache && (currentTime - lastFetchTime) < cacheDuration) {
+    logger.log('Returning cached services')
+    return serviceCache
+  }
+
+  try {
+    const response = await fetch('/services.json')
+    if (response.ok) {
+      serviceCache = await response.json()
+      lastFetchTime = currentTime
+      return serviceCache
+    }
+  } catch (error) {
+    logger.error('Error fetching services:', error)
+  }
+
+  return []
+}
