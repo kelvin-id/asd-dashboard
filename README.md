@@ -11,7 +11,6 @@ ASD Dashboard is architected with a focus on simplicity and adaptability:
 - **Service Worker**: Provides PWA capabilities, enabling offline functionality and caching of essential resources.
 - **Testing**: Automated UI testing is conducted using Playwright, integrated with GitHub Actions for continuous integration. Static files are served by a Python web server during tests.
 - **Widgets**: Widgets are loaded through iframes, supporting content from URLs or APIs with options for auto-refresh and configurable intervals.
-- **Themes**: The application supports both light and dark themes, configurable globally.
 - **Configurable Grid**: The widget layout grid is flexible, scaling from 1 to 6 columns/rows by default, with options for customization through configuration.
 
 ## Features
