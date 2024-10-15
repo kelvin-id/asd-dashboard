@@ -24,20 +24,47 @@ export const ciConfig = {
 export const ciBoards = {
   "boards": [
     {
-      "id": "board-1728854315081",
-      "name": "Modified Board",
+      "id": "board-1234567",
+      "name": "Modified Board 1",
       "order": 0,
       "views": [
         {
-          "id": "view-1728854315081",
-          "name": "Modified View",
+          "id": "view-1234567",
+          "name": "Modified View 1",
           "widgetState": [
             {
               "order": "0",
               "url": "http://localhost:8000/asd/toolbox",
-              "columns": "1",
-              "rows": "1",
-              "type": "iframe",
+              "minColumns": "6",
+              "maxColumns": "6",
+              "minRows": "6",
+              "maxRows": "6",
+              "type": "web",
+              "settings": {
+                "autoRefresh": false,
+                "refreshInterval": 0
+              },
+              "metadata": {
+                  "title": "toolbox"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "board-12345678",
+      "name": "Modified Board 2",
+      "order": 0,
+      "views": [
+        {
+          "id": "view-12345678",
+          "name": "Modified View 2",
+          "widgetState": [
+            {
+              "order": "0",
+              "url": "http://localhost:8000/asd/toolbox",
+              "type": "web",
               "settings": {
                 "autoRefresh": false,
                 "refreshInterval": 0

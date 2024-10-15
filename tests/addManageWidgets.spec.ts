@@ -145,7 +145,7 @@ test.describe('Widgets', () => {
     expect(orderBeforeDragDrop[widgetUrlFour]).toBe("3");
     expect(orderAfterReload[widgetUrlFour]).toBe("2");
 
-    const uuidLog = logs.find(log => log.includes('[widgetManagement][iframe.onload] Iframe loaded successfull'));
+    const uuidLog = logs.find(log => log.includes('[widgetManagement][createWidget] Widget created with grid spans'));
     expect(uuidLog).toBeDefined();
   });
 

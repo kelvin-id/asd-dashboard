@@ -19,10 +19,13 @@ async function createWidget (service, url, gridColumnSpan = 1, gridRowSpan = 1, 
   const config = await getConfig()
   const services = await fetchServices()
   const serviceObj = services.find(s => s.name === service) || {}
-  const minColumns = serviceObj.config.minColumns || config.styling.widget.minColumns
-  const maxColumns = serviceObj.config.maxColumns || config.styling.widget.maxColumns
-  const minRows = serviceObj.config.minRows || config.styling.widget.minRows
-  const maxRows = serviceObj.config.maxRows || config.styling.widget.maxRows
+
+  // Note: min,max ows and columns are not mandatory
+  const minColumns = serviceObj.config?.minColumns || config.styling.widget.minColumns
+  const maxColumns = serviceObj.config?.maxColumns || config.styling.widget.maxColumns
+
+  const minRows = serviceObj.config?.minRows || config.styling.widget.minRows
+  const maxRows = serviceObj.config?.maxRows || config.styling.widget.maxRows
 
   const widgetWrapper = document.createElement('div')
   widgetWrapper.className = 'widget-wrapper widget'
