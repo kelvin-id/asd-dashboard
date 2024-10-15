@@ -24,10 +24,9 @@ window.asd = {
 
 document.addEventListener('DOMContentLoaded', async () => {
   logger.log('DOMContentLoaded event fired')
+  initializeMainMenu()
   fetchServices()
   await getConfig()
-
-  initializeMainMenu()
   initializeDashboardMenu()
 
   const boards = await loadBoardState()
@@ -39,13 +38,21 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   const lastUsedBoardId = localStorage.getItem('lastUsedBoardId')
   const lastUsedViewId = localStorage.getItem('lastUsedViewId')
-  logger.log(`Last used boardId: ${lastUsedBoardId}, viewId: ${lastUsedViewId}`)
+
+  // Check if the last used board ID exists in the loaded boards
+  const boardExists = boards.some(board => board.id === lastUsedBoardId)
+  if (!boardExists) {
+    logger.warn(`Board with ID ${lastUsedBoardId} does not exist. Setting currentBoardId and currentViewId to null.`)
+    window.asd.currentBoardId = null
+    window.asd.currentViewId = null
+  } else {
+    window.asd.currentBoardId = lastUsedBoardId
+    window.asd.currentViewId = lastUsedViewId
+  }
 
   initializeBoards().then(async initialBoardView => {
-    const boardIdToLoad = lastUsedBoardId || initialBoardView.boardId
-    const viewIdToLoad = lastUsedViewId || initialBoardView.viewId
-    window.asd.currentBoardId = boardIdToLoad
-    window.asd.currentViewId = viewIdToLoad
+    const boardIdToLoad = window.asd.currentBoardId || initialBoardView.boardId
+    const viewIdToLoad = window.asd.currentViewId || initialBoardView.viewId
     logger.log(`Set currentBoardId to: ${window.asd.currentBoardId}, currentViewId to: ${window.asd.currentViewId}`)
     logger.log(`Switching to boardId: ${boardIdToLoad}, viewId: ${viewIdToLoad}`)
     await switchBoard(boardIdToLoad, viewIdToLoad)

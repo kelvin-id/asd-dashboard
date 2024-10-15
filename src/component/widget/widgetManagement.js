@@ -51,7 +51,7 @@ async function createWidget (service, url, gridColumnSpan = 1, gridRowSpan = 1, 
   widgetMenu.classList.add('widget-menu')
 
   // iframe.onerror = () Will not ever work!
-  console.timeLog(serviceObj.fallback)
+  console.log(serviceObj.fallback)
   if (serviceObj && serviceObj.fallback) {
     logger.log('Fallback action found for service:', service)
     const fixServiceButton = document.createElement('button')
@@ -63,7 +63,7 @@ async function createWidget (service, url, gridColumnSpan = 1, gridRowSpan = 1, 
     widgetMenu.appendChild(fixServiceButton)
     logger.log('Fix Service button added to widget for service:', service)
   } else {
-    logger.error('No fallback action found for service:', service)
+    logger.info('No fallback action found for service:', service)
   }
 
   const removeButton = document.createElement('button')
