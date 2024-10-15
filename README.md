@@ -1,8 +1,6 @@
 # ASD Dashboard
 
-The ASD web dashboard for ⚡ Accelerated Software Development / 🚀 Automated Service Deployment
-
-is a VanillaJS Progressive Web App (PWA) designed to streamline Accelerated Software Development and Automated Service Deployment. This application empowers users to manage remote services through dynamic, resizable widgets encapsulated within iframes. It supports multiple boards and views for flexible configurations, with user preferences stored in localStorage for persistent sessions. Services are configured in `services.json` and the configuration can be loaded via a `config.json` file. Both files can be loaded local or remote due to the way the project has been designed as a PWA.
+The ASD web dashboard is a VanillaJS Progressive Web App (PWA) designed to streamline ⚡ Accelerated Software Development and 🚀 Automated Service Deployment. This application empowers users to manage remote services through dynamic, resizable widgets encapsulated within iframes. It supports multiple boards and views for flexible configurations, with user preferences stored in localStorage for persistent sessions. Services are configured in `services.json` and the configuration can be loaded via a `config.json` file. Both files can be loaded local or remote due to the way the project has been designed as a PWA.
 
 ## Overview
 
