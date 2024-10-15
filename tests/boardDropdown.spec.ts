@@ -24,7 +24,7 @@ test.describe('Board Dropdown Functionality', () => {
     await handleDialog(page, 'prompt', newBoardName);
 
     await page.click('#board-dropdown .dropbtn');
-    await page.click('a[data-action="create"]');
+    await page.click('#board-control a[data-action="create"]');
 
     // Assert that the new board appears in the dropdown
     const boardSelector = await page.locator('#board-selector');
@@ -41,7 +41,7 @@ test.describe('Board Dropdown Functionality', () => {
 
     // Assuming a board named 'Test Board' exists
     await page.click('#board-dropdown .dropbtn');
-    await page.click('.dropdown-content a[data-action="rename"]');
+    await page.click('#board-control a[data-action="rename"]');
 
     // Assert that the board name is updated in the dropdown
     const boardSelector = await page.locator('#board-selector');
@@ -58,7 +58,7 @@ test.describe('Board Dropdown Functionality', () => {
 
     // Assuming a board named 'Test Board' exists
     await page.click('#board-dropdown .dropbtn');
-    await page.click('a[data-action="delete"]');
+    await page.click('#board-control a[data-action="delete"]');
 
     // Assert that the board is removed from the dropdown
     const boardSelector = await page.locator('#board-selector');

@@ -1,7 +1,7 @@
 import { test, expect, type Page } from '@playwright/test';
 import emojiList from '../src/ui/unicodeEmoji.js';
 import { routeServicesConfig } from './shared/mocking.js';
-import { addServices, selectServiceByName } from './shared/common.js';
+import { addServices, selectServiceByName, addServicesByName } from './shared/common.js';
 import { widgetUrlOne, widgetUrlTwo, widgetUrlThree, widgetUrlFour } from './shared/constant.js';
 
 
@@ -10,9 +10,21 @@ test.describe('Widgets', () => {
   test.beforeEach(async ({ page }) => {
     await routeServicesConfig(page)
     await page.goto('/');
+    await page.evaluate(() => {
+      localStorage.setItem('log', 'widgetManagement');
+    });
   });
 
   test(`should be able to add 4 services and drag and drop ${emojiList.pinching.unicode}`, async ({ page }) => {
+    const logs: string[] = [];
+
+    // Listen for console events
+    page.on('console', msg => {
+      if (msg.type() === 'log') {
+        logs.push(msg.text());
+      }
+    });
+
     const widgetCount = 4
 
     // Add 4 services
@@ -132,8 +144,34 @@ test.describe('Widgets', () => {
     // fourthWidget
     expect(orderBeforeDragDrop[widgetUrlFour]).toBe("3");
     expect(orderAfterReload[widgetUrlFour]).toBe("2");
+
+    const uuidLog = logs.find(log => log.includes('[widgetManagement][iframe.onload] Iframe loaded successfull'));
+    expect(uuidLog).toBeDefined();
   });
 
+  test('should generate widgets with unique and persistent UUIDs', async ({ page }) => {
+    // Add multiple widgets
+    await addServicesByName(page, 'ASD-terminal',10);
+
+    // Collect UUIDs of all widgets
+    const widgetUUIDs = await page.locator('.widget-wrapper').evaluateAll(widgets => 
+      widgets.map(widget => widget.getAttribute('data-dataid'))
+    );
+
+    // Check that all UUIDs are defined
+    widgetUUIDs.forEach(uuid => expect(uuid).toBeDefined());
+
+    // Check that all UUIDs are unique
+    const uniqueUUIDs = new Set(widgetUUIDs);
+    expect(uniqueUUIDs.size).toEqual(widgetUUIDs.length);
+
+    // Reload and check if UUIDs persist
+    await page.reload();
+    const reloadedWidgetUUIDs = await page.locator('.widget-wrapper').evaluateAll(widgets => 
+      widgets.map(widget => widget.getAttribute('data-dataid'))
+    );
+    expect(reloadedWidgetUUIDs).toEqual(widgetUUIDs);
+  });
 
   test(`should be able to change the widget url ${emojiList.link.unicode}`, async ({ page }) => {
     await addServices(page, 2);
@@ -163,7 +201,6 @@ test.describe('Widgets', () => {
     await expect(firstWidget).toHaveClass(/fullscreen/);
     await page.keyboard.press('Escape');
     await expect(firstWidget).not.toHaveClass(/fullscreen/);
-
   });
 
 
