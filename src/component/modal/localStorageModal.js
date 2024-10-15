@@ -3,7 +3,7 @@ import { Logger } from '../../utils/Logger.js'
 
 const logger = new Logger('localStorageModal.js')
 
-export function openLocalStorageModal () {
+export function openLocalStorageModal() {
   // Check if the modal already exists
   if (document.getElementById('localStorage-modal')) {
     logger.log('LocalStorage modal is already open')
@@ -11,70 +11,126 @@ export function openLocalStorageModal () {
   }
 
   logger.log('Opening LocalStorage modal')
-  const modal = document.createElement('div')
-  modal.id = 'localStorage-modal'
-  modal.innerHTML = `
-        <div class="modal-content">
-            <h2>Edit LocalStorage</h2>
-            <textarea id="localStorage-content">${JSON.stringify(getLocalStorageData(), null, 2)}</textarea>
-            <div class="modal-buttons">
-                <button id="save-localStorage">Save</button>
-                <button id="cancel-localStorage">Cancel</button>
-            </div>
-        </div>
-    `
-  document.body.appendChild(modal)
-
-  document.getElementById('save-localStorage').addEventListener('click', () => {
-    try {
-      saveLocalStorageChanges()
-      closeLocalStorageModal()
-    } catch (error) {
-      logger.error('Error saving LocalStorage changes:', error)
-    }
-  })
-
-  document.getElementById('cancel-localStorage').addEventListener('click', () => {
-    logger.log('Cancel button clicked, closing modal without saving changes')
-    closeLocalStorageModal()
-  })
+  try {
+    const localStorageData = getLocalStorageData()
+    renderLocalStorageModal(localStorageData)
+  } catch (error) {
+    showNotification(error.message)
+    return
+  }
 }
 
-function closeLocalStorageModal () {
+export function closeLocalStorageModal() {
   logger.log('Closing LocalStorage modal')
   const modal = document.getElementById('localStorage-modal')
   if (modal) {
     document.body.removeChild(modal)
   }
+  // Remove event listeners if necessary
+  window.removeEventListener('click', handleOutsideClick)
+  window.removeEventListener('keydown', handleEscapeKey)
 }
 
-function saveLocalStorageChanges () {
-  const content = document.getElementById('localStorage-content').value
+function isJSON(value) {
   try {
-    const parsedContent = JSON.parse(content)
-    for (const key in parsedContent) {
-      localStorage.setItem(key, JSON.stringify(parsedContent[key]))
-    }
-    logger.log('LocalStorage updated successfully')
-    alert('LocalStorage updated successfully!')
-
-    // Reload the page to reflect changes
-    location.reload()
-  } catch (error) {
-    showNotification(`Invalid JSON format:${error}`)
+    JSON.parse(value)
+    logger.log('Valid JSON:', value)
+    return true
+  } catch (e) {
+    logger.error('Invalid JSON:', value)
+    return false
   }
 }
 
-function getLocalStorageData () {
-  const data = {}
+function getLocalStorageData() {
+  const localStorageData = {}
+
   for (let i = 0; i < localStorage.length; i++) {
     const key = localStorage.key(i)
-    try {
-      data[key] = JSON.parse(localStorage.getItem(key))
-    } catch (error) {
-      logger.error(`Error parsing localStorage item with key "${key}":`, error)
-      data[key] = localStorage.getItem(key)
+    const value = localStorage.getItem(key)
+    logger.log(`Checking key: ${key}, value: ${value}`)
+
+    if (isJSON(value)) {
+      localStorageData[key] = JSON.parse(value)
+    } else {
+      logger.warn(`Non-JSON value detected for key: ${key}. This entry will not be editable in the modal.`)
     }
   }
-  return data
+
+  return localStorageData
+}
+
+function renderLocalStorageModal(data) {
+  const modal = document.createElement('div')
+  modal.id = 'localStorage-modal'
+  document.body.appendChild(modal)
+
+  Object.keys(data).forEach(key => {
+    const label = document.createElement('label')
+    label.textContent = `Key: ${key}`
+
+    const input = document.createElement('textarea')
+    input.value = JSON.stringify(data[key], null, 2) // Prettified JSON
+    input.id = `localStorage-${key}`
+
+    modal.appendChild(label)
+    modal.appendChild(input)
+  })
+
+  const saveButton = document.createElement('button')
+  saveButton.textContent = 'Save'
+  saveButton.addEventListener('click', () => {
+    const updatedData = {}
+
+    Object.keys(data).forEach(key => {
+      const input = document.getElementById(`localStorage-${key}`).value
+
+      if (isJSON(input)) {
+        updatedData[key] = JSON.parse(input)
+      } else {
+        showNotification(`Invalid JSON detected in editor for key: ${key}. Please correct this value.`)
+        return
+      }
+    })
+
+    saveLocalStorageData(updatedData)
+    showNotification('LocalStorage updated successfully!')
+  })
+
+  const buttonContainer = document.createElement('div')
+  const closeButton = document.createElement('button')
+  closeButton.textContent = 'Close'
+  closeButton.classList.add('lsm-cancel-button') // Added class
+  closeButton.onclick = closeLocalStorageModal
+
+  saveButton.classList.add('lsm-save-button') // Added class
+  buttonContainer.appendChild(saveButton)
+  buttonContainer.appendChild(closeButton)
+  modal.appendChild(buttonContainer)
+
+  // Event listener for closing the modal by clicking outside
+  window.addEventListener('click', handleOutsideClick)
+
+  // Event listener for closing the modal by pressing 'Escape'
+  window.addEventListener('keydown', handleEscapeKey)
+}
+
+function handleOutsideClick(event) {
+  const modal = document.getElementById('localStorage-modal')
+  if (event.target === modal) {
+    closeLocalStorageModal()
+  }
+}
+
+function handleEscapeKey(event) {
+  if (event.key === 'Escape') {
+    closeLocalStorageModal()
+  }
+}
+
+function saveLocalStorageData(updatedData) {
+  for (const key in updatedData) {
+    const value = updatedData[key]
+    localStorage.setItem(key, JSON.stringify(value))
+  }
 }
