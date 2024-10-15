@@ -3,7 +3,7 @@ import { Logger } from '../../utils/Logger.js'
 
 const logger = new Logger('localStorageModal.js')
 
-export function openLocalStorageModal() {
+export function openLocalStorageModal () {
   // Check if the modal already exists
   if (document.getElementById('localStorage-modal')) {
     logger.log('LocalStorage modal is already open')
@@ -16,11 +16,10 @@ export function openLocalStorageModal() {
     renderLocalStorageModal(localStorageData)
   } catch (error) {
     showNotification(error.message)
-    return
   }
 }
 
-export function closeLocalStorageModal() {
+export function closeLocalStorageModal () {
   logger.log('Closing LocalStorage modal')
   const modal = document.getElementById('localStorage-modal')
   if (modal) {
@@ -31,7 +30,7 @@ export function closeLocalStorageModal() {
   window.removeEventListener('keydown', handleEscapeKey)
 }
 
-function isJSON(value) {
+function isJSON (value) {
   try {
     JSON.parse(value)
     logger.log('Valid JSON:', value)
@@ -42,7 +41,7 @@ function isJSON(value) {
   }
 }
 
-function getLocalStorageData() {
+function getLocalStorageData () {
   const localStorageData = {}
 
   for (let i = 0; i < localStorage.length; i++) {
@@ -60,7 +59,7 @@ function getLocalStorageData() {
   return localStorageData
 }
 
-function renderLocalStorageModal(data) {
+function renderLocalStorageModal (data) {
   const modal = document.createElement('div')
   modal.id = 'localStorage-modal'
   document.body.appendChild(modal)
@@ -89,7 +88,6 @@ function renderLocalStorageModal(data) {
         updatedData[key] = JSON.parse(input)
       } else {
         showNotification(`Invalid JSON detected in editor for key: ${key}. Please correct this value.`)
-        return
       }
     })
 
@@ -115,20 +113,20 @@ function renderLocalStorageModal(data) {
   window.addEventListener('keydown', handleEscapeKey)
 }
 
-function handleOutsideClick(event) {
+function handleOutsideClick (event) {
   const modal = document.getElementById('localStorage-modal')
   if (event.target === modal) {
     closeLocalStorageModal()
   }
 }
 
-function handleEscapeKey(event) {
+function handleEscapeKey (event) {
   if (event.key === 'Escape') {
     closeLocalStorageModal()
   }
 }
 
-function saveLocalStorageData(updatedData) {
+function saveLocalStorageData (updatedData) {
   for (const key in updatedData) {
     const value = updatedData[key]
     localStorage.setItem(key, JSON.stringify(value))
