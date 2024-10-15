@@ -36,7 +36,8 @@
       "confirm",
       "prompt",
       "localStorage",
-      "location"
+      "location",
+      "getComputedStyle"
     ]
   }
 }

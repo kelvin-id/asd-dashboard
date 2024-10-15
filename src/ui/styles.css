@@ -78,6 +78,12 @@ main {
     border: 2px solid orange;
 }
 
+/* Highlight drop area */
+.highlight-drop-area {
+    border: 2px dashed #00FF00; /* Example: green dashed border */
+    background-color: rgba(0, 255, 0, 0.1); /* Light green background */
+}
+
 /* Dropdown styles */
 .dropdown {
     position: relative;
