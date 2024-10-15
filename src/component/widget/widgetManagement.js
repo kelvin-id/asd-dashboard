@@ -41,6 +41,7 @@ async function createWidget (service, url, gridColumnSpan = 1, gridRowSpan = 1, 
 
   const iframe = document.createElement('iframe')
   iframe.src = url
+  iframe.loading = 'lazy'
   iframe.style.border = '1px solid #ccc'
   iframe.style.width = '100%'
   iframe.style.height = '100%'
