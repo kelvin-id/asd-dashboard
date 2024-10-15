@@ -191,7 +191,7 @@ test.describe('Widgets', () => {
 
 
   test(`should be able to use fullscreen ${emojiList.fullscreen.unicode}`, async ({ page }) => {
-    await addServices(page, 2);
+    await addServices(page, 3);
 
     const widgets = page.locator('.widget-wrapper');
     const firstWidget = widgets.nth(0);
@@ -238,7 +238,7 @@ test.describe('Widgets', () => {
 
 
   test(`should be able to resize using columns and rows ${emojiList.triangularRuler.unicode}`, async ({ page }) => {
-    await addServices(page, 2);
+    await addServices(page, 3);
 
     const widgets = page.locator('.widget-wrapper');
     const firstWidget = widgets.nth(0);
