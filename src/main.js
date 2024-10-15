@@ -16,7 +16,9 @@ localStorage.setItem('log', 'all')
 window.asd = {
   services: [],
   config: {},
-  boards: []
+  boards: [],
+  currentBoardId: null,
+  currentViewId: null
 }
 
 document.addEventListener('DOMContentLoaded', async () => {
@@ -40,6 +42,9 @@ document.addEventListener('DOMContentLoaded', async () => {
   initializeBoards().then(async initialBoardView => {
     const boardIdToLoad = lastUsedBoardId || initialBoardView.boardId
     const viewIdToLoad = lastUsedViewId || initialBoardView.viewId
+    window.asd.currentBoardId = boardIdToLoad
+    window.asd.currentViewId = viewIdToLoad
+    logger.log(`Set currentBoardId to: ${window.asd.currentBoardId}, currentViewId to: ${window.asd.currentViewId}`)
     logger.log(`Switching to boardId: ${boardIdToLoad}, viewId: ${viewIdToLoad}`)
     await switchBoard(boardIdToLoad, viewIdToLoad)
   }).catch(error => {

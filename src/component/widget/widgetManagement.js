@@ -169,14 +169,8 @@ async function addWidget (url, columns = 1, rows = 1, type = 'iframe', boardId, 
   }
 
   // Default to current board and view if not provided
-  if (!boardId) {
-    boardId = document.querySelector('.board').id
-    logger.log('Defaulting boardId to current board:', boardId)
-  }
-  if (!viewId) {
-    viewId = document.querySelector('.board-view').id
-    logger.log('Defaulting viewId to current view:', viewId)
-  }
+  boardId = boardId || window.asd.currentBoardId
+  viewId = viewId || window.asd.currentViewId
 
   const service = await getServiceFromUrl(url)
   logger.log('Extracted service:', service)
@@ -209,8 +203,8 @@ function removeWidget (widgetElement) {
   widgetElement.remove()
   logger.log('Widget removed with dataid:', dataid)
   updateWidgetOrders()
-  const boardId = document.querySelector('.board').id
-  const viewId = document.querySelector('.board-view').id
+  const boardId = window.asd.currentBoardId
+  const viewId = window.asd.currentViewId
   logger.log(`Saving widget state after removal for board ${boardId} and view ${viewId}`)
   saveWidgetState(boardId, viewId)
 }
@@ -228,8 +222,8 @@ async function configureWidget (iframeElement) {
         logger.log('Data posted to iframe for API service:', data)
       })
     }
-    const boardId = document.querySelector('.board').id
-    const viewId = document.querySelector('.board-view').id
+    const boardId = window.asd.currentBoardId
+    const viewId = window.asd.currentViewId
     logger.log(`Saving widget state after configuration for board ${boardId} and view ${viewId}`)
     saveWidgetState(boardId, viewId)
   }
@@ -248,8 +242,8 @@ function updateWidgetOrders () {
     })
   })
 
-  const boardId = document.querySelector('.board').id
-  const viewId = document.querySelector('.board-view').id
+  const boardId = window.asd.currentBoardId
+  const viewId = window.asd.currentViewId
   logger.log(`Saving widget state after updating orders for board ${boardId} and view ${viewId}`)
   saveWidgetState(boardId, viewId)
 }

@@ -145,11 +145,15 @@ function setBoardAndViewIds (boardId, viewId) {
   boardElement.id = boardId
   const viewElement = document.querySelector('.board-view')
   viewElement.id = viewId
+  window.asd.currentBoardId = boardId
+  window.asd.currentViewId = viewId
+  logger.log(`Set currentBoardId to: ${window.asd.currentBoardId}, currentViewId to: ${window.asd.currentViewId}`)
 }
 
 export async function saveBoardState (boards) {
   try {
     localStorage.setItem('boards', JSON.stringify(boards))
+    logger.log('Saved board state to localStorage')
   } catch (error) {
     logger.error('Error saving board state:', error)
   }
@@ -163,6 +167,7 @@ export async function loadBoardState () {
     if (parsedBoards) {
       window.asd.boards = parsedBoards
     }
+    logger.log('Loaded board state from localStorage:', parsedBoards)
     return parsedBoards
   } catch (error) {
     logger.error('Error loading board state:', error)
