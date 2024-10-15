@@ -28,7 +28,7 @@ test.describe('LocalStorage Editor Functionality', () => {
     // Modify the JSON content in the textarea to create a board, view, and widget
     const textarea = await modal.locator('textarea#localStorage-boards'); // Adjust the selector to match actual key
     const originalContent = await textarea.inputValue();
-    const newContent = JSON.stringify(ciBoards.boards, null, 2);
+    const newContent = JSON.stringify(ciBoards, null, 2);
     await textarea.fill(newContent);
 
     // Save changes
