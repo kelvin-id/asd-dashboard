@@ -1,8 +1,13 @@
-export function showRecoveryModal (serviceObj, widgetWrapper) {
-  console.log('Opening recovery modal for action:', serviceObj.name)
+import { showNotification } from '../dialog/notification.js'
+import { Logger } from '../../utils/Logger.js'
+
+const logger = new Logger('serviceLaunchModal.js')
+
+export function showServiceModal (serviceObj, widgetWrapper) {
+  logger.log('Opening recovery modal for action:', serviceObj.name)
 
   const modal = document.createElement('div')
-  modal.className = 'recovery-modal'
+  modal.className = 'service-action-modal'
   modal.dataset.uuid = crypto.randomUUID()
 
   const iframe = document.createElement('iframe')
@@ -14,15 +19,15 @@ export function showRecoveryModal (serviceObj, widgetWrapper) {
   const doneButton = document.createElement('button')
   doneButton.textContent = 'Done and Refresh Widget'
   doneButton.onclick = () => {
-    console.log('Done button clicked, refreshing widget.')
+    logger.log('Done button clicked, refreshing widget.')
     modal.remove()
     try {
       const iframe = widgetWrapper.querySelector('iframe')
       iframe.src = widgetWrapper.dataset.url // Refresh iframe
-      console.log('Widget iframe refreshed successfully.')
+      logger.log('Widget iframe refreshed successfully.')
     } catch (error) {
-      console.error('Error refreshing widget iframe:', error)
-      alert('Failed to refresh widget. Please try again.')
+      logger.error('Error refreshing widget iframe:', error)
+      showNotification('Failed to refresh widget. Please try again.')
     }
   }
 
@@ -31,5 +36,5 @@ export function showRecoveryModal (serviceObj, widgetWrapper) {
   modal.appendChild(doneButton)
 
   document.body.appendChild(modal)
-  console.log('Recovery modal displayed.')
+  logger.log('Service modal displayed.')
 }

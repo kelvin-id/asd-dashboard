@@ -10,7 +10,7 @@ import { handleDragStart, handleDragEnd } from './events/dragDrop.js'
 import { toggleFullScreen } from './events/fullscreenToggle.js'
 import { initializeResizeHandles } from './events/resizeHandler.js'
 import { Logger } from '../../utils/Logger.js'
-import { showRecoveryModal } from '../modal/recoveryModal.js'
+import { showServiceModal } from '../modal/serviceLaunchModal.js'
 
 const logger = new Logger('widgetManagement.js')
 
@@ -58,7 +58,7 @@ async function createWidget (service, url, gridColumnSpan = 1, gridRowSpan = 1, 
     fixServiceButton.innerHTML = emojiList.launch.unicode
     fixServiceButton.classList.add('widget-button', 'widget-icon-action')
     fixServiceButton.onclick = () => {
-      showRecoveryModal(serviceObj, widgetWrapper)
+      showServiceModal(serviceObj, widgetWrapper)
     }
     widgetMenu.appendChild(fixServiceButton)
     logger.log('Fix Service button added to widget for service:', service)
