@@ -10,6 +10,7 @@ import { handleDragStart, handleDragEnd } from './events/dragDrop.js'
 import { toggleFullScreen } from './events/fullscreenToggle.js'
 import { initializeResizeHandles } from './events/resizeHandler.js'
 import { Logger } from '../../utils/Logger.js'
+import { showRecoveryModal } from '../modal/recoveryModal.js'
 
 const logger = new Logger('widgetManagement.js')
 
@@ -17,11 +18,11 @@ async function createWidget (service, url, gridColumnSpan = 1, gridRowSpan = 1, 
   logger.log('Creating widget with URL:', url)
   const config = await getConfig()
   const services = await fetchServices()
-  const serviceConfig = services.find(s => s.name === service)?.config || {}
-  const minColumns = serviceConfig.minColumns || config.styling.widget.minColumns
-  const maxColumns = serviceConfig.maxColumns || config.styling.widget.maxColumns
-  const minRows = serviceConfig.minRows || config.styling.widget.minRows
-  const maxRows = serviceConfig.maxRows || config.styling.widget.maxRows
+  const serviceObj = services.find(s => s.name === service) || {}
+  const minColumns = serviceObj.config.minColumns || config.styling.widget.minColumns
+  const maxColumns = serviceObj.config.maxColumns || config.styling.widget.maxColumns
+  const minRows = serviceObj.config.minRows || config.styling.widget.minRows
+  const maxRows = serviceObj.config.maxRows || config.styling.widget.maxRows
 
   const widgetWrapper = document.createElement('div')
   widgetWrapper.className = 'widget-wrapper widget'
@@ -46,16 +47,24 @@ async function createWidget (service, url, gridColumnSpan = 1, gridRowSpan = 1, 
   iframe.style.width = '100%'
   iframe.style.height = '100%'
 
-  iframe.onload = () => {
-    logger.log('Iframe loaded successfully:', url)
-  }
-
-  iframe.onerror = () => {
-    logger.error('Error loading iframe:', url)
-  }
-
   const widgetMenu = document.createElement('div')
   widgetMenu.classList.add('widget-menu')
+
+  // iframe.onerror = () Will not ever work!
+  console.timeLog(serviceObj.fallback)
+  if (serviceObj && serviceObj.fallback) {
+    logger.log('Fallback action found for service:', service)
+    const fixServiceButton = document.createElement('button')
+    fixServiceButton.innerHTML = emojiList.launch.unicode
+    fixServiceButton.classList.add('widget-button', 'widget-icon-action')
+    fixServiceButton.onclick = () => {
+      showRecoveryModal(serviceObj, widgetWrapper)
+    }
+    widgetMenu.appendChild(fixServiceButton)
+    logger.log('Fix Service button added to widget for service:', service)
+  } else {
+    logger.error('No fallback action found for service:', service)
+  }
 
   const removeButton = document.createElement('button')
   removeButton.innerHTML = emojiList.cross.unicode

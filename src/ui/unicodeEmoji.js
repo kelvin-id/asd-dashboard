@@ -14,7 +14,8 @@ const emojiList = {
   toolbox: { icon: '🧰', unicode: '\u{1F9F0}', description: 'Toolbox' },
   hammerAndWrench: { icon: '🛠️', unicode: '\u{1F6E0}', description: 'Wrench' },
   compass: { icon: '🧭', unicode: '\u{1F9ED}', description: 'Compass' },
-  globe: { icon: '🌐', unicode: '\u{1F310}', description: 'Globe' },
+  serviceWorkerEnabled: { icon: '🌐', unicode: '\u{1F310}', description: 'Globe' },
+  serviceWorkerDisabled: { icon: '🚫', unicode: '\u{1F6AB}', description: 'Prohibited' },
   pinching: { icon: '🤏', unicode: '\u{1F90F}', description: 'Drag and drop' },
   fullscreen: { icon: '▢', unicode: '\u{25A2}', description: 'Fullscreen' },
   dna: { icon: '🧬', unicode: '\u{1F9EC}', description: 'Settings' },
@@ -31,7 +32,9 @@ const emojiList = {
   camera: { icon: '📷', unicode: '\u{1F4F7}', description: 'Camera' },
   videoCamera: { icon: '📹', unicode: '\u{1F4F9}', description: 'Video Camera' },
   speaker: { icon: '🔊', unicode: '\u{1F50A}', description: 'Speaker' },
-  shield: { icon: '🛡️', unicode: '\u{1F6E1}', description: 'Shield (protection, security)' }
+  shield: { icon: '🛡️', unicode: '\u{1F6E1}', description: 'Shield (protection, security)' },
+  launch: { icon: '🚀', unicode: '\u{1F680}', description: 'Start a service' },
+  edit: { icon: '✏️', unicode: '\u{270F}\u{FE0F}', description: 'Edit or write' }
 }
 
 export default emojiList

@@ -1,3 +1,4 @@
+import { initializeMainMenu } from './component/menu/menu.js'
 import { initializeBoards, switchBoard } from './component/board/boardManagement.js'
 import { initializeDashboardMenu } from './component/menu/dashboardMenu.js'
 import { loadInitialConfig, loadBoardState } from './storage/localStorage.js'
@@ -26,6 +27,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   fetchServices()
   await getConfig()
 
+  initializeMainMenu()
   initializeDashboardMenu()
 
   const boards = await loadBoardState()

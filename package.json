@@ -37,7 +37,8 @@
       "prompt",
       "localStorage",
       "location",
-      "getComputedStyle"
+      "getComputedStyle",
+      "caches"
     ]
   }
 }

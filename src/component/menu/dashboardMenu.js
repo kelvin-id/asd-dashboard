@@ -33,7 +33,7 @@ function initializeDashboardMenu () {
     }
   })
 
-  document.getElementById('toggle-widget-buttons').addEventListener('click', () => {
+  document.getElementById('toggle-widget-menu').addEventListener('click', () => {
     const widgetContainer = document.getElementById('widget-container')
     widgetContainer.classList.toggle('hide-widget-menu')
   })

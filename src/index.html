@@ -7,52 +7,6 @@
     <link rel="stylesheet" href="ui/styles.css">
 </head>
 <body>
-   <menu id="controls">
-        <div class="control-group" id="board-control">
-            <select id="board-selector"></select>
-            <div id="board-dropdown" class="dropdown">
-                <button class="dropbtn">Board Actions</button>
-                <div class="dropdown-content">
-                    <a href="#" data-action="create">Create Board</a>
-                    <a href="#" data-action="rename">Rename Board</a>
-                    <a href="#" data-action="delete">Delete Board</a>
-                </div>
-            </div>
-        </div>
-
-        <div class="control-group" id="view-control">
-            <select id="view-selector"></select>
-            <div id="view-dropdown" class="dropdown">
-                <button class="dropbtn">View Actions</button>
-                <div class="dropdown-content">
-                    <a href="#" data-action="create">Create View</a>
-                    <a href="#" data-action="rename">Rename View</a>
-                    <a href="#" data-action="delete">Delete View</a>
-                    <a href="#" data-action="reset">Reset View</a>
-                </div>
-            </div>
-        </div>
-
-        <div class="control-group">
-            <select id="service-selector">
-                <option value="">Select a Service</option>
-                <!-- Options will be dynamically populated -->
-            </select>
-            <input type="text" id="widget-url" placeholder="Or enter URL manually">
-            <button id="add-widget-button">Add Widget</button>
-            <button id="toggle-widget-buttons">Widget menu</button>
-            <button id="reset-button">Reset</button>
-        </div>
-
-        <div class="control-group" id="admin-control">
-            <label for="sw-toggle" class="icon-checkbox" aria-label="Toggle service worker" title="Toggle service worker">
-                <input type="checkbox" id="sw-toggle">
-                <span class="sw-icon"></span>
-            </label>
-            <label id="localStorage-edit-button" aria-label="Storage editor" title="Storage editor">💾</label>
-        </div>
-    </menu>
-
     <main>
         <div class="board">
             <!-- A board will be dynamically loaded here -->
@@ -64,81 +18,6 @@
             </div>
         </div>
     </main>
-    <script>
-        const swToggle = document.getElementById('sw-toggle');
-        const swIcon = document.querySelector('.sw-icon');
-        const swCheckbox = document.querySelector('.icon-checkbox'); 
-        const swEnabled = localStorage.getItem('swEnabled') === 'true';
-        swToggle.checked = swEnabled;
-
-        function updateServiceWorkerUI(isEnabled) {
-            if (isEnabled) {
-                swIcon.textContent = '🌐'; // Network On
-                swCheckbox.setAttribute('aria-checked', 'true');
-                swCheckbox.setAttribute('title', 'Service worker is enabled');
-            } else {
-                swIcon.textContent = '🚫'; // Network Off
-                swCheckbox.setAttribute('aria-checked', 'false');
-                swCheckbox.setAttribute('title', 'Service worker is disabled');
-            }
-        }
-
-        updateServiceWorkerUI(swEnabled);
-
-        if ('serviceWorker' in navigator) {
-            function registerServiceWorker() {
-                navigator.serviceWorker.register('/serviceWorker.js', { scope: '/' })
-                    .then(function (registration) {
-                        console.log('Service Worker registered with scope:', registration.scope);
-                    })
-                    .catch(function (error) {
-                        console.error('Service Worker registration failed:', error);
-                    });
-            }
-
-            function unregisterServiceWorker() {
-                navigator.serviceWorker.getRegistrations()
-                    .then(function (registrations) {
-                        for (let registration of registrations) {
-                            registration.unregister()
-                                .then(function () {
-                                    console.log('Service Worker unregistered');
-                                })
-                                .catch(function (error) {
-                                    console.error('Service Worker unregistration failed:', error);
-                                });
-                        }
-                    });
-                caches.keys().then(function (cacheNames) {
-                    return Promise.all(
-                        cacheNames.map(function (cacheName) {
-                            return caches.delete(cacheName);
-                        })
-                    ).then(function () {
-                        console.log('All caches cleared');
-                    });
-                });
-            }
-
-            if (swEnabled) {
-                registerServiceWorker();
-            } else {
-                unregisterServiceWorker();
-            }
-
-            swToggle.addEventListener('change', function () {
-                const isEnabled = swToggle.checked;
-                localStorage.setItem('swEnabled', isEnabled);
-                updateServiceWorkerUI(isEnabled)
-
-                if (isEnabled) {
-                    registerServiceWorker();
-                } else {
-                    unregisterServiceWorker();
-                }
-            });
-        }
-    </script>
     <script type="module" src="main.js"></script>
 </body>
 </html>
