@@ -1,4 +1,4 @@
-import { initializeBoards, updateViewSelector } from './component/board/boardManagement.js'
+import { initializeBoards, updateViewSelector, switchBoard, switchView } from './component/board/boardManagement.js'
 import { initializeDashboardMenu } from './component/menu/dashboardMenu.js'
 import { loadWidgetState, loadInitialConfig, loadBoardState } from './storage/localStorage.js'
 import { initializeDragAndDrop } from './component/widget/events/dragDrop.js'
@@ -10,6 +10,8 @@ import { initializeViewDropdown } from './component/view/viewDropdown.js'
 import { Logger } from './utils/Logger.js'
 
 const logger = new Logger('main.js')
+
+localStorage.setItem('log', 'all')
 
 window.asd = {
   services: [],
@@ -25,12 +27,21 @@ document.addEventListener('DOMContentLoaded', async () => {
   initializeDashboardMenu()
 
   const boards = await loadBoardState()
+  logger.log(`Loaded boards from localStorage: ${JSON.stringify(boards)}`)
+
   if (boards.length === 0 && window.asd.config.globalSettings.localStorage.loadDashboardFromConfig === 'true') {
     await loadInitialConfig()
   }
 
-  initializeBoards().then(initialBoardView => {
-    if (initialBoardView) {
+  const lastUsedBoardId = localStorage.getItem('lastUsedBoardId')
+  const lastUsedViewId = localStorage.getItem('lastUsedViewId')
+  logger.log(`Last used boardId: ${lastUsedBoardId}, viewId: ${lastUsedViewId}`)
+
+  initializeBoards().then(async initialBoardView => {
+    if (lastUsedBoardId && lastUsedViewId) {
+      logger.log(`Switching to last used boardId: ${lastUsedBoardId}, viewId: ${lastUsedViewId}`)
+      await switchBoard(lastUsedBoardId, lastUsedViewId)
+    } else if (initialBoardView) {
       loadWidgetState(initialBoardView.boardId, initialBoardView.viewId)
       updateViewSelector(initialBoardView.boardId)
     }

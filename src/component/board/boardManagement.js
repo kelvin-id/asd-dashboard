@@ -5,7 +5,6 @@ import { Logger } from '../../utils/Logger.js'
 const logger = new Logger('boardManagement.js')
 
 export let boards = []
-let isLoading = false
 
 function generateUniqueId (prefix) {
   return `${prefix}-${Date.now()}`
@@ -28,6 +27,18 @@ export function createBoard (boardName, boardId = null, viewId = null) {
   // Save the board state after creating the default view
   saveBoardState(boards)
 
+  // Update the board selector
+  updateBoardSelector()
+
+  // Switch to the new board
+  switchBoard(newBoardId, defaultViewId)
+  logger.log(`Switched to new board ${newBoardId}`)
+
+  // Save the current board and view in localStorage
+  localStorage.setItem('lastUsedBoardId', newBoardId)
+  localStorage.setItem('lastUsedViewId', defaultViewId)
+  logger.log(`Saved last used boardId: ${newBoardId} and viewId: ${defaultViewId} to localStorage`)
+
   return newBoard
 }
 
@@ -43,6 +54,18 @@ export function createView (boardId, viewName, viewId = null) {
     board.views.push(newView)
     saveBoardState(boards)
     logger.log('Created new view:', newView)
+
+    // Update the view selector
+    updateViewSelector(boardId)
+
+    // Switch to the new view
+    switchView(boardId, newViewId)
+    logger.log(`Switched to new view ${newViewId} in board ${boardId}`)
+
+    // Save the current view in localStorage
+    localStorage.setItem('lastUsedViewId', newViewId)
+    logger.log(`Saved last used viewId: ${newViewId} to localStorage`)
+
     return newView
   } else {
     logger.error(`Board with ID ${boardId} not found`)
@@ -57,12 +80,6 @@ function clearWidgetContainer () {
 }
 
 export async function switchView (boardId, viewId) {
-  if (isLoading) {
-    logger.log('Currently loading, please wait...')
-    return
-  }
-
-  isLoading = true
   const board = boards.find(b => b.id === boardId)
   if (board) {
     logger.log(`Switching to view ${viewId} in board ${boardId}`)
@@ -75,22 +92,33 @@ export async function switchView (boardId, viewId) {
         logger.log(`Adding widget from state: ${JSON.stringify(widget)}`)
         await addWidget(widget.url, widget.columns, widget.rows, widget.type, boardId, viewId)
       }
+
+      // Update localStorage with the current view ID
+      localStorage.setItem('lastUsedViewId', viewId)
+      logger.log(`Updated localStorage with viewId: ${viewId}`)
+
+      // Update the view selector
+      updateViewSelector(boardId)
+      logger.log(`Updated view selector for boardId: ${boardId}`)
     } else {
       logger.error(`View with ID ${viewId} not found in board ${boardId}`)
     }
   } else {
     logger.error(`Board with ID ${boardId} not found`)
   }
-  isLoading = false
 }
 
 export function updateViewSelector (boardId) {
   const viewSelector = document.getElementById('view-selector')
-  viewSelector.innerHTML = '' // Clear existing options
-  const currentBoardId = document.querySelector('.board').id
-  const board = boards.find(b => b.id === currentBoardId)
+  if (!viewSelector) {
+    logger.error('View selector element not found')
+    return
+  }
 
-  if (currentBoardId) {
+  viewSelector.innerHTML = '' // Clear existing options
+  const board = boards.find(b => b.id === boardId)
+
+  if (board) {
     logger.log(`Found board with ID: ${boardId}, adding its views to the selector`)
     board.views.forEach(view => {
       logger.log(`Adding view to selector: ${view.name} with ID: ${view.id}`)
@@ -99,18 +127,21 @@ export function updateViewSelector (boardId) {
       option.textContent = view.name
       viewSelector.appendChild(option)
     })
+
+    // Select the newly created or switched view
+    const lastUsedViewId = localStorage.getItem('lastUsedViewId')
+    if (lastUsedViewId) {
+      viewSelector.value = lastUsedViewId
+      logger.log(`Set view selector value to last used viewId: ${lastUsedViewId}`)
+    } else {
+      logger.log('No last used viewId found in localStorage')
+    }
   } else {
-    logger.error(`Board with ID ${currentBoardId} not found`)
+    logger.error(`Board with ID ${boardId} not found`)
   }
 }
 
-export async function switchBoard (boardId) {
-  if (isLoading) {
-    logger.log('Currently loading, please wait...')
-    return
-  }
-
-  isLoading = true
+export async function switchBoard (boardId, viewId = null) {
   logger.log(`Attempting to switch to board: ${boardId}`)
   const board = boards.find(b => b.id === boardId)
   if (board) {
@@ -118,16 +149,24 @@ export async function switchBoard (boardId) {
     document.querySelector('.board').id = boardId
     clearWidgetContainer()
     if (board.views.length > 0) {
-      const firstViewId = board.views[0].id
-      logger.log(`Switching to first view ${firstViewId} in board ${boardId}`)
-      document.querySelector('.board-view').id = firstViewId
-      await switchView(boardId, firstViewId)
-      await loadWidgetState(boardId, firstViewId)
+      const targetViewId = viewId || board.views[0].id
+      logger.log(`Switching to view ${targetViewId} in board ${boardId}`)
+      document.querySelector('.board-view').id = targetViewId
+      await switchView(boardId, targetViewId)
+      await loadWidgetState(boardId, targetViewId) // Ensure widgets are loaded
+
+      // Update localStorage with the current board and view IDs
+      localStorage.setItem('lastUsedBoardId', boardId)
+      localStorage.setItem('lastUsedViewId', targetViewId)
+      logger.log(`Updated localStorage with boardId: ${boardId} and viewId: ${targetViewId}`)
+
+      // Call updateViewSelector to update the view-selector
+      updateViewSelector(boardId)
+      logger.log(`Updated view selector for boardId: ${boardId}`)
     }
   } else {
     logger.error(`Board with ID ${boardId} not found`)
   }
-  isLoading = false
 }
 
 export function initializeBoards () {
@@ -164,6 +203,12 @@ export function addBoardToUI (board) {
   option.value = board.id
   option.textContent = board.name
   boardSelector.appendChild(option)
+
+  // Select the newly created or switched board
+  const lastUsedBoardId = localStorage.getItem('lastUsedBoardId')
+  if (lastUsedBoardId) {
+    boardSelector.value = lastUsedBoardId
+  }
 }
 
 export function renameBoard (boardId, newBoardName) {
@@ -265,4 +310,10 @@ function updateBoardSelector () {
     option.textContent = board.name
     boardSelector.appendChild(option)
   })
+
+  // Select the newly created or switched board
+  const lastUsedBoardId = localStorage.getItem('lastUsedBoardId')
+  if (lastUsedBoardId) {
+    boardSelector.value = lastUsedBoardId
+  }
 }

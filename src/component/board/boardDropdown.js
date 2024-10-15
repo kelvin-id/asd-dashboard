@@ -1,5 +1,5 @@
 import { saveBoardState } from '../../storage/localStorage.js'
-import { createBoard, renameBoard, deleteBoard, updateViewSelector, addBoardToUI, boards } from './boardManagement.js'
+import { createBoard, renameBoard, deleteBoard, updateViewSelector, addBoardToUI, boards, switchBoard, switchView } from './boardManagement.js'
 import { initializeDropdown } from '../utils/dropDownUtils.js'
 import { Logger } from '../../utils/Logger.js'
 
@@ -16,7 +16,7 @@ export function initializeBoardDropdown () {
   })
 }
 
-function handleCreateBoard () {
+async function handleCreateBoard () {
   const boardName = prompt('Enter new board name:')
   if (boardName) {
     try {
@@ -24,6 +24,16 @@ function handleCreateBoard () {
       logger.log('Board created:', newBoard)
       saveBoardState(boards)
       addBoardToUI(newBoard)
+
+      // Switch to the new board and its default view
+      await switchBoard(newBoard.id)
+      const defaultViewId = newBoard.views[0].id
+      await switchView(newBoard.id, defaultViewId)
+
+      // Save the current board and view in localStorage
+      localStorage.setItem('lastUsedBoardId', newBoard.id)
+      localStorage.setItem('lastUsedViewId', defaultViewId)
+      logger.log(`Switched to new board ${newBoard.id} and view ${defaultViewId}`)
     } catch (error) {
       logger.error('Error creating board:', error)
     }
