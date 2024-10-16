@@ -93,16 +93,6 @@ export async function switchView (boardId, viewId) {
         logger.error('board-view element not found in DOM')
       }
 
-      // const lastUsedViewId = localStorage.getItem('lastUsedViewId')
-      // const lastUsedWidgetState = view.widgetState
-      // const currentWidgetState = JSON.parse(localStorage.getItem('boards'))
-      //   .find(b => b.id === boardId).views.find(v => v.id === viewId).widgetState
-
-      // if (lastUsedViewId === viewId && JSON.stringify(lastUsedWidgetState) === JSON.stringify(currentWidgetState)) {
-      //   logger.log('View and widget state match the last used state, skipping re-rendering')
-      //   return
-      // }
-
       clearWidgetContainer()
       logger.log(`Rendering widgets for view ${viewId}:`, view.widgetState)
       for (const widget of view.widgetState) {

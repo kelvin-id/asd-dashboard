@@ -95,7 +95,7 @@ function renderLocalStorageModal (data) {
     showNotification('LocalStorage updated successfully!')
     setTimeout(() => {
       location.reload()
-    }, 800) // Wait 1 second before reloading
+    }, 600) // Wait 1 second before reloading
   })
 
   const buttonContainer = document.createElement('div')

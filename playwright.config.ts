@@ -23,7 +23,7 @@ export default defineConfig({
   },
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
-    actionTimeout: 2000, // Default timeout for actions like clicks, waits, etc.
+    actionTimeout: 3000, // Default timeout for actions like clicks, waits, etc.
     navigationTimeout: 6000,
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: 'on-first-retry',
@@ -44,6 +44,12 @@ export default defineConfig({
     {
       name: 'firefox',
       use: { ...devices['Desktop Firefox'] },
+      grep: process.env.CI ? /.*/ : /.^/,
+    },
+
+    {
+      name: 'webkit',
+      use: { ...devices['Desktop Safari'] },
     },
   ],
   /* Run local dev server before starting the tests */

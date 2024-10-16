@@ -12,7 +12,7 @@ import { Logger } from './utils/Logger.js'
 
 const logger = new Logger('main.js')
 
-localStorage.setItem('log', 'all')
+// localStorage.setItem('log', 'all')
 
 window.asd = {
   services: [],

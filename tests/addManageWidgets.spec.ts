@@ -10,6 +10,7 @@ test.describe('Widgets', () => {
   test.beforeEach(async ({ page }) => {
     await routeServicesConfig(page)
     await page.goto('/');
+    await page.waitForLoadState('domcontentloaded');
     await page.evaluate(() => {
       localStorage.setItem('log', 'widgetManagement');
     });
